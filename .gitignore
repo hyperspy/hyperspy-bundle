@@ -34,3 +34,11 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# WinPython folders
+WinPython64/*
+WinPython32/*
+
+# NSIS scripts
+NSIS_installer_script-32bit.nsi
+NSIS_installer_script-64bit.nsi
