@@ -30,9 +30,8 @@ def get_current_hyperspy_version():
 
 
 def download_hyperspy_license():
-    urlretrieve(
-        "https://github.com/hyperspy/hyperspy/blob/master/COPYING.txt",
-        "COPYING.txt")
+    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master",
+                "COPYING.txt")
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
@@ -150,6 +149,7 @@ class HSpyBundleInstaller:
             self.get_full_paths("python-*")["32"]),
             '64': winpython.wppm.Distribution(
                 self.get_full_paths("python-*")["64"])}
+        self.hspy_version = get_current_hyperspy_version()
 
     def get_full_paths(self, rel_path):
         fps = {}
@@ -215,11 +215,8 @@ class HSpyBundleInstaller:
                   "%s\\WinPython Command Prompt.exe" % wppath,
                   "nosetests", "hyperspy"])
 
-    def get_log_name(self, arch):
-        return "hspy_bundle-%sbit_v%s_install.log" % (
-            arch, get_current_hyperspy_version())
 
-    def clean():
+    def clean(self):
         """Remove all *.pyc and *.swp files"""
         for arch, wppath in self.wppath.iteritems():
             for dirpath, dirnames, filenames in os.walk(wppath):
@@ -235,7 +232,7 @@ class HSpyBundleInstaller:
             for i, line in enumerate(f):
                 if "__VERSION__" in line:
                     line = line.replace("__VERSION__",
-                                        get_current_hyperspy_version())
+                                        self.hspy_version)
                     f32.write(line)
                     f64.write(line)
                 elif "__ARCHITECTURE__" in line:
