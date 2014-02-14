@@ -219,35 +219,13 @@ class HSpyBundleInstaller:
         return "hspy_bundle-%sbit_v%s_install.log" % (
             arch, get_current_hyperspy_version())
 
-    def create_install_log(self, clean=True):
-        """Create a log of all the files in path recursively.
-
-        This log is used by the uninstall script to remove only the files
-        that were copied by the installer.
-
-        Parameters
-        ----------
-        clean: bool
-            If True, delete all *.pyc and *.swp files
-
-        """
+    def clean():
+        """Remove all *.pyc and *.swp files"""
         for arch, wppath in self.wppath.iteritems():
-            filename = self.get_log_name(arch)
-            with io.open(
-                    os.path.join(wppath, filename),
-                    "w", encoding="cp1252", newline="\r\n") as f:
-                if wppath.endswith(("/", "\\")):
-                    wppath = wppath[:-1]
-                for dirpath, dirnames, filenames in os.walk(wppath):
-                    f.write(u"Folder: %s\n" %
-                            dirpath.replace(wppath, ".").replace(
-                                "/", "\\").decode("utf8"))
-                    for fn in filenames:
-                        if clean is True:
-                            if os.path.splitext(fn)[1] in (".swp", ".pyc"):
-                                os.remove(os.path.join(dirpath, fn))
-                                continue
-                        f.write(u"File: %s\n" % fn.decode("utf8"))
+            for dirpath, dirnames, filenames in os.walk(wppath):
+                for fn in filenames:
+                    if os.path.splitext(fn)[1] in (".swp", ".pyc"):
+                        os.remove(os.path.join(dirpath, fn))
 
     def create_installers(self):
         """Create NSIS 64 and 32 bit installers from emplate."""
