@@ -13,7 +13,10 @@
 !include "StrFunc.nsh"
 !include "LogicLib.nsh"
 !include "X64.nsh"
-
+!include "hspy_delete64.nsh"
+!include "hspy_delete32.nsh"
+!include "hspy_delete06_64.nsh"
+!include "hspy_delete06_32.nsh"
 !define APPNAME "HyperSpy"
 !define APPVERSION "__VERSION__"
 !define ARCHITECTURE "__ARCHITECTURE__"
@@ -110,6 +113,8 @@ OutFile "${S_NAME}.exe"
 			call InstModeChanged
 			SetSilent silent
 		${EndIf}
+ 
+		
 		FunctionEnd
 
 	Function GuiInit
@@ -211,6 +216,56 @@ OutFile "${S_NAME}.exe"
 		${Else}
 			!insertmacro SetInstMode 0
 		${EndIf}
+		
+		${If} $InstMode <> 1
+			ReadRegStr $R0 SHCTX \
+			"Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+			"UninstallString"
+			ReadRegStr $R1 SHCTX \
+			"Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+			"DisplayVersion"
+			ReadRegStr $R2 SHCTX \
+			"Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" \
+			"InstallLocation"
+
+			StrCmp $R0 "" done
+			ask:	
+			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+			'${APPNAME} is already installed and must be uninstalled to \
+			install another version.\
+			$\n$\nClick "OK" to \
+			uninstall it or "Cancel" to cancel the installation.' \
+			IDOK uninst
+			Abort
+			uninst:	
+			${If} $R1 == ""
+				; DisplayVersion was not defined in HSpy 0.6,
+				; so it is 0.6
+				;Do not use the 0.6 uninstaller to uninstall 
+				;HyperSpy because is buggy.
+				;The following code uninstalls correctly HSpy 0.6
+				${If} $InstMode = 2
+					Exec 'cmd.exe /C ""$R2\WinPython Command Prompt.exe" uninstall_hyperspy_here & exit"'
+					Sleep 3000
+				${EndIf}
+				# Remove StartMenu entries
+				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
+				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk"
+				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk"
+				Delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
+				RMDir "$SMPROGRAMS\${APPNAME}"
+				DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
+				Delete /REBOOTOK $R0 ; delete the evil uninstaller
+			        ${If} ${FileExists} `$R2\python-2.7.4.amd64\*.*`
+					!insertmacro hspy_delete06_64 $R2
+				${ElseIf} ${FileExists} `$R2\python-2.7.4\*.*`
+					!insertmacro hspy_delete06_32 $R2
+				${EndIf}
+			${Else}
+				Exec $R0
+			${EndIf}
+		done:
+		${EndIf}
 		FunctionEnd
 
 	; -------- Sections -----------------------------------------------------------
@@ -226,12 +281,11 @@ OutFile "${S_NAME}.exe"
 
 		${If} $InstMode <> 1
 		; Create StartMenu shortcuts
-		CreateDirectory "$SMPROGRAMS\${APPNAME}"
-		createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy.bat"
-		createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'
-		createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_qtconsole.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_qtconsole_logo.ico" 0
-		createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_notebook.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_notebook_logo.ico" 0
-		createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_notebook.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_notebook_logo.ico" 0
+			CreateDirectory "$SMPROGRAMS\${APPNAME}"
+			createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy.bat"
+			createShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'
+			createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_qtconsole.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_qtconsole_logo.ico" 0
+			createShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_notebook.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_notebook_logo.ico" 0
 		${EndIf}
 		SectionEnd
 
@@ -297,67 +351,7 @@ OutFile "${S_NAME}.exe"
 		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" uninstall_hyperspy_here & exit"'
 		Sleep 3000
 		${EndIf}
-
-		${If} ${FileExists} "$INSTDIR\__INSTALL_LOG__"
-
-			var /global line
-			var /global delpath
-			var /global parsedline
-			var /global extension
-			FileOpen $R0 "$INSTDIR\__INSTALL_LOG__" r
-			FileRead $R0 $line
-			StrCpy $delpath ""
-			StrCpy $R9 0
-			${DoUntil} $line == ""
-				${UnStrTrimNewLines} $R1 "$line"
-				${UnStrStrAdv} $parsedline $R1 "Folder: " ">" ">" "0" "0" "0"
-				${If} $parsedline != "" # It is a directory entry
-					${If} $parsedline != "."
-						# Remove . 
-						; messageBox MB_OK "$delpath"
-						StrCpy $delpath "$parsedline" "" 1 
-						StrCpy $delpath "$INSTDIR\$delpath"
-						; messageBox MB_OK "$delpath"
-						IntOp $R9 $R9 + 1
-						push $delpath
-					${Else} # It is the installation directory.
-						StrCpy $delpath "$INSTDIR"
-						; messageBox MB_OK "$delpath"
-
-					${EndIf}
-				${Else}
-					${UnStrStrAdv} $parsedline $R1 "File: " ">" ">" "0" "0" "0"
-					${If} $parsedline != "" # It is a File entry
-						; messageBox MB_OK "$delpath\$parsedline"
-						Delete "$delpath\$parsedline"
-						# If it is a .py file also
-						# delete the pyc file if it
-						# exists.
-						StrCpy $extension "$parsedline" 3 -3
-						${If} $extension == ".py"
-							StrCpy $parsedline "$parsedlinec"
-							Delete "$delpath\$parsedline"
-						${EndIf}
-					${EndIf}
-				${EndIf} 
-				FileRead $R0 $line
-			${Loop}
-
-			FileClose $R0
-			Delete "$INSTDIR\__INSTALL_LOG__" 
-			${ForEach} $R8 $R9 1 - 1
-				Pop $delpath
-				RmDir "$delpath"
-				ClearErrors
-			${Next}
-			Delete "$INSTDIR\hyperspy_install.log"
-			Delete "$INSTDIR\Uninstall_HyperSpy_Bundle.exe"
-			ClearErrors
-			RmDir /REBOOTOK $INSTDIR
-
-		${Else}        
-			MessageBox MB_OK "The uninstaller cannot find the install log and therefore the files will not be removed. You can remove them manually from $INSTDIR"
-		${EndIf} 
+		!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 		DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 		# Remove StartMenu entries
 		Delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"

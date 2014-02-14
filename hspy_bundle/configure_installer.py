@@ -29,6 +29,44 @@ def get_current_hyperspy_version():
     return js['info']['version']
 
 
+def download_hyperspy_license():
+    urlretrieve(
+        "https://github.com/hyperspy/hyperspy/blob/master/COPYING.txt",
+        "COPYING.txt")
+
+
+def create_delete_macro(path, name, add_uninstaller=True):
+    """Create a NSIS macro to delete file structructure in path.
+
+    """
+    path = os.path.abspath(os.path.expanduser(path))
+    skip = len(path) + 1
+    lines = []
+    lines.append("!macro %s INSTALL_PATH\n" % name)
+    for dirpath, dirnames, filenames in os.walk(path, topdown=False):
+        for filename in filenames:
+            lines.append('\tDelete /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
+                                                          dirpath[skip:],
+                                                          filename))
+            if os.path.splitext(filename)[1] == ".py":
+                filename = os.path.splitext(filename)[0] + ".pyc"
+                lines.append('\tDelete /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
+                                                              dirpath[skip:],
+                                                              filename))
+
+        lines.append('\tRMDir /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
+                                                     dirpath[skip:]))
+        if add_uninstaller is True:
+            lines.insert(-1, '\tDelete /REBOOTOK "%s"\n' % os.path.join(
+                "${INSTALL_PATH}",
+                dirpath[skip:],
+                'Uninstall_Hyperspy_Bundle.exe'))
+    lines.append("!macroend\n")
+    with open(name + ".nsh", "w") as f:
+        for line in lines:
+            f.write(line)
+
+
 class HSpyBundleInstaller:
     needed_packages = [
         'colorama',
@@ -216,7 +254,7 @@ class HSpyBundleInstaller:
         with open(get_nsis_template_path(), 'r') as f,\
                 open('NSIS_installer_script-32bit.nsi', 'w') as f32,\
                 open('NSIS_installer_script-64bit.nsi', 'w') as f64:
-            for line in f:
+            for i, line in enumerate(f):
                 if "__VERSION__" in line:
                     line = line.replace("__VERSION__",
                                         get_current_hyperspy_version())
@@ -254,7 +292,7 @@ class HSpyBundleInstaller:
                                            get_nsis_plugins_path()))
                     f64.write(line.replace("__NSIS_PLUGINS__",
                                            get_nsis_plugins_path()))
-                elif "__HSPY_ICON__":
+                elif "__HSPY_ICON__" in line:
                     icons = self.get_full_paths(
                         "python-*\\Lib\\site-packages\\hyperspy\\data\\"
                         "hyperspy_bundle_installer.ico")
@@ -262,14 +300,19 @@ class HSpyBundleInstaller:
                                            icons["32"]))
                     f64.write(line.replace("__HSPY_ICON__",
                                            icons["64"]))
+                elif "__DELETE_MACRO_NAME__" in line:
+                    f32.write(line.replace("__DELETE_MACRO_NAME__",
+                                           "hspy_delete32"))
+                    f64.write(line.replace("__DELETE_MACRO_NAME__",
+                                           "hspy_delete64"))
                 else:
                     f32.write(line)
                     f64.write(line)
-    def download_hyperspy_license():
-        urlretrieve(
-            "https://github.com/hyperspy/hyperspy/blob/master/COPYING.txt",
-            "COPYING.txt")
-
+    def create_delete_macros(self):
+        for arch, wppath in self.wppath.iteritems():
+            create_delete_macro(wppath,
+                                "hspy_delete%s" % arch,
+                                add_uninstaller=True)
 
 if __name__ == "__main__":
     p = HSpyBundleInstaller('.')
