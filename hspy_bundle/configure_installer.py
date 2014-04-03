@@ -110,7 +110,7 @@ class HSpyBundleInstaller:
         'spyder',
         'sympy',
         'tornado',
-        'VTK'
+        'VTK',
         'winpython',
     ]
 
