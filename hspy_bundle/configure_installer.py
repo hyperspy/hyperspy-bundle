@@ -193,6 +193,8 @@ class HSpyBundleInstaller:
             else:
                 packages = glob(os.path.join(self.dist_path,
                                              "packages2install\\*amd64*"))
+            packages += glob(os.path.join(self.dist_path,
+                                         "packages2install\\*any*"))
             for package in packages:
                 print("Installing %s" % package)
                 try:
