@@ -30,7 +30,7 @@ def get_current_hyperspy_version():
 def download_hyperspy_license():
     from urllib import urlretrieve
     urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
-                "COPYING.txt")
+                os.path.join(os.path.dirname(__file__), "COPYING.txt"))
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
