@@ -2,12 +2,7 @@
 
 import os
 from glob import glob
-import shutil
 from subprocess import call
-import json
-from urllib2 import urlopen
-from urllib import urlretrieve
-import io
 
 import winpython.wppm
 
@@ -25,18 +20,21 @@ def get_nsis_plugins_path():
 def get_current_hyperspy_version():
     """Fetch version from pypi."""
 
+    import json
+    from urllib2 import urlopen
+
     js = json.load(urlopen("https://pypi.python.org/pypi/hyperspy/json"))
     return js['info']['version']
 
 
 def download_hyperspy_license():
-    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master",
+    from urllib import urlretrieve
+    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
                 "COPYING.txt")
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
     """Create a NSIS macro to delete file structructure in path.
-
     """
     path = os.path.abspath(os.path.expanduser(path))
     skip = len(path) + 1
@@ -44,17 +42,17 @@ def create_delete_macro(path, name, add_uninstaller=True):
     lines.append("!macro %s INSTALL_PATH\n" % name)
     for dirpath, dirnames, filenames in os.walk(path, topdown=False):
         for filename in filenames:
-            lines.append('\tDelete /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
-                                                          dirpath[skip:],
-                                                          filename))
+            lines.append('\tDelete /REBOOTOK "%s"\n' %
+                         os.path.join("${INSTALL_PATH}",
+                                      dirpath[skip:], filename))
             if os.path.splitext(filename)[1] == ".py":
                 filename = os.path.splitext(filename)[0] + ".pyc"
-                lines.append('\tDelete /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
-                                                              dirpath[skip:],
-                                                              filename))
+                lines.append('\tDelete /REBOOTOK "%s"\n' %
+                             os.path.join("${INSTALL_PATH}",
+                                          dirpath[skip:], filename))
 
-        lines.append('\tRMDir /REBOOTOK "%s"\n' % os.path.join("${INSTALL_PATH}",
-                                                     dirpath[skip:]))
+        lines.append('\tRMDir /REBOOTOK "%s"\n' %
+                     os.path.join("${INSTALL_PATH}", dirpath[skip:]))
         if add_uninstaller is True:
             lines.insert(-1, '\tDelete /REBOOTOK "%s"\n' % os.path.join(
                 "${INSTALL_PATH}",
@@ -67,54 +65,6 @@ def create_delete_macro(path, name, add_uninstaller=True):
 
 
 class HSpyBundleInstaller:
-    needed_packages = [
-        'colorama',
-        'configobj',
-        'docutils',
-        'ets',
-        'formlayout',
-        'guidata',
-        'guiqwt',
-        'h5py',
-        'hyperspy',
-        'ipython',
-        'Jinja2',
-        'logilab-astng',
-        'logilab-common',
-        'MarkupSafe',
-        'matplotlib',
-        'nose',
-        'numba',
-        'numexpr',
-        'numpy',
-        'Pillow',
-        'pip',
-        'Pygments',
-        'pylint',
-        'pyparsing',
-        'PyQt',
-        'PyQtdoc',
-        'PyQwt',
-        'pyreadline',
-        'PySide',
-        'python-dateutil',
-        'pytz',
-        'pywin32',
-        'pyzmq',
-        'scikit-image',
-        'scikit-learn',
-        'scipy',
-        'seaborn',
-        'setuptools',
-        'simplejson',
-        'six',
-        'Sphinx',
-        'spyder',
-        'sympy',
-        'tornado',
-        'VTK',
-        'winpython',
-    ]
 
     def __init__(self, dist_path):
         """Tool to customize WinPython distributions to create the HyperSpy
@@ -162,63 +112,12 @@ class HSpyBundleInstaller:
             fps[arch] = fp
         return fps
 
-    def uninstall_unneeded_packages(self):
-        print "Uninstalling unneeded packages."
-        for distribution in self.distributions.values():
-            for package in distribution.get_installed_packages():
-                try:
-                    if package.name not in self.needed_packages:
-                        print "Uninstalling:", package.name
-                except:
-                    print("Uninstallation error")
-
-    def remove_tools(self):
-        for arch in ['32', '64']:
-            to_remove = list(self.get_full_paths("Qt*")[arch])
-            if self.get_full_paths("TortoiseHg*")[arch]:
-                to_remove.append(self.get_full_paths("TortoiseHg*")[arch])
-            for f in to_remove:
-                print "Removing %s from WinPython %s bit" % (f, arch)
-                os.remove(f)
-            hg_dir = self.get_full_paths(
-                os.path.join('tools', 'TortoiseHg'))[arch]
-            if hg_dir:
-                shutil.rmtree(hg_dir)
-
-    def install_local_packages(self):
-        for arch in ["32", "64"]:
-            if arch == "32":
-                packages = glob(os.path.join(self.dist_path,
-                                             "packages2install\\*win32*"))
-            else:
-                packages = glob(os.path.join(self.dist_path,
-                                             "packages2install\\*amd64*"))
-            packages += glob(os.path.join(self.dist_path,
-                                         "packages2install\\*any*"))
-            for package in packages:
-                print("Installing %s" % package)
-                try:
-                    self.distributions[arch].install(
-                        winpython.wppm.Package(package))
-                except:
-                    print("Error installing %s in WinPython %s bit " %
-                          (package, arch))
-
-    def install_pip_packages(self, packages):
-        for wppath in self.wppath.values():
-            for package in packages:
-                print("Installing %s in %s" % (
-                    package, wppath))
-                call(['cmd.exe', "/C",
-                      "%s\\WinPython Command Prompt.exe" % wppath,
-                      "pip", "install", "--upgrade", package])
 
     def test_hyperspy(self):
         for wppath in self.wppath.values():
-            call(['cmd.exe', "/C",
+            call(['cmd.exe', '/C',
                   "%s\\WinPython Command Prompt.exe" % wppath,
                   "nosetests", "hyperspy"])
-
 
     def clean(self):
         """Remove all *.pyc and *.swp files"""
@@ -295,10 +194,4 @@ class HSpyBundleInstaller:
 
 if __name__ == "__main__":
     p = HSpyBundleInstaller('.')
-    p.uninstall_unneeded_packages()
-    p.remove_tools()
-    p.install_local_packages()
-    p.install_pip_packages(['configobj',
-                            'hyperspy'])
-    p.create_install_log()
     p.create_installers()
