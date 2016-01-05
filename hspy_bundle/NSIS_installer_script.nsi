@@ -15,8 +15,6 @@
 !include "X64.nsh"
 !include "hspy_delete64.nsh"
 !include "hspy_delete32.nsh"
-!include "hspy_delete06_64.nsh"
-!include "hspy_delete06_32.nsh"
 !define APPNAME "HyperSpy"
 !define APPVERSION "__VERSION__"
 !define ARCHITECTURE "__ARCHITECTURE__"
@@ -248,19 +246,17 @@ OutFile "${S_NAME}.exe"
 					Exec 'cmd.exe /C ""$R2\WinPython Command Prompt.exe" uninstall_hyperspy_here & exit"'
 					Sleep 3000
 				${EndIf}
-				# Remove StartMenu entries
-				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
-				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk"
-				Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk"
-				Delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
-				RMDir "$SMPROGRAMS\${APPNAME}"
-				DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
-				Delete /REBOOTOK $R0 ; delete the evil uninstaller
-			        ${If} ${FileExists} `$R2\python-2.7.4.amd64\*.*`
-					!insertmacro hspy_delete06_64 $R2
-				${ElseIf} ${FileExists} `$R2\python-2.7.4\*.*`
-					!insertmacro hspy_delete06_32 $R2
-				${EndIf}
+
+				; Execute fixed, embedded 06 uninstaller
+				ClearErrors
+				File "NSISPlugins\uninstaller_06.exe"
+				ExecWait '"$INSTDIR\uninstaller_06.exe" /S _?=$INSTDIR'
+				IfErrors error_uninstalling_06
+				Goto uninstall_06_complete
+				error_uninstalling_06:
+					Abort
+				uninstall_06_complete:
+				Delete $INSTDIR\uninstaller_06.exe
 			${Else}
 				Exec $R0
 			${EndIf}
