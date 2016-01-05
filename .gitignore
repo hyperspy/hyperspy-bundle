@@ -42,3 +42,4 @@ WinPython32/*
 # NSIS scripts
 NSIS_installer_script-32bit.nsi
 NSIS_installer_script-64bit.nsi
+*.spyderproject
