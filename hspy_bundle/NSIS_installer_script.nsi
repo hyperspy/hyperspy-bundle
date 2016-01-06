@@ -275,7 +275,7 @@ Function InstModeSelectionPage_Leave
 
 			; Execute fixed, embedded 06 uninstaller
 			ClearErrors
-			File "NSISPlugins\uninstaller_06.exe"
+			File "__NSIS_PLUGINS__\uninstaller_06.exe"
 			ExecWait '"$INSTDIR\uninstaller_06.exe" /S _?=$INSTDIR'
 			IfErrors error_uninstalling_06
 			Goto uninstall_06_complete

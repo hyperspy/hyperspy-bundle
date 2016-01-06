@@ -30,7 +30,7 @@ def get_current_hyperspy_version():
 def download_hyperspy_license():
     from urllib import urlretrieve
     urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
-                os.path.join(os.path.dirname(__file__), "COPYING.txt"))
+                "COPYING.txt")
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
@@ -182,7 +182,7 @@ if __name__ == "__main__":
         hspy_version = sys.argv[3]
     else:
         hspy_version = get_current_hyperspy_version()
-    if not os.path.exists(os.path.join(__file__, 'COPYING.txt')):
+    if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
     p.create_delete_macros()
