@@ -293,6 +293,9 @@ FunctionEnd
 ; -------- Sections -----------------------------------------------------------
 Section "Required Files"
 SectionIn RO
+	; Include default MPL RC file
+	SetOutPath "${APP_INSTDIR}\settings\.matplotlib"
+	File "matplotlibrc"
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
 	${If} $InstMode = 2
