@@ -9,5 +9,6 @@ setup(name='hspy_bundle',
       version='1.0',
       packages=['hspy_bundle'],
       package_data={'hspy_bundle' : ['NSISPlugins/*',
-                                     'NSIS_installer_script.nsi'],},
+                                     'NSIS_installer_script.nsi',
+                                     'matplotlibrc'],},
       )
