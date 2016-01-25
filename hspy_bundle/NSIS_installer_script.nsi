@@ -22,15 +22,15 @@
 !define WINPYTHON_PATH "__WINPYTHON_PATH__"
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
 !define S_NAME "HyperSpy-${APPVERSION}-Bundle-Windows-${ARCHITECTURE}"
-!define S_DEFINSTDIR_USER "$LocalAppData"
-!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS"
-!ifdef CL64
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64"
-!else
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles"
-!endif
 !define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
-!define APP_INSTDIR "$INSTDIR\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_USER "$LocalAppData\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
+!ifdef CL64
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APP_REL_INSTDIR}"
+!else
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles\${APP_REL_INSTDIR}"
+!endif
+!define APP_INSTDIR "$INSTDIR"
 !define UNINSTALLER_FULLPATH "${APP_INSTDIR}\Uninstall_Hyperspy_Bundle.exe"
 
 !define MUI_ICON "__HSPY_ICON__"
@@ -97,7 +97,7 @@ RequestExecutionLevel user
 !insertmacro MUI_PAGE_LICENSE COPYING.txt
 Page custom InstModeSelectionPage_Create InstModeSelectionPage_Leave
 !define MUI_PAGE_CUSTOMFUNCTION_PRE disableBack
-!define MUI_DIRECTORYPAGE_TEXT_TOP "${APPNAME} ${APPVERSION} will be installed to a subfolder named $\"${APP_REL_INSTDIR}$\" in the following folder. To install to a different base folder, click Browse and select another folder."
+!define MUI_DIRECTORYPAGE_TEXT_TOP "${APPNAME} ${APPVERSION} will be installed in the following folder. To install to a different folder, click Browse and select another folder."
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -289,6 +289,13 @@ Function InstModeSelectionPage_Leave
 	done:
 	${EndIf}
 FunctionEnd
+
+Function .onVerifyInstDir
+    ${If} ${FileExists} $InstDir
+          StrCpy $InstDir "$INSTDIR\${APP_REL_INSTDIR}"
+    ${EndIf}
+FunctionEnd
+
 
 ; -------- Sections -----------------------------------------------------------
 Section "Required Files"
