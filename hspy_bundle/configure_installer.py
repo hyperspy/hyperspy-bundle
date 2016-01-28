@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from glob import glob
 from subprocess import call
 import shutil
@@ -22,14 +23,20 @@ def get_current_hyperspy_version():
     """Fetch version from pypi."""
 
     import json
-    from urllib2 import urlopen
+    if sys.version_info[0] < 3:
+        from urllib2 import urlopen
+    else:
+        from urllib.request import urlopen
 
     js = json.load(urlopen("https://pypi.python.org/pypi/hyperspy/json"))
     return js['info']['version']
 
 
 def download_hyperspy_license():
-    from urllib import urlretrieve
+    if sys.version_info[0] < 3:
+        from urllib import urlretrieve
+    else:
+        from urllib.request import urlretrieve
     urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
                 "COPYING.txt")
 
@@ -118,7 +125,7 @@ class HSpyBundleInstaller:
 
     def clean(self):
         """Remove all *.pyc and *.swp files"""
-        for arch, wppath in self.wppath.iteritems():
+        for arch, wppath in self.wppath.items():
             for dirpath, dirnames, filenames in os.walk(wppath):
                 for fn in filenames:
                     if os.path.splitext(fn)[1] in (".swp", ".pyc"):
@@ -165,7 +172,7 @@ class HSpyBundleInstaller:
                         fa.write(line)
 
     def create_delete_macros(self):
-        for arch, wppath in self.wppath.iteritems():
+        for arch, wppath in self.wppath.items():
             create_delete_macro(wppath,
                                 "hspy_delete%s" % arch,
                                 add_uninstaller=True)
