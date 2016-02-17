@@ -307,7 +307,7 @@ SectionIn RO
 	File /r "${WINPYTHON_PATH}\*"
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" install_hyperspy_here & exit"'
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" jupyter-context_menu-add & exit"'
 	Sleep 3000
 	${EndIf}
 
@@ -354,7 +354,7 @@ Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
 	${If} $InstMode = 2
-		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" uninstall_hyperspy_here & exit"'
+		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" jupyter-context_menu-remove & exit"'
 		Sleep 3000
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
