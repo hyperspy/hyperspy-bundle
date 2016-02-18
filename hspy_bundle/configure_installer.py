@@ -167,7 +167,7 @@ class HSpyBundleInstaller:
                                               get_nsis_plugins_path()))
                     elif "__HSPY_ICON__" in line:
                         fa.write(line.replace("__HSPY_ICON__",
-                                              self.get_icon_path()))
+                                              get_icon_path()))
                     elif "__DELETE_MACRO_NAME__" in line:
                         fa.write(line.replace("__DELETE_MACRO_NAME__",
                                               "hspy_delete" + a))
