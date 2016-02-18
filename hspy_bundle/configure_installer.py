@@ -19,6 +19,11 @@ def get_nsis_plugins_path():
                         "NSISPlugins")
 
 
+def get_icon_path():
+    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+                        "icons", "hyperspy_bundle_installer.ico")
+
+
 def get_current_hyperspy_version():
     """Fetch version from pypi."""
 
@@ -161,10 +166,8 @@ class HSpyBundleInstaller:
                         fa.write(line.replace("__NSIS_PLUGINS__",
                                               get_nsis_plugins_path()))
                     elif "__HSPY_ICON__" in line:
-                        icons = self.get_full_paths(
-                            "python-*\\Lib\\site-packages\\hyperspy\\data\\"
-                            "hyperspy_bundle_installer.ico", a)
-                        fa.write(line.replace("__HSPY_ICON__", icons))
+                        fa.write(line.replace("__HSPY_ICON__",
+                                              self.get_icon_path()))
                     elif "__DELETE_MACRO_NAME__" in line:
                         fa.write(line.replace("__DELETE_MACRO_NAME__",
                                               "hspy_delete" + a))
