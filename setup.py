@@ -10,8 +10,8 @@ setup(name='hspy_bundle',
       packages=['hspy_bundle'],
       package_data={'hspy_bundle': ['NSISPlugins/*',
                                     'NSIS_installer_script.nsi',
-                                    'matplotlibrc'],
-                    'icons': ["icons/*.ico"],
+                                    'matplotlibrc',
+                                    "icons/*"],
                     },
 
       )
