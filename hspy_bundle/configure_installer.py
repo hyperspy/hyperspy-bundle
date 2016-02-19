@@ -46,9 +46,11 @@ def download_hyperspy_license():
                 "COPYING.txt")
 
 
-def copy_mpl_rc():
-    shutil.copy2(os.path.join(os.path.dirname(__file__), 'matplotlibrc'),
-                 'matplotlibrc')
+def copy_files():
+    for f in ("matplotlibrc",
+              "jupyter_qtconsole.bat",
+              "jupyter_notebook.bat",):
+        shutil.copy2(os.path.join(os.path.dirname(__file__), f), f)
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
@@ -200,8 +202,7 @@ if __name__ == "__main__":
         hspy_version = get_current_hyperspy_version()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
-    if not os.path.exists('matplotlibrc'):
-        copy_mpl_rc()
+    copy_files()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
     p.create_delete_macros()
     p.create_installers()

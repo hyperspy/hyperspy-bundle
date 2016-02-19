@@ -304,6 +304,8 @@ SectionIn RO
 	SetOutPath "${APP_INSTDIR}\settings\.matplotlib"
 	File "matplotlibrc"
 	SetOutPath "${APP_INSTDIR}"
+	File "jupyter_notebook.bat"
+	File "jupyter_qtconsole.bat"
 	File /r "${WINPYTHON_PATH}\*"
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
@@ -314,10 +316,12 @@ SectionIn RO
 	${If} $InstMode <> 1
 	; Create StartMenu shortcuts
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\jupyter_notebook.bat" "--notebook-dir=%HOMEPATH%" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\jupyter_qtconsole.bat" "%HOMEPATH%" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\WinPython Command Prompt.exe"
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\IPython.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\ipython.exe"
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\jupyter-qtconsole.exe" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\jupyter-notebook.exe" "--notebook-dir=%HOMEDIR%" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\WinPython Interpreter.exe"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\Spyder.exe" ""
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'
 
 		WriteUninstaller "${UNINSTALLER_FULLPATH}"
@@ -361,9 +365,12 @@ Section "Uninstall"
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk"
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Notebook Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
 	RMDir "$SMPROGRAMS\${APPNAME}"
 

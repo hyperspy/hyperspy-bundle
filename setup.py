@@ -11,6 +11,8 @@ setup(name='hspy_bundle',
       package_data={'hspy_bundle': ['NSISPlugins/*',
                                     'NSIS_installer_script.nsi',
                                     'matplotlibrc',
+                                    'jupyter_notebook.bat'
+                                    'jupyter_qtconsole.bat'
                                     "icons/*"],
                     },
 
