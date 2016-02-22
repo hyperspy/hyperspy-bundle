@@ -366,7 +366,7 @@ Section "Uninstall"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
-	Delete "$SMPROGRAMS\${APPNAME}\Notebook Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"
