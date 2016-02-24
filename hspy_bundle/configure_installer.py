@@ -10,17 +10,17 @@ import winpython.wppm
 
 
 def get_nsis_template_path():
-    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "NSIS_installer_script.nsi")
 
 
 def get_nsis_plugins_path():
-    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "NSISPlugins")
 
 
 def get_icon_path():
-    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "icons", "hyperspy_bundle_installer.ico")
 
 
