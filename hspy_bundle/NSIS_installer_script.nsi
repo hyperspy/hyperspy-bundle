@@ -15,7 +15,7 @@
 !include "FileFunc.nsh"
 !include "X64.nsh"
 !include "__DELETE_MACRO_NAME__.nsh"
-!define APPNAME "HyperSpy"
+!define APPNAME "HyperSpy WinPython Bundle"
 !define APPVERSION "__VERSION__"
 !define ARCHITECTURE "__ARCHITECTURE__"
 ;!define CL64 1 # Uncomment this line for 64bit
@@ -304,20 +304,25 @@ SectionIn RO
 	SetOutPath "${APP_INSTDIR}\settings\.matplotlib"
 	File "matplotlibrc"
 	SetOutPath "${APP_INSTDIR}"
+	File "jupyter_notebook.bat"
+	File "jupyter_qtconsole.bat"
 	File /r "${WINPYTHON_PATH}\*"
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" install_hyperspy_here & exit"'
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" jupyter_context-menu_add & exit"'
 	Sleep 3000
 	${EndIf}
 
 	${If} $InstMode <> 1
 	; Create StartMenu shortcuts
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy.bat"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\jupyter_notebook.bat" "--notebook-dir=%HOMEPATH%" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\jupyter_qtconsole.bat" "%HOMEPATH%" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\WinPython Command Prompt.exe"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\WinPython Interpreter.exe"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\Spyder.exe" ""
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_qtconsole.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_qtconsole_logo.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\hyperspy_notebook.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspy\data\hyperspy_notebook_logo.ico" 0
 
 		WriteUninstaller "${UNINSTALLER_FULLPATH}"
 		WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" DisplayName "${APPNAME}"
@@ -354,15 +359,18 @@ Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
 	${If} $InstMode = 2
-		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" uninstall_hyperspy_here & exit"'
+		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" jupyter_context-menu_remove & exit"'
 		Sleep 3000
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME}.lnk"
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} QtConsole.lnk"
-	Delete "$SMPROGRAMS\${APPNAME}\${APPNAME} Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk"
 	RMDir "$SMPROGRAMS\${APPNAME}"
 

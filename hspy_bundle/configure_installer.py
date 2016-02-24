@@ -10,13 +10,18 @@ import winpython.wppm
 
 
 def get_nsis_template_path():
-    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "NSIS_installer_script.nsi")
 
 
 def get_nsis_plugins_path():
-    return os.path.join(os.path.abspath(os.path.split(__file__)[0]),
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "NSISPlugins")
+
+
+def get_icon_path():
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                        "icons", "hyperspy_bundle_installer.ico")
 
 
 def get_current_hyperspy_version():
@@ -41,9 +46,11 @@ def download_hyperspy_license():
                 "COPYING.txt")
 
 
-def copy_mpl_rc():
-    shutil.copy2(os.path.join(os.path.dirname(__file__), 'matplotlibrc'),
-                 'matplotlibrc')
+def copy_files():
+    for f in ("matplotlibrc",
+              "jupyter_qtconsole.bat",
+              "jupyter_notebook.bat",):
+        shutil.copy2(os.path.join(os.path.dirname(__file__), f), f)
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
@@ -161,10 +168,8 @@ class HSpyBundleInstaller:
                         fa.write(line.replace("__NSIS_PLUGINS__",
                                               get_nsis_plugins_path()))
                     elif "__HSPY_ICON__" in line:
-                        icons = self.get_full_paths(
-                            "python-*\\Lib\\site-packages\\hyperspy\\data\\"
-                            "hyperspy_bundle_installer.ico", a)
-                        fa.write(line.replace("__HSPY_ICON__", icons))
+                        fa.write(line.replace("__HSPY_ICON__",
+                                              get_icon_path()))
                     elif "__DELETE_MACRO_NAME__" in line:
                         fa.write(line.replace("__DELETE_MACRO_NAME__",
                                               "hspy_delete" + a))
@@ -197,8 +202,7 @@ if __name__ == "__main__":
         hspy_version = get_current_hyperspy_version()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
-    if not os.path.exists('matplotlibrc'):
-        copy_mpl_rc()
+    copy_files()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
     p.create_delete_macros()
     p.create_installers()
