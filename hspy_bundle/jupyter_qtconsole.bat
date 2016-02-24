@@ -13,4 +13,4 @@ set params=%params% %1
 goto loop
 :afterloop
 
-jupyter-qtconsole.exe %*
+jupyter-qtconsole.exe %params%
