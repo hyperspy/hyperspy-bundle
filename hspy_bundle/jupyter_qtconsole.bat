@@ -1,7 +1,7 @@
 @echo off
 call "%~dp0/Scripts/env.bat"
 rem first argument is starting directory
-cd %1
+cd "%1"
 
 rem throw the first parameter away
 shift
