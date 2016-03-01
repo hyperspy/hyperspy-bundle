@@ -316,8 +316,8 @@ SectionIn RO
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_notebook.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\WinPython Command Prompt.exe"
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\WinPython Interpreter.exe"
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\spyderlib\windows\spyder.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'

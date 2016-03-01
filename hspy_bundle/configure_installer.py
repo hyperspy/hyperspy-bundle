@@ -5,6 +5,7 @@ import sys
 from glob import glob
 from subprocess import call
 import io
+import shutil
 
 import winpython.wppm
 
@@ -40,6 +41,20 @@ python.exe -m spyderlib.start_app %*
 
 """
 
+PYTHON_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+python %*
+
+"""
+
+CMD_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+cmd.exe /k
+
+"""
+
 
 def get_nsis_template_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -51,9 +66,14 @@ def get_nsis_plugins_path():
                         "NSISPlugins")
 
 
-def get_icon_path():
+def get_icons_folder_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                        "icons", "hyperspy_bundle_installer.ico")
+                        "icons", )
+
+
+def get_icon_path():
+    return os.path.join(get_icons_folder_path(),
+                        "hyperspy_bundle_installer.ico")
 
 
 def get_current_hyperspy_version():
@@ -156,7 +176,7 @@ class HSpyBundleInstaller:
                   "nosetests", "hyperspy"])
 
     def clean(self):
-        """Remove all *.pyc and *.swp files"""
+        """Remove all * .pyc and *.swp files"""
         for arch, wppath in self.wppath.items():
             for dirpath, dirnames, filenames in os.walk(wppath):
                 for fn in filenames:
@@ -220,15 +240,18 @@ class HSpyBundleInstaller:
         * spyder.bat: uses our env.bat.
 
         """
-
         for arch, wppath in self.wppath.items():
             hspy_scripts = os.path.join(wppath, "hspy_scripts")
             if not os.path.exists(hspy_scripts):
                 os.makedirs(hspy_scripts)
+            for icon in ("python.ico", "cmd.ico"):
+                shutil.copy2(os.path.join(get_icons_folder_path(), icon),
+                             hspy_scripts)
             for f, script in zip(
                     ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
-                     "spyder.bat"),
-                    (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT)):
+                     "spyder.bat", "python.bat", "cmd.bat"),
+                    (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
+                     CMD_BAT)):
                 with io.open(os.path.join(hspy_scripts, f), 'w',
                              newline='\r\n', errors="ignore") as f:
                     f.write(script)
