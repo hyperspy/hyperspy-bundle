@@ -234,10 +234,10 @@ class HSpyBundleInstaller:
 
         * env.bat: Taken from WinPython and patched not to use settings as
             home directory
-        * jupyter_qtconsole.bat: uses our env.bat and add the ability to
+        * jupyter_qtconsole.bat: use our env.bat and add the ability to
             to start in the directory specified by the first parameter
-        * jupyter_notebook.bat: uses our env.bat.
-        * spyder.bat: uses our env.bat.
+        * jupyter_notebook.bat, spyder.bat, cmd.bat, python.bat: use our
+            and starts in home folder.
 
         """
         for arch, wppath in self.wppath.items():
