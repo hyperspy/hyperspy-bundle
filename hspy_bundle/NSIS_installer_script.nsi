@@ -302,8 +302,6 @@ Section "Required Files"
 SectionIn RO
 	; Include default MPL RC file
 	SetOutPath "${APP_INSTDIR}"
-	File "jupyter_notebook.bat"
-	File "jupyter_qtconsole.bat"
 	File /r "${WINPYTHON_PATH}\*"
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
