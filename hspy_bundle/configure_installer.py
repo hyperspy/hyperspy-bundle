@@ -4,9 +4,56 @@ import os
 import sys
 from glob import glob
 from subprocess import call
+import io
 import shutil
 
 import winpython.wppm
+
+
+NOTEBOOK_BAT = u"""@echo off
+call "%~dp0env.bat"
+jupyter-notebook.exe %*
+"""
+
+QTCONSOLE_BAT = u"""@echo off
+call "%~dp0env.bat"
+rem first argument is starting directory
+cd %1
+
+rem throw the first parameter away
+shift
+set params=%1
+:loop
+shift
+if [%1]==[] goto afterloop
+set params=%params% %1
+goto loop
+:afterloop
+
+jupyter-qtconsole.exe %params%
+
+"""
+
+SPYDER_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+python.exe -m spyderlib.start_app %*
+
+"""
+
+PYTHON_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+python %*
+
+"""
+
+CMD_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+cmd.exe /k
+
+"""
 
 
 def get_nsis_template_path():
@@ -19,9 +66,14 @@ def get_nsis_plugins_path():
                         "NSISPlugins")
 
 
-def get_icon_path():
+def get_icons_folder_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                        "icons", "hyperspy_bundle_installer.ico")
+                        "icons", )
+
+
+def get_icon_path():
+    return os.path.join(get_icons_folder_path(),
+                        "hyperspy_bundle_installer.ico")
 
 
 def get_current_hyperspy_version():
@@ -44,13 +96,6 @@ def download_hyperspy_license():
         from urllib.request import urlretrieve
     urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
                 "COPYING.txt")
-
-
-def copy_files():
-    for f in ("matplotlibrc",
-              "jupyter_qtconsole.bat",
-              "jupyter_notebook.bat",):
-        shutil.copy2(os.path.join(os.path.dirname(__file__), f), f)
 
 
 def create_delete_macro(path, name, add_uninstaller=True):
@@ -131,7 +176,7 @@ class HSpyBundleInstaller:
                   "nosetests", "hyperspy"])
 
     def clean(self):
-        """Remove all *.pyc and *.swp files"""
+        """Remove all * .pyc and *.swp files"""
         for arch, wppath in self.wppath.items():
             for dirpath, dirnames, filenames in os.walk(wppath):
                 for fn in filenames:
@@ -182,6 +227,46 @@ class HSpyBundleInstaller:
                                 "hspy_delete%s" % arch,
                                 add_uninstaller=True)
 
+    def create_hspy_scripts(self):
+        """Create the hspy_scripts directory and populate it with the scripts.
+
+        This created 4 scripts:
+
+        * env.bat: Taken from WinPython and patched not to use settings as
+            home directory
+        * jupyter_qtconsole.bat: use our env.bat and add the ability to
+            to start in the directory specified by the first parameter
+        * jupyter_notebook.bat, spyder.bat, cmd.bat, python.bat: use our
+            and starts in home folder.
+
+        """
+        for arch, wppath in self.wppath.items():
+            hspy_scripts = os.path.join(wppath, "hspy_scripts")
+            if not os.path.exists(hspy_scripts):
+                os.makedirs(hspy_scripts)
+            for icon in ("python.ico", "cmd.ico"):
+                shutil.copy2(os.path.join(get_icons_folder_path(), icon),
+                             hspy_scripts)
+            for f, script in zip(
+                    ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
+                     "spyder.bat", "python.bat", "cmd.bat"),
+                    (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
+                     CMD_BAT)):
+                with io.open(os.path.join(hspy_scripts, f), 'w',
+                             newline='\r\n', errors="ignore") as f:
+                    f.write(script)
+            # Path env.bat
+            env_path = os.path.join(wppath, "Scripts", "env.bat")
+            with open(env_path, "r") as orig:
+                with open(os.path.join(
+                          hspy_scripts, "env.bat"), "w") as patched:
+                    for line in orig.readlines():
+                        if "settings" in line:
+                            patched.write("rem " + line)
+                        else:
+                            patched.write(line)
+
+
 if __name__ == "__main__":
     import sys
 
@@ -202,7 +287,7 @@ if __name__ == "__main__":
         hspy_version = get_current_hyperspy_version()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
-    copy_files()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
+    p.create_hspy_scripts()
     p.create_delete_macros()
     p.create_installers()
