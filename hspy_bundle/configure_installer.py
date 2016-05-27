@@ -277,13 +277,9 @@ class HSpyBundleInstaller:
                 "python-*\Lib\site-packages\start_jupyter_cm\windows.py", "64")
             with fileinput.FileInput(fp, inplace=True) as f:
                 for line in f:
-                    print(line.replace(
+                    line.replace(
                         'WPSCRIPTS_FOLDER = "Scripts"',
-                        'WPSCRIPTS_FOLDER = "hspy_scripts"',), end='')
-            with open(fp) as f:
-                for line in f:
-                    if "FOLDER" in line:
-                        print(line)
+                        'WPSCRIPTS_FOLDER = "hspy_scripts"',)
 
 
 if __name__ == "__main__":
