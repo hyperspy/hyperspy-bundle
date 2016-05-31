@@ -6,6 +6,7 @@ from glob import glob
 from subprocess import call
 import io
 import shutil
+import fileinput
 
 import winpython.wppm
 
@@ -261,10 +262,24 @@ class HSpyBundleInstaller:
                 with open(os.path.join(
                           hspy_scripts, "env.bat"), "w") as patched:
                     for line in orig.readlines():
+                        if "WinPython.ini" in line:
+                            # This section, which is at the end of the script
+                            # as of WP 3.5.1 breaks our scripts so we don't
+                            # write the remaining of the file
+                            break
                         if "settings" in line:
                             patched.write("rem " + line)
                         else:
                             patched.write(line)
+    def patch_start_jupyter_cm(self):
+        for arch, wppath in self.wppath.items():
+            fp = self.get_full_paths(
+                "python-*\Lib\site-packages\start_jupyter_cm\windows.py", "64")
+            with fileinput.FileInput(fp, inplace=True) as f:
+                for line in f:
+                    line.replace(
+                        'WPSCRIPTS_FOLDER = "Scripts"',
+                        'WPSCRIPTS_FOLDER = "hspy_scripts"',)
 
 
 if __name__ == "__main__":
@@ -289,6 +304,9 @@ if __name__ == "__main__":
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
     p.create_hspy_scripts()
+    # This is necessary in order to workaround #1009
+    p.patch_start_jupyter_cm()
+    # To remove the pyc files.
     p.clean()
     p.create_delete_macros()
     p.create_installers()
