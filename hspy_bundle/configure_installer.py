@@ -289,5 +289,6 @@ if __name__ == "__main__":
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
     p.create_hspy_scripts()
+    p.clean()
     p.create_delete_macros()
     p.create_installers()
