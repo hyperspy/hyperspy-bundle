@@ -6,7 +6,6 @@ from glob import glob
 from subprocess import call
 import io
 import shutil
-import fileinput
 
 import winpython.wppm
 
@@ -274,12 +273,15 @@ class HSpyBundleInstaller:
     def patch_start_jupyter_cm(self):
         for arch, wppath in self.wppath.items():
             fp = self.get_full_paths(
-                "python-*\Lib\site-packages\start_jupyter_cm\windows.py", "64")
-            with fileinput.FileInput(fp, inplace=True) as f:
+                "python-*\Lib\site-packages\start_jupyter_cm\windows.py", arch)
+            lines = []
+            with open(fp, "r") as f:
                 for line in f:
-                    line.replace(
-                        'WPSCRIPTS_FOLDER = "Scripts"',
-                        'WPSCRIPTS_FOLDER = "hspy_scripts"',)
+                    if 'WPSCRIPTS_FOLDER = "Scripts"' in line:
+                        line = line.replace('"Scripts"', '"hspy_scripts"')
+                    lines.append(line)
+            with open(fp, "w") as f:
+                f.writelines(lines)
 
 
 if __name__ == "__main__":
