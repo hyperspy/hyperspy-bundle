@@ -261,10 +261,10 @@ class HSpyBundleInstaller:
                 with open(os.path.join(
                           hspy_scripts, "env.bat"), "w") as patched:
                     for line in orig.readlines():
-                        if "WinPython.ini" in line:
-                            # This section, which is at the end of the script
-                            # as of WP 3.5.1 breaks our scripts so we don't
-                            # write the remaining of the file
+                        if line.startswith("rem ****"):
+                            # Remove everythign from this line on as we have
+                            # no Julia or R installed and the winpython.ini
+                            # section breaks our scripts.
                             break
                         if "settings" in line:
                             patched.write("rem " + line)
