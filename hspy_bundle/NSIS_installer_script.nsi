@@ -328,6 +328,8 @@ SectionIn RO
 		WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" InstallLocation "${APP_INSTDIR}"
 		WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" NoModify 1
 		WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" NoRepair 1
+	Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" hyperspyui_install & exit"'
+	Sleep 3000
 	${EndIf}
 SectionEnd
 
@@ -356,6 +358,10 @@ Section "Uninstall"
 	SetOutPath "$TEMP"
 	${If} $InstMode = 2
 		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" jupyter_context-menu_remove & exit"'
+		Sleep 3000
+	${EndIf}
+	${If} $InstMode <> 1
+		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" hyperspyui_install -remove & exit"'
 		Sleep 3000
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
