@@ -55,6 +55,12 @@ cmd.exe /k
 
 """
 
+HSPYUI_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+hyperspyui %*
+
+"""
 
 def get_nsis_template_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -230,14 +236,14 @@ class HSpyBundleInstaller:
     def create_hspy_scripts(self):
         """Create the hspy_scripts directory and populate it with the scripts.
 
-        This created 4 scripts:
+        This created 7 scripts:
 
         * env.bat: Taken from WinPython and patched not to use settings as
             home directory
         * jupyter_qtconsole.bat: use our env.bat and add the ability to
             to start in the directory specified by the first parameter
-        * jupyter_notebook.bat, spyder.bat, cmd.bat, python.bat: use our
-            and starts in home folder.
+        * jupyter_notebook.bat, spyder.bat, cmd.bat, python.bat, hspyui.bat:
+            use our env.bat and starts in home folder.
 
         """
         for arch, wppath in self.wppath.items():
@@ -249,9 +255,9 @@ class HSpyBundleInstaller:
                              hspy_scripts)
             for f, script in zip(
                     ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
-                     "spyder.bat", "python.bat", "cmd.bat"),
+                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat"),
                     (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
-                     CMD_BAT)):
+                     CMD_BAT, HSPYUI_BAT)):
                 with io.open(os.path.join(hspy_scripts, f), 'w',
                              newline='\r\n', errors="ignore") as f:
                     f.write(script)
