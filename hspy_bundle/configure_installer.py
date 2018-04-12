@@ -62,6 +62,7 @@ hyperspyui %*
 
 """
 
+
 def get_nsis_template_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                         "NSIS_installer_script.nsi")
@@ -91,8 +92,9 @@ def get_current_hyperspy_version():
     else:
         from urllib.request import urlopen
 
-    js = json.load(urlopen("https://pypi.python.org/pypi/hyperspy/json"))
-    return js['info']['version']
+    js_str = urlopen(
+        "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
+    return json.loads(js_str)['info']['version']
 
 
 def download_hyperspy_license():
@@ -276,6 +278,7 @@ class HSpyBundleInstaller:
                             patched.write("rem " + line)
                         else:
                             patched.write(line)
+
     def patch_start_jupyter_cm(self):
         for arch, wppath in self.wppath.items():
             fp = self.get_full_paths(
