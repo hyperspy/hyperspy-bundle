@@ -102,7 +102,7 @@ def download_hyperspy_license():
         from urllib import urlretrieve
     else:
         from urllib.request import urlretrieve
-    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
+    urlretrieve("https://raw.github.com/hyperspy/hyperspy/RELEASE_next_minor/COPYING.txt",
                 "COPYING.txt")
 
 
