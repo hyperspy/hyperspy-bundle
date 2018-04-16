@@ -90,18 +90,23 @@ before_deploy:
   - "ren %WP_INSTDIR%\\settings\\pydistutils_bak.cfg pydistutils.cfg"
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
-  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH%"
+  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
+  - "ls"
   - ps: Add-AppveyorMessage "Installer created! Re-run tests in Winpython environment..."
   # Re-run tests in WinPython environment
   - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.5"}
   - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION}
-  # What version name should be used? For now, keep the hyperspy version (HSPY_VERSION is set during installer configuration)
-  - "SET BUNDLE_INST_NAME=HyperSpy-%HSPY_VERSION%-Bundle-Windows-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
-  - "ren HyperSpy-%HSPY_VERSION%-Bundle-Windows-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
+  # Use hyperspy-bundle tag as version name
+  - "SET BUNDLE_INST_NAME=HyperSpy-%APPVEYOR_REPO_TAG_NAME%-Bundle-Windows-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
+  - "ren HyperSpy-%APPVEYOR_REPO_TAG_NAME%-Bundle-Windows-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
   - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
   - ps: py.test --mpl $Env:HYPERSPY_DIR
   - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
+  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+
+on_failure:
+  # In case, the tests fail, we still push the installer to debug the failure if necessary.
   - "appveyor PushArtifact %BUNDLE_INST_NAME%"
 
 deploy:
