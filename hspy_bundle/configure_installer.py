@@ -85,12 +85,8 @@ def get_icon_path():
 
 def get_current_hyperspy_version():
     """Fetch version from pypi."""
-
     import json
-    if sys.version_info[0] < 3:
-        from urllib2 import urlopen
-    else:
-        from urllib.request import urlopen
+    from urllib.request import urlopen
 
     js_str = urlopen(
         "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
@@ -98,11 +94,8 @@ def get_current_hyperspy_version():
 
 
 def download_hyperspy_license():
-    if sys.version_info[0] < 3:
-        from urllib import urlretrieve
-    else:
-        from urllib.request import urlretrieve
-    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
+    from urllib.request import urlretrieve
+    urlretrieve("https://raw.github.com/hyperspy/hyperspy/RELEASE_next_minor/COPYING.txt",
                 "COPYING.txt")
 
 
@@ -294,8 +287,6 @@ class HSpyBundleInstaller:
 
 
 if __name__ == "__main__":
-    import sys
-
     if len(sys.argv) > 1:
         bundle_dir = sys.argv[1]
     else:
@@ -311,6 +302,7 @@ if __name__ == "__main__":
         hspy_version = sys.argv[3]
     else:
         hspy_version = get_current_hyperspy_version()
+    os.environ['HSPY_VERSION'] = hspy_version
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)

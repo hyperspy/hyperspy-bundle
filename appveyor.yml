@@ -1,0 +1,123 @@
+
+shallow_clone: true
+
+environment:
+
+  global:
+    NSIS_DIR: "%PROGRAMFILES(x86)%/NSIS"
+
+  matrix:
+
+    # Pre-installed Python versions, which Appveyor may upgrade to
+    # a later point release.
+     - PYTHON: "C:\\Miniconda35"
+       PYTHON_VERSION: "3.5.x"
+       PYTHON_MAJOR: 3
+       PYTHON_ARCH: "32"
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.5.4.1Qt5.exe'
+       WP_CRC: 'e58b0c86fc4e6ae4fe3f9f467008fd4e3447b5f35b7ad689ab01cdc93733d19e'
+
+     - PYTHON: "C:\\Miniconda35-x64"
+       PYTHON_VERSION: "3.5.x"
+       PYTHON_MAJOR: 3
+       PYTHON_ARCH: "64"
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.5.4.1Qt5.exe'
+       WP_CRC: 'e522c8adfbd9c967fa2f692d3c313fec1f0e53724b4651ea9e969228532a9586'
+
+     - PYTHON: "C:\\Miniconda36"
+       PYTHON_VERSION: "3.6.x"
+       PYTHON_MAJOR: 3
+       PYTHON_ARCH: "32"
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.6.3.0Qt5.exe'
+       WP_CRC: '56259865127c3f802f1eca29528f2676317cad2fd6573ce516fc35b4441a1d3c'
+
+     - PYTHON: "C:\\Miniconda36-x64"
+       PYTHON_VERSION: "3.6.x"
+       PYTHON_MAJOR: 3
+       PYTHON_ARCH: "64"
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.6.3.0Qt5.exe'
+       WP_CRC: 'a5efea23ede143fdacab60b8db95835de25c0173bd0d9fd53d5952648bde69b9'
+
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - "ECHO %APPVEYOR_BUILD_FOLDER%"
+  - "ECHO %CMD_IN_ENV%"
+
+install:
+  - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
+  - "%PYTHON%/python.exe setup.py install"
+
+build: false  # Not a C# project, build stuff at the test step instead.
+
+  # Build bundle installer for tags:
+before_deploy:
+  # Download WinPython installer if not cached
+  - ps: Add-AppveyorMessage "Installing WinPython..."
+  - "SET WP_INSTDIR=%USERPROFILE%\\wpdir\\WinPython-%PYTHON_ARCH%\\"
+  - "SET WP_EXE=%USERPROFILE%/wpdir/WinPython%PYTHON_MAJOR%-%PYTHON_ARCH%bit.exe"
+  - "mkdir %USERPROFILE%\\wpdir"
+  - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
+  - ps: Write-Output (Get-FileHash $Env:WP_EXE)
+  - ps: if ((Get-FileHash $Env:WP_EXE).Hash -ne $Env:WP_CRC) { exit(1) }
+  - ps: (& $Env:WP_EXE /S /D=$Env:WP_INSTDIR | Out-Null )
+  - "ls %USERPROFILE%/wpdir"
+  - "ls %WP_INSTDIR%"
+  # we rename pydistutils temporaly to enable use of msvc
+  - "ren %WP_INSTDIR%\\settings\\pydistutils.cfg pydistutils_bak.cfg"
+
+  # Patch NSIS to allow longer strings
+  - ps: Add-AppveyorMessage "Setting up WinPython environment..."
+  - ps: Start-FileDownload ('http://freefr.dl.sourceforge.net/project/nsis/NSIS%203/3.03/nsis-3.03-strlen_8192.zip') ../nsis_patch.zip
+  - ps: if ((Get-FileHash '../nsis_patch.zip').Hash -ne '023d637df9cd146f2d207fbbc627a5f63e5f71fea012523797c5af6bf342704b') { exit(1) }
+  - "7z x ../nsis_patch.zip -o%NSIS_DIR% -aoa"
+  - ps: Start-FileDownload ('http://nsis.sourceforge.net/mediawiki/images/e/eb/Textreplace.zip') ../Textreplace.zip
+  - ps: if ((Get-FileHash '../Textreplace.zip').Hash -ne '6462C0C22E87E7C81DD9076D40ACC74C515243A56F10F4F8FE720F7099DB3BA2') { exit(1) }
+  - "7z x ../Textreplace.zip -o%NSIS_DIR% -aoa"
+  - ps: Start-FileDownload ('http://nsis.sourceforge.net/mediawiki/images/8/8f/UAC.zip') ../UAC.zip
+  - ps: if ((Get-FileHash '../UAC.zip').Hash -ne '20E3192AF5598568887C16D88DE59A52C2CE4A26E42C5FB8BEE8105DCBBD1760') { exit(1) }
+  - "7z x ../UAC.zip -o%NSIS_DIR% -aoa"
+
+  # Install current hyperspy in WinPython
+  - "%CMD_IN_ENV% %WP_INSTDIR%/scripts/env.bat"
+  # Give info about python vesion and compiler used to compile the python
+  - "%CMD_IN_ENV% python.exe -c \"import sys; print(sys.version)\""
+  - "%CMD_IN_ENV% pip install start_jupyter_cm"
+  - "%CMD_IN_ENV% pip install hyperspy[all]"
+  # Try to run twice as workaround for permission error
+  - "%CMD_IN_ENV% pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip || pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip"
+
+  # setting back the config
+  - "ren %WP_INSTDIR%\\settings\\pydistutils_bak.cfg pydistutils.cfg"
+  # Custom installer step
+  - ps: Add-AppveyorMessage "Creating installer..."
+  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH%"
+  - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
+  - ps: Add-AppveyorMessage "Installer created! Re-run tests in Winpython environment..."
+  # Re-run tests in WinPython environment
+  - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.5"}
+  - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION}
+  # What version name should be used? For now, keep the hyperspy version (HSPY_VERSION is set during installer configuration)
+  - "SET BUNDLE_INST_NAME=HyperSpy-%HSPY_VERSION%-Bundle-Windows-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
+  - "ren HyperSpy-%HSPY_VERSION%-Bundle-Windows-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
+  - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
+  - ps: py.test --mpl $Env:HYPERSPY_DIR
+  - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
+  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+
+deploy:
+  provider: GitHub
+  auth_token:
+    #   to266:
+    #secure: ptV5Dkz3pSVdjD0qRDpxJgjVlddFtleZ+B+c2X1Fg67P8OX3bHWVktRmlj6hfLhM
+    #   vidartf:
+    #secure: KwAfARhGEqOnZHltPB6kKu8xmnoiGSk7NMYJBIEbWvFCuVnepoPV7ZcIjUN3pUpK
+    #   sem-geologist:
+    #secure: RRqUkx9H5VuFNITmm+YzgB0qnqgVGPH1yrPVxb4oCD+FAjcTch2WZAiPEKn4L6w6
+    #   ericpre:
+    secure: ae8XsPI+vKJI9AWm0r9+ec71CIkXcnCHlNIQ57v+87hh5k1xuAAxIOi1CFKEmmZv
+  artifact: /.*\.exe/  # upload installers to release assets
+  draft: false
+  prerelease: false
+  force_update: true
+  on:
+    appveyor_repo_tag: true        # deploy on tag push only
