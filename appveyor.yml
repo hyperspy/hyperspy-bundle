@@ -45,7 +45,7 @@ init:
 
 install:
   - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
-  - "%PYTHON%/python.exe setup.py install"
+  - "%PYTHON%/Scripts/pip install ."
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
