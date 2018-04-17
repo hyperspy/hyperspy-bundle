@@ -90,7 +90,7 @@ before_deploy:
   - "ls"
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
-  - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.5"}
+  - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.3"}
   - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION}
   # Use hyperspy-bundle tag as version name
   - "SET BUNDLE_INST_NAME=HyperSpy-%APPVEYOR_REPO_TAG_NAME%-Bundle-Windows-%PY_VERSION%-%PYTHON_ARCH%bit.exe"

@@ -58,7 +58,7 @@ cmd.exe /k
 HSPYUI_BAT = u"""@echo off
 call "%~dp0env.bat"
 cd "%HOMEPATH%"
-hyperspyui %*
+python -m hyperspyui %*
 
 """
 
