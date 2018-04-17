@@ -85,12 +85,8 @@ def get_icon_path():
 
 def get_current_hyperspy_version():
     """Fetch version from pypi."""
-
     import json
-    if sys.version_info[0] < 3:
-        from urllib2 import urlopen
-    else:
-        from urllib.request import urlopen
+    from urllib.request import urlopen
 
     js_str = urlopen(
         "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
@@ -98,11 +94,8 @@ def get_current_hyperspy_version():
 
 
 def download_hyperspy_license():
-    if sys.version_info[0] < 3:
-        from urllib import urlretrieve
-    else:
-        from urllib.request import urlretrieve
-    urlretrieve("https://raw.github.com/hyperspy/hyperspy/master/COPYING.txt",
+    from urllib.request import urlretrieve
+    urlretrieve("https://raw.github.com/hyperspy/hyperspy/RELEASE_next_minor/COPYING.txt",
                 "COPYING.txt")
 
 
@@ -139,7 +132,7 @@ def create_delete_macro(path, name, add_uninstaller=True):
 
 class HSpyBundleInstaller:
 
-    def __init__(self, dist_path, hspy_version, arch=("32", "64")):
+    def __init__(self, dist_path, version, arch=("32", "64")):
         """Tool to customize WinPython distributions to create the HyperSpy
         bundle installer for Windows.
         The "distribution path" must have the following structure:
@@ -169,7 +162,7 @@ class HSpyBundleInstaller:
             (a, winpython.wppm.Distribution(
                 self.get_full_paths("python-*", a)))
             for a in arch))
-        self.hspy_version = hspy_version
+        self.version = version
 
     def get_full_paths(self, rel_path, arch):
         fp = glob(os.path.join(self.wppath[arch], rel_path))
@@ -199,7 +192,7 @@ class HSpyBundleInstaller:
                 for i, line in enumerate(f):
                     if "__VERSION__" in line:
                         line = line.replace("__VERSION__",
-                                            self.hspy_version)
+                                            self.version)
                         fa.write(line)
                     elif "__ARCHITECTURE__" in line:
                         fa.write(line.replace("__ARCHITECTURE__", a + "bit"))
@@ -294,8 +287,6 @@ class HSpyBundleInstaller:
 
 
 if __name__ == "__main__":
-    import sys
-
     if len(sys.argv) > 1:
         bundle_dir = sys.argv[1]
     else:
@@ -308,12 +299,12 @@ if __name__ == "__main__":
         dirs = [d.lstrip(os.path.join(bundle_dir, "WinPython-")) for d in dirs]
         arch = tuple(set([d[0:2] for d in dirs]))
     if len(sys.argv) > 3:
-        hspy_version = sys.argv[3]
+        version = sys.argv[3]
     else:
-        hspy_version = get_current_hyperspy_version()
+        version = get_current_hyperspy_version()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
-    p = HSpyBundleInstaller(bundle_dir, hspy_version, arch)
+    p = HSpyBundleInstaller(bundle_dir, version, arch)
     p.create_hspy_scripts()
     # This is necessary in order to workaround #1009
     p.patch_start_jupyter_cm()
