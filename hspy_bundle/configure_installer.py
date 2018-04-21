@@ -62,6 +62,14 @@ python -m hyperspyui %*
 
 """
 
+JUPYTER_CM_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+if [%1]==[add] cmd.exe /c "jupyter_context-menu_add"
+if [%1]==[remove] cmd.exe /c "jupyter_context-menu_remove"
+
+"""
+
 
 def get_nsis_template_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -250,9 +258,10 @@ class HSpyBundleInstaller:
                              hspy_scripts)
             for f, script in zip(
                     ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
-                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat"),
+                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat",
+                     "jupyter_cm.bat"),
                     (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
-                     CMD_BAT, HSPYUI_BAT)):
+                     CMD_BAT, HSPYUI_BAT, JUPYTER_CM_BAT)):
                 with io.open(os.path.join(hspy_scripts, f), 'w',
                              newline='\r\n', errors="ignore") as f:
                     f.write(script)
