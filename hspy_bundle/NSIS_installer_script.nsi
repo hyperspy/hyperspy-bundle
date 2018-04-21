@@ -15,13 +15,13 @@
 !include "FileFunc.nsh"
 !include "X64.nsh"
 !include "__DELETE_MACRO_NAME__.nsh"
-!define APPNAME "HyperSpy WinPython Bundle"
+!define APPNAME "HyperSpy Bundle"
 !define APPVERSION "__VERSION__"
 !define ARCHITECTURE "__ARCHITECTURE__"
 ;!define CL64 1 # Uncomment this line for 64bit
 !define WINPYTHON_PATH "__WINPYTHON_PATH__"
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
-!define S_NAME "HyperSpy-${APPVERSION}-Bundle-Windows-${ARCHITECTURE}"
+!define S_NAME "HyperSpy-Bundle-${APPVERSION}-${ARCHITECTURE}"
 !define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
 !define S_DEFINSTDIR_USER "$LocalAppData\${APP_REL_INSTDIR}"
 !define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
@@ -347,7 +347,7 @@ Function UN.onInit
 	${EndIf}
 
 	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" IDOK next
 		Abort
 	next:
 FunctionEnd

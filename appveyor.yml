@@ -93,8 +93,8 @@ before_deploy:
   - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.3"}
   - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION}
   # Use hyperspy-bundle tag as version name
-  - "SET BUNDLE_INST_NAME=HyperSpy-%APPVEYOR_REPO_TAG_NAME%-Bundle-Windows-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
-  - "ren HyperSpy-%APPVEYOR_REPO_TAG_NAME%-Bundle-Windows-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
+  - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
+  - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
   - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
   - ps: py.test --mpl $Env:HYPERSPY_DIR
   - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
