@@ -37,7 +37,7 @@ jupyter-qtconsole.exe %params%
 SPYDER_BAT = u"""@echo off
 call "%~dp0env.bat"
 cd "%HOMEPATH%"
-python.exe -m spyderlib.start_app %*
+spyder3 %*
 
 """
 
