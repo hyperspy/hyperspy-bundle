@@ -23,7 +23,7 @@
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
 !define S_NAME "HyperSpy-Bundle-${APPVERSION}-${ARCHITECTURE}"
 !define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
-!define S_DEFINSTDIR_USER "$LocalAppData\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_USER "$PROFILE\${APP_REL_INSTDIR}"
 !define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
 !ifdef CL64
 	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APP_REL_INSTDIR}"
@@ -357,6 +357,7 @@ Section "Uninstall"
 	SetOutPath "$TEMP"
 	${If} $InstMode = 2
 		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
+		Sleep 3000 ; It needs a bit of time to run before it get deleted...
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
