@@ -91,14 +91,19 @@ def get_icon_path():
                         "hyperspy_bundle_installer.ico")
 
 
-def get_current_hyperspy_version():
-    """Fetch version from pypi."""
-    import json
-    from urllib.request import urlopen
-
-    js_str = urlopen(
-        "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
-    return json.loads(js_str)['info']['version']
+def get_default_version_name(date=True):
+    if date is True:
+        """ Use the date as default version name"""
+        import datetime
+        return datetime.date.today().strftime("%Y.%m.%d")
+    else:
+        """Fetch version from pypi."""
+        import json
+        from urllib.request import urlopen
+    
+        js_str = urlopen(
+            "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
+        return json.loads(js_str)['info']['version']
 
 
 def download_hyperspy_license():
@@ -310,7 +315,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 3:
         version = sys.argv[3]
     else:
-        version = get_current_hyperspy_version()
+        version = get_default_version_name()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, version, arch)
