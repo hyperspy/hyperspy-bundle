@@ -14,29 +14,29 @@ environment:
        PYTHON_VERSION: "3.5.x"
        PYTHON_MAJOR: 3
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.5.4.1Qt5.exe'
-       WP_CRC: 'e58b0c86fc4e6ae4fe3f9f467008fd4e3447b5f35b7ad689ab01cdc93733d19e'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180404/WinPython32-3.5.4.2Qt5.exe'
+       WP_CRC: '207d38b1647f051346985c4bbbca9b7748608dadfde62c3601aa0a1b4cd30bb9'
 
      - PYTHON: "C:\\Miniconda35-x64"
        PYTHON_VERSION: "3.5.x"
        PYTHON_MAJOR: 3
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.5.4.1Qt5.exe'
-       WP_CRC: 'e522c8adfbd9c967fa2f692d3c313fec1f0e53724b4651ea9e969228532a9586'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180404/WinPython64-3.5.4.2Qt5.exe'
+       WP_CRC: 'bc34af4d3369fbc77d0baa44dd014ec4d10135a779f4459f2f54cda34b77229d'
 
      - PYTHON: "C:\\Miniconda36"
        PYTHON_VERSION: "3.6.x"
        PYTHON_MAJOR: 3
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.6.3.0Qt5.exe'
-       WP_CRC: '56259865127c3f802f1eca29528f2676317cad2fd6573ce516fc35b4441a1d3c'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180404/WinPython32-3.6.5.0Qt5.exe'
+       WP_CRC: '83cb7ccf519a7fffc0cf6b00f0cb2d45f8d4cbf55b6e9b463fcd2534fa6f450a'
 
      - PYTHON: "C:\\Miniconda36-x64"
        PYTHON_VERSION: "3.6.x"
        PYTHON_MAJOR: 3
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.6.3.0Qt5.exe'
-       WP_CRC: 'a5efea23ede143fdacab60b8db95835de25c0173bd0d9fd53d5952648bde69b9'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180404/WinPython64-3.6.5.0Qt5.exe'
+       WP_CRC: 'cdf56107a0b106e8a34c3f5680521677c7798d5459135d3272053a0e8bd3e94b'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
