@@ -26,12 +26,9 @@ test_script:
   # Install the build
 
   # Re-run tests in the created anaconda build.
-  - appveyor AddMessage "Tests finished! Pushing to GitHub..."
-  - appveyor PushArtifact C:\projects\hyperspy-bundle\*.exe
 
-on_failure:
-  # In case, the tests fail, we still push the installer to debug the failure if necessary.
-  - appveyor PushArtifact C:\projects\hyperspy-bundle\*.exe
+artifacts:
+  - path: '*.exe'
 
 deploy:
   provider: GitHub
