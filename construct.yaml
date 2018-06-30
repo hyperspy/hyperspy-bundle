@@ -1,0 +1,26 @@
+
+name: HyperSpy-bundle
+version: 2018-06-30
+
+install_in_dependency_order: True
+
+channels:
+  - http://repo.anaconda.com/pkgs/main/
+  - https://conda.anaconda.org/conda-forge
+
+specs:
+  - python
+  - conda
+  - numpy
+  - hyperspy
+  - hyperspy-gui-traitsui
+#  - menuinst [win] # For anaconda start menu
+#  - console_shortcut [win] # For anaconda prompt shortcut in the start menu
+#  - hyperspyui
+#  - start-jupyter-cm
+
+#post_install: post_installation.sh          [unix]
+#post_install: post_installation.bat         [win]
+
+# Icon image for Windows installer
+icon_image: hyperspy_bundle_installer.ico   [win]
