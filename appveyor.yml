@@ -5,7 +5,12 @@ environment:
 
   matrix:
      - MINICONDA: "C:\\Miniconda36"
+       PYTHON_VERSION: "py36"
+       PYTHON_ARCH: "32bit"
+  
      - MINICONDA: "C:\\Miniconda36-x64"
+       PYTHON_VERSION: "py36"
+       PYTHON_ARCH: "64bit"
 
 init:
   - "ECHO %MINICONDA%"
@@ -14,7 +19,6 @@ init:
 
 install:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%" 
-  - appveyor AddMessage "Installing hyperspy-bundle..."
   - conda install -yq constructor"
 
 build: false  # Not a C# project, build stuff at the test step instead.
@@ -22,6 +26,8 @@ build: false  # Not a C# project, build stuff at the test step instead.
 test_script:
   # Create the anaconda based hyperspy bundle
   - constructor .
+  - "set BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe"
+  - "ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%"
 
   # Install the build
 
