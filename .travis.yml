@@ -1,0 +1,45 @@
+language: generic
+
+matrix:
+  include:
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36
+    os: osx
+
+install:
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
+     wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; 
+     PLATFORM='MacOSX';
+    else
+     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+     PLATFORM='Linux';
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+
+  - conda create -yq -n build-environment python=$PYTHON constructor
+  - source activate build-environment
+
+script:
+  # Create the anaconda based hyperspy bundle
+  - constructor -v .
+
+  # Rename the output file
+  - export BUILD_NAME=HyperSpy-bundle-${TRAVIS_TAG}-${PYTHON_VERSION}-${PLATFORM}-64bit.sh
+  - ls
+  - mv HyperSpy-*.sh $BUILD_NAME
+  - ls
+
+  # Install the build
+
+  # Re-run tests in the created anaconda build.
+
+deploy:
+  provider: releases
+  api_key:
+    # ericpre:
+    secure: 
+  file: $BUILD_NAME
+  skip_cleanup: true
+  on:
+    tags: true
