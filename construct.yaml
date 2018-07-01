@@ -1,6 +1,6 @@
 
 name: HyperSpy-bundle
-version: 2018-06-30
+version: 2018.07.01
 
 install_in_dependency_order: True
 
@@ -11,7 +11,8 @@ channels:
 specs:
   - python
   - conda
-  - numpy
+  - pyface [win] # it should be removed... but on windows it doesn't work...
+  - python-dateutil [win] # it should be removed... but on windows it doesn't work...
   - hyperspy
   - hyperspy-gui-traitsui
 #  - menuinst [win] # For anaconda start menu
@@ -22,5 +23,10 @@ specs:
 #post_install: post_installation.sh          [unix]
 #post_install: post_installation.bat         [win]
 
+
+license_file: LICENSE
+
 # Icon image for Windows installer
 icon_image: hyperspy_bundle_installer.ico   [win]
+
+keep_pkgs: True
