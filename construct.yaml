@@ -2,19 +2,17 @@
 name: HyperSpy-bundle
 version: 2018.07.01
 
-install_in_dependency_order: True
-
 channels:
   - http://repo.anaconda.com/pkgs/main/
-  - https://conda.anaconda.org/conda-forge
+#  - https://conda.anaconda.org/conda-forge
 
 specs:
   - python
   - conda
-  - pyface [win] # it should be removed... but on windows it doesn't work...
-  - python-dateutil [win] # it should be removed... but on windows it doesn't work...
+#  - pyface [win] # it should be removed... but on windows it doesn't work...
+#  - python-dateutil [win] # it should be removed... but on windows it doesn't work...
   - hyperspy
-  - hyperspy-gui-traitsui
+#  - hyperspy-gui-traitsui
 #  - menuinst [win] # For anaconda start menu
 #  - console_shortcut [win] # For anaconda prompt shortcut in the start menu
 #  - hyperspyui
@@ -23,10 +21,10 @@ specs:
 #post_install: post_installation.sh          [unix]
 #post_install: post_installation.bat         [win]
 
+install_in_dependency_order: True
 
 license_file: LICENSE
 
 # Icon image for Windows installer
 icon_image: hyperspy_bundle_installer.ico   [win]
 
-keep_pkgs: True
