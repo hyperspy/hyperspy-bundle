@@ -19,7 +19,8 @@ init:
 
 install:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%" 
-  - conda install -yq constructor"
+  - conda install -yq --only-deps constructor"
+  - pip install https://github.com/ericpre/constructor/archive/ignore_noarch_python.zip
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
