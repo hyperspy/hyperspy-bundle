@@ -17,8 +17,10 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
 
-  - conda create -yq -n build-environment python=$PYTHON constructor
+  - conda create -yq -n build-environment python=$PYTHON
   - source activate build-environment
+  - conda install -yq --only-deps constructor
+  - pip install https://github.com/ericpre/constructor/archive/ignore_noarch_python.zip
 
 script:
   # Create the anaconda based hyperspy bundle
@@ -38,7 +40,7 @@ deploy:
   provider: releases
   api_key:
     # ericpre:
-    secure: 
+    secure: "HmYq6EvfcP2H16Vew3QKCz5d/02xxyAtYAfvycvBk0wiTXw0Bt1dBGn8A8xgzpUU0GUgCqeiSp57JT3c+bwXPF04IQ3gDmoB2203R/Rsj35gy6owaMyVGTkYa2VQTByJLXVlFuNnL/LPOhHKBI/y+22xBtvdXrE5DhuzIHR3t0XpLk7TYurXsv4nBIWwptgq1eTUDf+9tNIyyrW9J6cAazTXPIKUp0QaRUx699FaI4Fobn0Mp0hT0X6jodo0qknSknVuYGP695maadIr+HavfIYwrxFm45Tc1DP0SMA0br4ZnetkrISBH/4AlhSCmxJAkODU/xuAmz8cxgYqrxXTIZ/pJh/MGY2TdibUeCkp9pa0LFOvmZj6lt/9z64Sz9dRmgc2CiZ3l0cqXufbV89DZjuJMvVeweJXYoq01F7WJqYbJBH6wylri4GV4Aol4I/WLUCUHrPsPBEGClDB/RLXf7LPaGwpmQp5gfVvD48+258OXfz4refKKnRsjV3hpD5vLkhbEe2jk8zYmENNL57n8vzowCcMP9ND6hrTQ39LGGrlwO/w9raRGtxQB4W8+Tw+uGeE5DaH7CMgsGw2Cbgdu5im8Lv5HJxGv3NqBT6jZybcmXGIIsoZt3cCZ/dGjotNfHHylR6jUtFrnmqSgByGLeZab3zhIXgj041NiBfUWgY="
   file: $BUILD_NAME
   skip_cleanup: true
   on:
