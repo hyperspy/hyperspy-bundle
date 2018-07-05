@@ -23,6 +23,8 @@ post_install: post_installation.sh          # [linux]
 post_install: post_installation-macosx.sh   # [osx]
 post_install: post_installation.bat         # [win]
 
+installer_type: pkg                         # [osx]
+
 install_in_dependency_order: True
 
 license_file: LICENSE

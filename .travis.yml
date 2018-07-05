@@ -26,10 +26,13 @@ script:
   # Create the anaconda based hyperspy bundle
   - constructor -v .
 
-  # Rename the output file
-  - export BUILD_NAME=HyperSpy-bundle-${TRAVIS_TAG}-${PYTHON_VERSION}-${PLATFORM}-64bit.sh
+  # Rename the output file which can have .sh or .pkg extension
   - ls
-  - mv HyperSpy-*.sh $BUILD_NAME
+  # We need to "rev" twice to retrieve the last field of the "cut"
+  - EXT=`echo HyperSpy-* | rev | cut -d'.' -f1 | rev`
+  - echo $EXT
+  - BUILD_NAME=HyperSpy-bundle-${TRAVIS_TAG}-${PYTHON_VERSION}-${PLATFORM}-64bit.${EXT}
+  - mv HyperSpy-*.${EXT} $BUILD_NAME
   - ls
 
   # Install the build
