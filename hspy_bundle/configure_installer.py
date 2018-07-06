@@ -37,7 +37,7 @@ jupyter-qtconsole.exe %params%
 SPYDER_BAT = u"""@echo off
 call "%~dp0env.bat"
 cd "%HOMEPATH%"
-python.exe -m spyderlib.start_app %*
+spyder3 %*
 
 """
 
@@ -62,6 +62,14 @@ python -m hyperspyui %*
 
 """
 
+JUPYTER_CM_BAT = u"""@echo off
+call "%~dp0env.bat"
+cd "%HOMEPATH%"
+if [%1]==[add] cmd.exe /c "jupyter_context-menu_add"
+if [%1]==[remove] cmd.exe /c "jupyter_context-menu_remove"
+
+"""
+
 
 def get_nsis_template_path():
     return os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -83,14 +91,19 @@ def get_icon_path():
                         "hyperspy_bundle_installer.ico")
 
 
-def get_current_hyperspy_version():
-    """Fetch version from pypi."""
-    import json
-    from urllib.request import urlopen
-
-    js_str = urlopen(
-        "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
-    return json.loads(js_str)['info']['version']
+def get_default_version_name(date=True):
+    if date is True:
+        """ Use the date as default version name"""
+        import datetime
+        return datetime.date.today().strftime("%Y.%m.%d")
+    else:
+        """Fetch version from pypi."""
+        import json
+        from urllib.request import urlopen
+    
+        js_str = urlopen(
+            "https://pypi.python.org/pypi/hyperspy/json").read().decode('utf8')
+        return json.loads(js_str)['info']['version']
 
 
 def download_hyperspy_license():
@@ -250,9 +263,10 @@ class HSpyBundleInstaller:
                              hspy_scripts)
             for f, script in zip(
                     ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
-                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat"),
+                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat",
+                     "jupyter_cm.bat"),
                     (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
-                     CMD_BAT, HSPYUI_BAT)):
+                     CMD_BAT, HSPYUI_BAT, JUPYTER_CM_BAT)):
                 with io.open(os.path.join(hspy_scripts, f), 'w',
                              newline='\r\n', errors="ignore") as f:
                     f.write(script)
@@ -301,7 +315,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 3:
         version = sys.argv[3]
     else:
-        version = get_current_hyperspy_version()
+        version = get_default_version_name()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
     p = HSpyBundleInstaller(bundle_dir, version, arch)

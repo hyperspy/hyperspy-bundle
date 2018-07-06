@@ -15,15 +15,15 @@
 !include "FileFunc.nsh"
 !include "X64.nsh"
 !include "__DELETE_MACRO_NAME__.nsh"
-!define APPNAME "HyperSpy WinPython Bundle"
+!define APPNAME "HyperSpy Bundle"
 !define APPVERSION "__VERSION__"
 !define ARCHITECTURE "__ARCHITECTURE__"
 ;!define CL64 1 # Uncomment this line for 64bit
 !define WINPYTHON_PATH "__WINPYTHON_PATH__"
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
-!define S_NAME "HyperSpy-${APPVERSION}-Bundle-Windows-${ARCHITECTURE}"
+!define S_NAME "HyperSpy-Bundle-${APPVERSION}-${ARCHITECTURE}"
 !define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
-!define S_DEFINSTDIR_USER "$LocalAppData\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_USER "$PROFILE\${APP_REL_INSTDIR}"
 !define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
 !ifdef CL64
 	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APP_REL_INSTDIR}"
@@ -306,8 +306,7 @@ SectionIn RO
 	Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" "jupyter nbextension enable --py --sys-prefix widgetsnbextension""'
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" jupyter_context-menu_add & exit"'
-	Sleep 3000
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
 	${EndIf}
 
 	${If} $InstMode <> 1
@@ -318,9 +317,9 @@ SectionIn RO
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\spyderlib\windows\spyder.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\spyder.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" '"${UNINSTALLER_FULLPATH}"'
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" "${UNINSTALLER_FULLPATH}" "/MODE=$InstMode"
 
 		WriteUninstaller "${UNINSTALLER_FULLPATH}"
 		WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" DisplayName "${APPNAME}"
@@ -348,7 +347,7 @@ Function UN.onInit
 	${EndIf}
 
 	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME}?" IDOK next
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" IDOK next
 		Abort
 	next:
 FunctionEnd
@@ -357,14 +356,15 @@ Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
 	${If} $InstMode = 2
-		Exec 'cmd.exe /C ""$INSTDIR\WinPython Command Prompt.exe" jupyter_context-menu_remove & exit"'
-		Sleep 3000
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
+		Sleep 3000 ; It needs a bit of time to run before it get deleted...
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
-	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"
