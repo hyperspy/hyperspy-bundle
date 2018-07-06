@@ -15,6 +15,7 @@ specs:
   - hyperspy-gui-traitsui
   - jupyterlab
   - nodejs
+  - spyder
 # Once the following package are on conda-forge
 #  - hyperspyui
 #  - start-jupyter-cm
