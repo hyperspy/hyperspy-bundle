@@ -36,11 +36,12 @@ test_script:
   - 'start /wait "" %BUNDLE_INST_NAME% /S /D=%INSTALL_DIR%'
 
   # Check installed package
-  - 'set HYPERSPY_BUNDLE_BIN_PATH="%INSTALL_DIR%\\bin"'
-  - '%HYPERSPY_BUNDLE_BIN_PATH%\\conda list'
+  - 'set HYPERSPY_BUNDLE_BIN_PATH="%INSTALL_DIR%/bin"'
+  - '%HYPERSPY_BUNDLE_BIN_PATH%/conda list'
 
   # Re-run tests in the created anaconda build.
-  - '%HYPERSPY_BUNDLE_BIN_PATH%\\pytest --mpl --pyargs hyperspy'
+  - 'set MPLBACKEND=agg'
+  - '%HYPERSPY_BUNDLE_BIN_PATH%/pytest --mpl --pyargs hyperspy'
 
 
 artifacts:

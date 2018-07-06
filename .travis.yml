@@ -43,6 +43,7 @@ script:
   - $HYPERSPY_BUNDLE_BIN_PATH/conda list
 
   # Re-run tests in the created anaconda build.
+  - export MPLBACKEND=agg
   - $HYPERSPY_BUNDLE_BIN_PATH/pytest --mpl --pyargs hyperspy
 
 deploy:
