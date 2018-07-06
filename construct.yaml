@@ -16,6 +16,8 @@ specs:
   - jupyterlab
   - nodejs
   - spyder
+  - pytest
+  - pytest-mpl
 # Once the following package are on conda-forge
 #  - hyperspyui
 #  - start-jupyter-cm

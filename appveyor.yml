@@ -7,10 +7,12 @@ environment:
      - MINICONDA: "C:\\Miniconda36"
        PYTHON_VERSION: "py36"
        PYTHON_ARCH: "32bit"
+       INSTALL_DIR: "HyperSpy-bundle"
   
      - MINICONDA: "C:\\Miniconda36-x64"
        PYTHON_VERSION: "py36"
        PYTHON_ARCH: "64bit"
+       INSTALL_DIR: "HyperSpy-bundle"
 
 init:
   - "ECHO %MINICONDA%"
@@ -18,8 +20,8 @@ init:
   - "ECHO %CMD_IN_ENV%"
 
 install:
-  - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%" 
-  - conda install -yq --only-deps constructor"
+  - 'set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%'
+  - conda install -yq --only-deps constructor
   - pip install https://github.com/ericpre/constructor/archive/ignore_noarch_python.zip
 
 build: false  # Not a C# project, build stuff at the test step instead.
@@ -27,12 +29,19 @@ build: false  # Not a C# project, build stuff at the test step instead.
 test_script:
   # Create the anaconda based hyperspy bundle
   - constructor .
-  - "set BUNDLE_INST_NAME=HyperSpy-bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe"
-  - "ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%"
+  - 'set BUNDLE_INST_NAME=HyperSpy-bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe'
+  - 'ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%'
 
   # Install the build
+  - 'start /wait "" %BUNDLE_INST_NAME% /S /D=%INSTALL_DIR%'
+
+  # Check installed package
+  - 'set HYPERSPY_BUNDLE_BIN_PATH="%INSTALL_DIR%\\bin"'
+  - '%HYPERSPY_BUNDLE_BIN_PATH%\\conda list'
 
   # Re-run tests in the created anaconda build.
+  - '%HYPERSPY_BUNDLE_BIN_PATH%\\pytest --mpl --pyargs hyperspy'
+
 
 artifacts:
   - path: '*.exe'

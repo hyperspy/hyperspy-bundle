@@ -2,8 +2,8 @@ language: generic
 
 matrix:
   include:
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=HyperSpy-bundle
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=HyperSpy-bundle
     os: osx
 
 install:
@@ -35,9 +35,15 @@ script:
   - mv HyperSpy-*.${EXT} $BUILD_NAME
   - ls
 
-  # Install the build
+  # Install the build in the subfolder "HyperSpy-bundle"
+  - bash $BUILD_NAME -b -p $HOME/$INSTALL_DIR
+
+  # Check installed package
+  - HYPERSPY_BUNDLE_BIN_PATH="$HOME/$INSTALL_DIR/bin"
+  - $HYPERSPY_BUNDLE_BIN_PATH/conda list
 
   # Re-run tests in the created anaconda build.
+  - $HYPERSPY_BUNDLE_BIN_PATH/pytest --mpl --pyargs hyperspy
 
 deploy:
   provider: releases
