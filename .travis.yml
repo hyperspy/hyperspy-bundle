@@ -25,7 +25,8 @@ install:
 
 script:
   # Create the anaconda based hyperspy bundle
-  - travis_wait 30 constructor -v .
+  - travis_wait 40 constructor .
+  - source deactivate
 
   # Rename the output file which can have .sh or .pkg extension
   - ls
@@ -46,7 +47,7 @@ script:
   # Re-run tests in the created anaconda build.
   - $HYPERSPY_BUNDLE_BIN_PATH/conda install -yq -c conda-forge pytest pytest-mpl
   - export MPLBACKEND=agg
-  - $HYPERSPY_BUNDLE_BIN_PATH/py.test --mpl --pyargs hyperspy
+  - $HYPERSPY_BUNDLE_BIN_PATH/pytest --mpl --pyargs hyperspy
 
 deploy:
   provider: releases

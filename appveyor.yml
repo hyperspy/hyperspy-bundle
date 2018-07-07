@@ -29,6 +29,7 @@ build: false  # Not a C# project, build stuff at the test step instead.
 test_script:
   # Create the anaconda based hyperspy bundle
   - constructor -v .
+  - deactivate
   - 'set BUNDLE_INST_NAME=HyperSpy-bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe'
   - 'ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%'
 
@@ -38,10 +39,10 @@ test_script:
   - dir %INSTALL_DIR%
 
   # Check installed package
-  - set HYPERSPY_BUNDLE_BIN_PATH=%INSTALL_DIR%\\Scripts
-  - echo %HYPERSPY_BUNDLE_BIN_PATH%
-  - dir %HYPERSPY_BUNDLE_BIN_PATH%
-  - cd %HYPERSPY_BUNDLE_BIN_PATH%
+  - set HYPERSPY_BUNDLE_SCRIPTS_PATH=%INSTALL_DIR%\\Scripts
+  - echo %HYPERSPY_BUNDLE_SCRIPTS_PATH%
+  - dir %HYPERSPY_BUNDLE_SCRIPTS_PATH%
+  - cd %HYPERSPY_BUNDLE_SCRIPTS_PATH%
   - conda list
   - 'conda install -yq -c conda-forge pytest pytest-mpl'
 
