@@ -1,4 +1,4 @@
 @echo off
 
 REM activate lab extension
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+"%INSTALL_DIR%\\Scripts\\jupyter" labextension install @jupyter-widgets/jupyterlab-manager

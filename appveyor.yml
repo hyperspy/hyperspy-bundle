@@ -50,7 +50,6 @@ test_script:
   - 'set MPLBACKEND=agg'
   - 'pytest --mpl --pyargs hyperspy'
 
-
 artifacts:
   - path: '*.exe'
 
