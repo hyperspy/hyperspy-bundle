@@ -7,16 +7,16 @@ environment:
      - MINICONDA: "C:\\Miniconda36"
        PYTHON_VERSION: "py36"
        PYTHON_ARCH: "32bit"
-       INSTALL_DIR: "HyperSpy-bundle"
   
      - MINICONDA: "C:\\Miniconda36-x64"
        PYTHON_VERSION: "py36"
        PYTHON_ARCH: "64bit"
-       INSTALL_DIR: "HyperSpy-bundle"
 
 init:
+  - "set INSTALL_DIR=%APPVEYOR_BUILD_FOLDER%\\HyperSpy-bundle"
   - "ECHO %MINICONDA%"
   - "ECHO %APPVEYOR_BUILD_FOLDER%"
+  - "ECHO %INSTALL_DIR%"
   - "ECHO %CMD_IN_ENV%"
 
 install:
@@ -28,20 +28,26 @@ build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
   # Create the anaconda based hyperspy bundle
-  - constructor .
+  - constructor -v .
   - 'set BUNDLE_INST_NAME=HyperSpy-bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe'
   - 'ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%'
 
   # Install the build
   - 'start /wait "" %BUNDLE_INST_NAME% /S /D=%INSTALL_DIR%'
+  - dir
+  - dir %INSTALL_DIR%
 
   # Check installed package
-  - 'set HYPERSPY_BUNDLE_BIN_PATH="%INSTALL_DIR%/bin"'
-  - '%HYPERSPY_BUNDLE_BIN_PATH%/conda list'
+  - set HYPERSPY_BUNDLE_BIN_PATH=%INSTALL_DIR%\\Scripts
+  - echo %HYPERSPY_BUNDLE_BIN_PATH%
+  - dir %HYPERSPY_BUNDLE_BIN_PATH%
+  - cd %HYPERSPY_BUNDLE_BIN_PATH%
+  - conda list
+  - 'conda install -yq -c conda-forge pytest pytest-mpl'
 
   # Re-run tests in the created anaconda build.
   - 'set MPLBACKEND=agg'
-  - '%HYPERSPY_BUNDLE_BIN_PATH%/pytest --mpl --pyargs hyperspy'
+  - 'pytest --mpl --pyargs hyperspy'
 
 
 artifacts:

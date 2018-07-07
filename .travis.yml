@@ -19,12 +19,13 @@ install:
 
   - conda create -yq -n build-environment python=$PYTHON
   - source activate build-environment
+  # Install constructor dev version which ignore noarch package.
   - conda install -yq --only-deps constructor
   - pip install https://github.com/ericpre/constructor/archive/ignore_noarch_python.zip
 
 script:
   # Create the anaconda based hyperspy bundle
-  - constructor -v .
+  - travis_wait 30 constructor -v .
 
   # Rename the output file which can have .sh or .pkg extension
   - ls
@@ -43,8 +44,9 @@ script:
   - $HYPERSPY_BUNDLE_BIN_PATH/conda list
 
   # Re-run tests in the created anaconda build.
+  - $HYPERSPY_BUNDLE_BIN_PATH/conda install -yq -c conda-forge pytest pytest-mpl
   - export MPLBACKEND=agg
-  - $HYPERSPY_BUNDLE_BIN_PATH/pytest --mpl --pyargs hyperspy
+  - $HYPERSPY_BUNDLE_BIN_PATH/py.test --mpl --pyargs hyperspy
 
 deploy:
   provider: releases
