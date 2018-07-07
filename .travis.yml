@@ -2,8 +2,8 @@ language: generic
 
 matrix:
   include:
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=HyperSpy-bundle
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=HyperSpy-bundle
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=$HOME/HyperSpy-bundle
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=$HOME/hyperspy-bundle
     os: osx
 
 install:
@@ -38,16 +38,23 @@ script:
   - ls
 
   # Install the build in the subfolder "HyperSpy-bundle"
-  - bash $BUILD_NAME -b -p $HOME/$INSTALL_DIR
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
+     installer -pkg $BUILD_NAME -target ~;
+     ls ~;
+    else
+     bash $BUILD_NAME -b -p $INSTALL_DIR;
+    fi
+  - ls $INSTALL_DIR
+  - ls $INSTALL_DIR/bin
 
-  # Check installed package
-  - HYPERSPY_BUNDLE_BIN_PATH="$HOME/$INSTALL_DIR/bin"
-  - $HYPERSPY_BUNDLE_BIN_PATH/conda list
+  # Activate the correct environment and check installed package
+  - source $INSTALL_DIR/bin/activate
+  - conda list
 
   # Re-run tests in the created anaconda build.
-  - $HYPERSPY_BUNDLE_BIN_PATH/conda install -yq -c conda-forge pytest pytest-mpl
+  - conda install -yq -c conda-forge pytest pytest-mpl
   - export MPLBACKEND=agg
-  - $HYPERSPY_BUNDLE_BIN_PATH/pytest --mpl --pyargs hyperspy
+  - pytest --mpl --pyargs hyperspy
 
 deploy:
   provider: releases

@@ -11,6 +11,7 @@ specs:
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
+  # constructor takes too long on macosx to solve the package dependencies with spyder...
   - spyder                                  # [not osx]
   - hyperspy
   - hyperspy-gui-traitsui
@@ -21,9 +22,10 @@ specs:
 #  - hyperspyui
 #  - start-jupyter-cm
 
-post_install: post_installation.sh          # [linux]
-post_install: post_installation-macosx.sh   # [osx]
-post_install: post_installation.bat         # [win]
+post_install: post_install.sh               # [linux]
+post_install: post_install-macosx.sh        # [osx]
+post_install: post_install.bat              # [win]
+pre_uninstall: pre_uninstall.bat            # [win]
 
 installer_type: pkg                         # [osx]
 
