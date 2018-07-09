@@ -3,7 +3,7 @@ language: generic
 matrix:
   include:
   - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=$HOME/HyperSpy-bundle
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=$HOME/hyperspy-bundle
+  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=/hyperspy-bundle
     os: osx
 
 install:
@@ -15,6 +15,7 @@ install:
      PLATFORM='Linux';
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
+  - OLD_PATH=$PATH
   - export PATH="$HOME/miniconda/bin:$PATH"
 
   - conda create -yq -n build-environment python=$PYTHON
@@ -39,8 +40,9 @@ script:
 
   # Install the build in the subfolder "HyperSpy-bundle"
   - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
-     installer -pkg $BUILD_NAME -target ~;
-     ls ~;
+     sudo installer -pkg $BUILD_NAME -target /;
+     export PATH=$INSTALL_DIR/bin:$OLD_PATH;
+     ls $PATH;
     else
      bash $BUILD_NAME -b -p $INSTALL_DIR;
     fi
