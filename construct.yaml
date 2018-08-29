@@ -16,6 +16,7 @@ specs:
   - hyperspy
   - hyperspy-gui-traitsui
   - jupyterlab
+  - cython
   - nodejs
 
 # Once the following package are on conda-forge
