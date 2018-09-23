@@ -10,30 +10,16 @@ environment:
 
     # Pre-installed Python versions, which Appveyor may upgrade to
     # a later point release.
-     - PYTHON: "C:\\Miniconda35"
-       PYTHON_VERSION: "3.5.x"
-       PYTHON_MAJOR: 3
-       PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.5.4.1Qt5.exe'
-       WP_CRC: 'e58b0c86fc4e6ae4fe3f9f467008fd4e3447b5f35b7ad689ab01cdc93733d19e'
-
-     - PYTHON: "C:\\Miniconda35-x64"
-       PYTHON_VERSION: "3.5.x"
-       PYTHON_MAJOR: 3
-       PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.5.4.1Qt5.exe'
-       WP_CRC: 'e522c8adfbd9c967fa2f692d3c313fec1f0e53724b4651ea9e969228532a9586'
-
      - PYTHON: "C:\\Miniconda36"
-       PYTHON_VERSION: "3.6.x"
-       PYTHON_MAJOR: 3
+       PYTHON_VERSION_SHORT: "3.6"
+       PYTHON_VERSION: "3.6.3"
        PYTHON_ARCH: "32"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.6.3.0Qt5.exe'
        WP_CRC: '56259865127c3f802f1eca29528f2676317cad2fd6573ce516fc35b4441a1d3c'
 
      - PYTHON: "C:\\Miniconda36-x64"
-       PYTHON_VERSION: "3.6.x"
-       PYTHON_MAJOR: 3
+       PYTHON_VERSION_SHORT: "3.6"
+       PYTHON_VERSION: "3.6.3"
        PYTHON_ARCH: "64"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.6.3.0Qt5.exe'
        WP_CRC: 'a5efea23ede143fdacab60b8db95835de25c0173bd0d9fd53d5952648bde69b9'
@@ -54,7 +40,7 @@ before_deploy:
   # Download WinPython installer if not cached
   - ps: Add-AppveyorMessage "Installing WinPython..."
   - "SET WP_INSTDIR=%USERPROFILE%\\wpdir\\WinPython-%PYTHON_ARCH%\\"
-  - "SET WP_EXE=%USERPROFILE%/wpdir/WinPython%PYTHON_MAJOR%-%PYTHON_ARCH%bit.exe"
+  - "SET WP_EXE=%USERPROFILE%/wpdir/WinPython3-%PYTHON_ARCH%bit.exe"
   - "mkdir %USERPROFILE%\\wpdir"
   - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
   - ps: Write-Output (Get-FileHash $Env:WP_EXE)
@@ -90,10 +76,9 @@ before_deploy:
   - "ls"
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
-  - ps: if($Env:PYTHON_VERSION -eq "3.5.x") {$Env:PY_VERSION="3.5.4"} else {$Env:PY_VERSION="3.6.3"}
-  - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PY_VERSION}
+  - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION}
   # Use hyperspy-bundle tag as version name
-  - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PY_VERSION%-%PYTHON_ARCH%bit.exe"
+  - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
   - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
   - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
   - ps: py.test --mpl $Env:HYPERSPY_DIR
