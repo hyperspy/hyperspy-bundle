@@ -12,17 +12,17 @@ environment:
     # a later point release.
      - PYTHON: "C:\\Miniconda36"
        PYTHON_VERSION_SHORT: "3.6"
-       PYTHON_VERSION: "3.6.3"
+       PYTHON_VERSION: "3.6.6"
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-32bit-3.6.3.0Qt5.exe'
-       WP_CRC: '56259865127c3f802f1eca29528f2676317cad2fd6573ce516fc35b4441a1d3c'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython32-3.6.6.2Qt5.exe'
+       WP_CRC: 'af9301f4748f7443732c6fc2ecab0e25e0109d5fda623d686e4371d015eb7be3'
 
      - PYTHON: "C:\\Miniconda36-x64"
        PYTHON_VERSION_SHORT: "3.6"
-       PYTHON_VERSION: "3.6.3"
+       PYTHON_VERSION: "3.6.6"
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.9.20171031/WinPython-64bit-3.6.3.0Qt5.exe'
-       WP_CRC: 'a5efea23ede143fdacab60b8db95835de25c0173bd0d9fd53d5952648bde69b9'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython64-3.6.6.2Qt5.exe'
+       WP_CRC: '0007085df58ad4e5749e6d3fc43ce49688ca15a77abea615d36770b2f7ec1ba3'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
