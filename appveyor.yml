@@ -80,8 +80,8 @@ before_deploy:
   # Give info about python vesion and compiler used to compile the python
   - "%CMD_IN_ENV% python.exe -c \"import sys; print(sys.version)\""
 
-  # Use matplotlib 2.2.3 until tests are not compatible with 3.0
-  - "%CMD_IN_ENV% pip install matplotlib==2.2.3 pytest-mpl"
+  # Remove typing to run tests (winpython bug?) typing is only requires for python<3.5
+  - "%CMD_IN_ENV% pip uninstall -y typing"
   # Use a specific branch of hyperspy on github
   - "%CMD_IN_ENV% pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
@@ -97,6 +97,8 @@ before_deploy:
   - "ls"
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
+  # Use matplotlib 2.2.3 until tests are not compatible with 3.0
+  - "%CMD_IN_ENV% pip install matplotlib==2.2.3 pytest-mpl"
   - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION}
   # Use hyperspy-bundle tag as version name
   - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
