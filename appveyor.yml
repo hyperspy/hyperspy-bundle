@@ -69,7 +69,7 @@ before_deploy:
   # Use matplotlib 2.2.3 until tests are not compatible with 3.0
   - "%CMD_IN_ENV% pip install matplotlib==2.2.3 pytest-mpl"
   # Use a specific branch of hyperspy on github
-  - "%CMD_IN_ENV% pip install https://github.com/ericpre/hyperspy/archive/fix_cleanup_decorator_plot_testing.zip#egg=hyperspy[all]"
+  - "%CMD_IN_ENV% pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
   #- "%CMD_IN_ENV% pip install hyperspy[all]"
   - "%CMD_IN_ENV% pip install start_jupyter_cm"
