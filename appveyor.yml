@@ -85,9 +85,9 @@ before_deploy:
   # tqdm RuntimeError when running samfire tests, see https://github.com/hyperspy/hyperspy/issues/2077
   - "%CMD_IN_ENV% pip install tqdm==4.24"
   # Use a specific branch of hyperspy on github
-  - "%CMD_IN_ENV% pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
+  #- "%CMD_IN_ENV% pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
-  #- "%CMD_IN_ENV% pip install hyperspy[all]"
+  - "%CMD_IN_ENV% pip install hyperspy[all]"
   - "%CMD_IN_ENV% pip install start_jupyter_cm"
   # Try to run twice as workaround for permission error (for now, we keep master to test the bundle)
   - "%CMD_IN_ENV% pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip || pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip"
