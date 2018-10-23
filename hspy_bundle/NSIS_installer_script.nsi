@@ -303,7 +303,6 @@ SectionIn RO
 	; Include default MPL RC file
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
-	Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" "jupyter nbextension enable --py --sys-prefix widgetsnbextension""'
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
 		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
@@ -314,6 +313,7 @@ SectionIn RO
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk" "${APP_INSTDIR}\hspy_scripts\hyperspyui.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspyui\images\icon\hyperspy.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_notebook.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Lab.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_lab.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
@@ -365,6 +365,7 @@ Section "Uninstall"
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Lab.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"
