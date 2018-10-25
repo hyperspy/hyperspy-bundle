@@ -22,13 +22,12 @@
 !define WINPYTHON_PATH "__WINPYTHON_PATH__"
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
 !define S_NAME "HyperSpy-Bundle-${APPVERSION}-${ARCHITECTURE}"
-!define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
-!define S_DEFINSTDIR_USER "$PROFILE\${APP_REL_INSTDIR}"
-!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_USER "$PROFILE\${APPNAME}"
+!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APPNAME}"
 !ifdef CL64
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APP_REL_INSTDIR}"
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APPNAME}"
 !else
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles\${APP_REL_INSTDIR}"
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles\${APPNAME}"
 !endif
 !define APP_INSTDIR "$INSTDIR"
 !define UNINSTALLER_FULLPATH "${APP_INSTDIR}\Uninstall_Hyperspy_Bundle.exe"
@@ -210,6 +209,12 @@ Function InstModeSelectionPage_Leave
 	; push $0 ;put back all users hwnd
 	${NSD_GetState} $0 $9
 	${NSD_GetState} $1 $8
+
+	StrLen $INSTDIRLEN $INSTDIR
+	${If} $INSTDIRLEN > 35 ${AndIfNot} ${AtLeastWin8}
+		MessageBox MB_OK "Installation path should be shorter than 35 characters."
+	${EndIf}
+
 	${If} $8 = 1
 		!insertmacro SetInstMode 1
 	${ElseIf} $9 = 1
@@ -292,7 +297,7 @@ FunctionEnd
 
 Function .onVerifyInstDir
     ${If} ${FileExists} $InstDir
-          StrCpy $InstDir "$INSTDIR\${APP_REL_INSTDIR}"
+          StrCpy $InstDir "$INSTDIR\${APPNAME}"
     ${EndIf}
 FunctionEnd
 
