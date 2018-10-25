@@ -11,28 +11,28 @@ environment:
     # Pre-installed Python versions, which Appveyor may upgrade to
     # a later point release.
      - PYTHON: "C:\\Miniconda36"
-       PYTHON_VERSION_SHORT: "3.6"
+       PYTHON_VERSION_SHORT: "36"
        PYTHON_VERSION: "3.6.6"
        PYTHON_ARCH: "32"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython32-3.6.6.2Qt5.exe'
        WP_CRC: 'af9301f4748f7443732c6fc2ecab0e25e0109d5fda623d686e4371d015eb7be3'
 
      - PYTHON: "C:\\Miniconda36-x64"
-       PYTHON_VERSION_SHORT: "3.6"
+       PYTHON_VERSION_SHORT: "36"
        PYTHON_VERSION: "3.6.6"
        PYTHON_ARCH: "64"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython64-3.6.6.2Qt5.exe'
        WP_CRC: '0007085df58ad4e5749e6d3fc43ce49688ca15a77abea615d36770b2f7ec1ba3'
 
      - PYTHON: "C:\\Miniconda37"
-       PYTHON_VERSION_SHORT: "3.7"
+       PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.0"
        PYTHON_ARCH: "32"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython32-3.7.0.2.exe'
        WP_CRC: '4516e09e671d027d50f0c160ad9d2fe8528f610970d38a20093fbdcc731b0735'
 
      - PYTHON: "C:\\Miniconda37-x64"
-       PYTHON_VERSION_SHORT: "3.7"
+       PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.0"
        PYTHON_ARCH: "64"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython64-3.7.0.2.exe'
