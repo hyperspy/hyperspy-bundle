@@ -12,6 +12,7 @@
 !include "nsDialogs.nsh"
 !include "StrFunc.nsh"
 !include "LogicLib.nsh"
+!include "WinVer.nsh"
 !include "FileFunc.nsh"
 !include "X64.nsh"
 !include "__DELETE_MACRO_NAME__.nsh"
@@ -97,12 +98,14 @@ RequestExecutionLevel user
 Page custom InstModeSelectionPage_Create InstModeSelectionPage_Leave
 !define MUI_PAGE_CUSTOMFUNCTION_PRE disableBack
 !define MUI_DIRECTORYPAGE_TEXT_TOP "${APPNAME} ${APPVERSION} will be installed in the following folder. To install to a different folder, click Browse and select another folder."
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE checkLengthPath
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
 ; ------- UAC functions -------------------------------------------------------
 Var InstMode ;0=current, 1=portable, 2=all users,
+Var InstDirLen
 
 Function InstModeChanged
 	${If} $InstMode = 0 ; Current user
@@ -149,6 +152,15 @@ Function disableBack
 	${If} ${UAC_IsInnerInstance}
 		GetDlgItem $0 $HWNDParent 3
 		EnableWindow $0 0
+	${EndIf}
+FunctionEnd
+
+Function checkLengthPath
+	StrLen $InstDirLen "${APP_INSTDIR}"
+	${IfNot} ${AtLeastWin8}
+	${AndIf} $InstDirLen > 38
+		MessageBox MB_OK|MB_ICONSTOP "On Windows 7 and older, the installation path should be shorter than 38 characters."
+		Abort
 	${EndIf}
 FunctionEnd
 
@@ -209,11 +221,6 @@ Function InstModeSelectionPage_Leave
 	; push $0 ;put back all users hwnd
 	${NSD_GetState} $0 $9
 	${NSD_GetState} $1 $8
-
-	StrLen $INSTDIRLEN $INSTDIR
-	${If} $INSTDIRLEN > 35 ${AndIfNot} ${AtLeastWin8}
-		MessageBox MB_OK "Installation path should be shorter than 35 characters."
-	${EndIf}
 
 	${If} $8 = 1
 		!insertmacro SetInstMode 1

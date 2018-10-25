@@ -172,9 +172,12 @@ class HSpyBundleInstaller:
         if not isinstance(arch, (list, tuple)):
             arch = (arch,)
         self.arch = arch
-        self.wppath = dict((
-            (a, glob(os.path.join(dist_path, "WinPython-%s*" % a))[0])
-            for a in arch))
+        try:
+            self.wppath = dict((
+                (a, glob(os.path.join(dist_path, "WinPython-%s*" % a))[0])
+                for a in arch))
+        except IndexError:
+            raise RuntimeError("No Winpython distribution can be found.")
         self.distributions = dict((
             (a, winpython.wppm.Distribution(
                 self.get_full_paths("python-*", a)))
