@@ -12,6 +12,7 @@
 !include "nsDialogs.nsh"
 !include "StrFunc.nsh"
 !include "LogicLib.nsh"
+!include "WinVer.nsh"
 !include "FileFunc.nsh"
 !include "X64.nsh"
 !include "__DELETE_MACRO_NAME__.nsh"
@@ -22,13 +23,12 @@
 !define WINPYTHON_PATH "__WINPYTHON_PATH__"
 !define PYTHON_FOLDER "__PYTHON_FOLDER__"
 !define S_NAME "HyperSpy-Bundle-${APPVERSION}-${ARCHITECTURE}"
-!define APP_REL_INSTDIR "${APPNAME} ${APPVERSION}"
-!define S_DEFINSTDIR_USER "$PROFILE\${APP_REL_INSTDIR}"
-!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APP_REL_INSTDIR}"
+!define S_DEFINSTDIR_USER "$PROFILE\${APPNAME}"
+!define S_DEFINSTDIR_PORTABLE "$DOCUMENTS\${APPNAME}"
 !ifdef CL64
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APP_REL_INSTDIR}"
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles64\${APPNAME}"
 !else
-	!define S_DEFINSTDIR_ADMIN "$ProgramFiles\${APP_REL_INSTDIR}"
+	!define S_DEFINSTDIR_ADMIN "$ProgramFiles\${APPNAME}"
 !endif
 !define APP_INSTDIR "$INSTDIR"
 !define UNINSTALLER_FULLPATH "${APP_INSTDIR}\Uninstall_Hyperspy_Bundle.exe"
@@ -98,12 +98,14 @@ RequestExecutionLevel user
 Page custom InstModeSelectionPage_Create InstModeSelectionPage_Leave
 !define MUI_PAGE_CUSTOMFUNCTION_PRE disableBack
 !define MUI_DIRECTORYPAGE_TEXT_TOP "${APPNAME} ${APPVERSION} will be installed in the following folder. To install to a different folder, click Browse and select another folder."
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE checkLengthPath
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
 ; ------- UAC functions -------------------------------------------------------
 Var InstMode ;0=current, 1=portable, 2=all users,
+Var InstDirLen
 
 Function InstModeChanged
 	${If} $InstMode = 0 ; Current user
@@ -150,6 +152,15 @@ Function disableBack
 	${If} ${UAC_IsInnerInstance}
 		GetDlgItem $0 $HWNDParent 3
 		EnableWindow $0 0
+	${EndIf}
+FunctionEnd
+
+Function checkLengthPath
+	StrLen $InstDirLen "${APP_INSTDIR}"
+	${IfNot} ${AtLeastWin8}
+	${AndIf} $InstDirLen > 38
+		MessageBox MB_OK|MB_ICONSTOP "On Windows 7 and older, the installation path should be shorter than 38 characters."
+		Abort
 	${EndIf}
 FunctionEnd
 
@@ -210,6 +221,7 @@ Function InstModeSelectionPage_Leave
 	; push $0 ;put back all users hwnd
 	${NSD_GetState} $0 $9
 	${NSD_GetState} $1 $8
+
 	${If} $8 = 1
 		!insertmacro SetInstMode 1
 	${ElseIf} $9 = 1
@@ -292,7 +304,7 @@ FunctionEnd
 
 Function .onVerifyInstDir
     ${If} ${FileExists} $InstDir
-          StrCpy $InstDir "$INSTDIR\${APP_REL_INSTDIR}"
+          StrCpy $InstDir "$INSTDIR\${APPNAME}"
     ${EndIf}
 FunctionEnd
 
@@ -303,7 +315,6 @@ SectionIn RO
 	; Include default MPL RC file
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
-	Exec 'cmd.exe /C ""${APP_INSTDIR}\WinPython Command Prompt.exe" "jupyter nbextension enable --py --sys-prefix widgetsnbextension""'
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
 		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
@@ -314,6 +325,7 @@ SectionIn RO
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk" "${APP_INSTDIR}\hspy_scripts\hyperspyui.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspyui\images\icon\hyperspy.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_notebook.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Lab.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_lab.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
@@ -365,6 +377,7 @@ Section "Uninstall"
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
+	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Lab.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Python prompt.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk"

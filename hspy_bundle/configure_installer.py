@@ -9,6 +9,10 @@ import shutil
 
 import winpython.wppm
 
+LAB_BAT = u"""@echo off
+call "%~dp0env.bat"
+jupyter-lab.exe %*
+"""
 
 NOTEBOOK_BAT = u"""@echo off
 call "%~dp0env.bat"
@@ -168,9 +172,12 @@ class HSpyBundleInstaller:
         if not isinstance(arch, (list, tuple)):
             arch = (arch,)
         self.arch = arch
-        self.wppath = dict((
-            (a, glob(os.path.join(dist_path, "WinPython-%s*" % a))[0])
-            for a in arch))
+        try:
+            self.wppath = dict((
+                (a, glob(os.path.join(dist_path, "WinPython-%s*" % a))[0])
+                for a in arch))
+        except IndexError:
+            raise RuntimeError("No Winpython distribution can be found.")
         self.distributions = dict((
             (a, winpython.wppm.Distribution(
                 self.get_full_paths("python-*", a)))
@@ -263,10 +270,10 @@ class HSpyBundleInstaller:
                              hspy_scripts)
             for f, script in zip(
                     ("jupyter_qtconsole.bat", "jupyter_notebook.bat",
-                     "spyder.bat", "python.bat", "cmd.bat", "hyperspyui.bat",
-                     "jupyter_cm.bat"),
-                    (QTCONSOLE_BAT, NOTEBOOK_BAT, SPYDER_BAT, PYTHON_BAT,
-                     CMD_BAT, HSPYUI_BAT, JUPYTER_CM_BAT)):
+                     "jupyter_lab.bat", "spyder.bat", "python.bat", 
+                     "cmd.bat", "hyperspyui.bat", "jupyter_cm.bat"),
+                    (QTCONSOLE_BAT, NOTEBOOK_BAT, LAB_BAT, SPYDER_BAT, 
+                     PYTHON_BAT, CMD_BAT, HSPYUI_BAT, JUPYTER_CM_BAT)):
                 with io.open(os.path.join(hspy_scripts, f), 'w',
                              newline='\r\n', errors="ignore") as f:
                     f.write(script)
