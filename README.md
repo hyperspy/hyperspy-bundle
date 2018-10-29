@@ -1,4 +1,7 @@
+<p align="center">
 <a href="https://github.com/hyperspy/hyperspy-bundle/releases"><img src="./images/download_button.png"></a>
+</p>
+
 
 # HyperSpy WinPython Bundle Distribution
 
@@ -8,7 +11,7 @@ that includes [HyperSpy](http://hyperspy.org/),
 [HyperSpyUI](http://hyperspy.org/hyperspyUI/) and all their dependencies.
 
 HyperSpy Bundle does not interact with any other Python
-installation, so it can be safely installehttps://tympanus.net/Development/IconHoverEffects/#set-4d alongside other
+installation, so it can be safely installed alongside other
 Python distributions. Moreover it is portable, so it can be installed to an USB
 key.
 
