@@ -318,6 +318,7 @@ SectionIn RO
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
 		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
+		AccessControl::GrantOnFile "${APP_INSTDIR}" "(BU)" "FullAccess"
 	${EndIf}
 
 	${If} $InstMode <> 1
