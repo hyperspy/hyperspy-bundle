@@ -37,6 +37,7 @@
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 SetCompressor /SOLID ZLIB
+Unicode True
 
 Name "${S_NAME}"
 OutFile "${S_NAME}.exe"
