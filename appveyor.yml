@@ -76,8 +76,7 @@ before_deploy:
   - "7z x ../UAC.zip -o%NSIS_DIR% -aoa"
   - ps: Start-FileDownload ('http://nsis.sourceforge.net/mediawiki/images/4/4a/AccessControl.zip') ../AccessControl.zip
   - ps: if ((Get-FileHash '../AccessControl.zip').Hash -ne '7f7548e797dfe2e9d636f46a9c4556b7f5548789dca5db08edc5e62fd093963d') { exit(1) }
-  - "7z x ../AccessControl.zip -o../AccessControl -aoa"
-  - ps: Move-Item -Path '../AccessControl/Unicode/Plugins/AccessControl.dll' -Destination '%NSIS_DIR%/Plugins/x86-unicode/AccessControl.dll'
+  - "7z x ../AccessControl.zip -o%NSIS_DIR% -aoa"
 
   # Install current hyperspy in WinPython
   - "%CMD_IN_ENV% %WP_INSTDIR%/scripts/env.bat"
