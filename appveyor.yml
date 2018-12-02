@@ -27,7 +27,7 @@ init:
 
 install:
   - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
-  - "%MINICONDA%/Scripts/pip install ."
+  - "%MINICONDA%\\Scripts\\pip install ."
 
 build: false  # Not a C# project, build stuff at the test step instead.
 
@@ -64,14 +64,14 @@ before_deploy:
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
-  - "ECHO %PATH%"
-  # prepend PATH to use makensis from miniconda
-  - "SET PATH=%MINICONDA%;%PATH%"
-  - "ECHO %PATH%"
-  - "%CMD_IN_ENV% pip --version"
-  - "%MINICONDA%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
-  - "%MINICONDA%/Scripts/conda.exe install -yq -c conda-forge conda-execute"
-  - "%MINICONDA%/Scripts/conda.exe execute -v NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
+  # set PATH to make sure we use makensis from miniconda
+  - "SET ORIGPATH=%PATH%"
+  - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts"
+  - "python -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
+  - "conda install -yq -c nsis nsis=3.* uac accesscontrol"
+  - "makensis NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
+  # Set back the original PATH
+  - "SET PATH=%ORIGPATH%"
   - "ls"
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
