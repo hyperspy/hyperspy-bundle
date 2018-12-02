@@ -1,0 +1,7 @@
+How to build a HyperSpy bundle locally:
+
+1. Download and install a WinPython distribution in a subfolder named "WP", for example
+2. Install the required packages in the WinPython distribution (start_jupyter_cm, hyperspy, etc)
+3. Install the hyperspy_bundle library and conda-execute in a python miniconda distribution
+4. run "python -m hspy_bundle.configure_installer WP 64 your_tag" to build a 64bits bundle
+5. run "conda execute NSIS_installer_script-64bit.nsi" for a 64bits bundle

@@ -1,7 +1,17 @@
+# conda execute
+# env:
+#  - nsis 3.*
+#  - uac
+#  - accesscontrol
+# channels:
+#  - nsis
+# run_with: makensis
+
 ; Hyperspy installer script for Nullsoft installer system.
-; Tested using version 2.46.
+; Tested using version 3.0b2 from the nsis channel in miniconda.
 ; requires installation of 1 extra plugins:
 ;     * UAC - http://nsis.sourceforge.net/UAC_plug-in
+;     * AccessControl - https://nsis.sourceforge.io/AccessControl_plug-in
 
 ; This file based heavily on UAC_DualMode from the UAC plugin.
 
