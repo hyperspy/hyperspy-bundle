@@ -315,6 +315,7 @@ SectionIn RO
 	; Include default MPL RC file
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
+	Exec 'cmd.exe /C "${APP_INSTDIR}\hspy_scripts\compile_all.bat"'
 	${If} $InstMode = 2
 	; Create right-click context menu entries for Hyperspy Here
 		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
