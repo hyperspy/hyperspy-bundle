@@ -64,8 +64,9 @@ before_deploy:
   # Give info about python vesion and compiler used to compile the python
   - "%CMD_IN_ENV% python.exe -c \"import sys; print(sys.version)\""
 
-  # Remove typing to run tests (winpython bug?) typing is only requires for python<3.5
+  # Remove when updating winpython to >=2018-04
   - "%CMD_IN_ENV% pip uninstall -y typing"
+  - "%CMD_IN_ENV% pip install --upgrade ipython ptpython jupyter-console"
   # tqdm RuntimeError when running samfire tests, see https://github.com/hyperspy/hyperspy/issues/2077
   - "%CMD_IN_ENV% pip install tqdm==4.24"
   # Use a specific branch of hyperspy on github
