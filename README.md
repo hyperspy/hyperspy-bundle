@@ -1,3 +1,8 @@
+<p align="center">
+<a href="https://github.com/hyperspy/hyperspy-bundle/releases"><img src="./images/download_button.png"></a>
+</p>
+
+
 # HyperSpy WinPython Bundle Distribution
 
 
