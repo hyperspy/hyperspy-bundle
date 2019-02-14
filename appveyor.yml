@@ -10,17 +10,17 @@ environment:
 
      - PYTHON: "C:\\Miniconda37"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.0"
+       PYTHON_VERSION: "3.7.1"
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython32-3.7.0.2.exe'
-       WP_CRC: '4516e09e671d027d50f0c160ad9d2fe8528f610970d38a20093fbdcc731b0735'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20181031/Winpython32-3.7.1.0.exe'
+       WP_CRC: '152fdd8ec34f123a14ddf0f74f8f9038ef9ba2676bf60954fa8bf9afdd73ec4a'
 
      - PYTHON: "C:\\Miniconda37-x64"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.0"
+       PYTHON_VERSION: "3.7.1"
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython64-3.7.0.2.exe'
-       WP_CRC: '506376156017929982179381bf449841fb17041f0d95ea03ed4c8add871e8f45'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20181031/Winpython64-3.7.1.0.exe'
+       WP_CRC: 'e95de8d6b90c217d6a71d831367b6f94eb76ddc855f041ea1e029b081aba107e'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
@@ -43,7 +43,7 @@ before_deploy:
   - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
   - ps: Write-Output (Get-FileHash $Env:WP_EXE)
   - ps: if ((Get-FileHash $Env:WP_EXE).Hash -ne $Env:WP_CRC) { exit(1) }
-  - ps: (& $Env:WP_EXE /S /D=$Env:WP_INSTDIR | Out-Null )
+  - ps: (& $Env:WP_EXE /VERYSILENT /DIR=$Env:WP_INSTDIR | Out-Null )
   - "ls %USERPROFILE%/wpdir"
   - "ls %WP_INSTDIR%"
 
