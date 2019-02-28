@@ -63,8 +63,7 @@ before_deploy:
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
   - "pip install hyperspy[all]"
-  - "pip install start_jupyter_cm"
-  - "pip install hyperspyui"
+  - "pip install start_jupyter_cm hyperspyui"
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
@@ -80,13 +79,20 @@ before_deploy:
   - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
   - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
   - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
-  - ps: py.test --mpl $Env:HYPERSPY_DIR
+  - ps: pytest --mpl $Env:HYPERSPY_DIR
   - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
   - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+  # Report checksums
+  - md5sum %BUNDLE_INST_NAME%
+  - sha256sum %BUNDLE_INST_NAME%
 
 on_failure:
   # In case, the tests fail, we still push the installer to debug the failure if necessary.
   - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+  # Report checksums
+  - md5sum %BUNDLE_INST_NAME%
+  - sha256sum %BUNDLE_INST_NAME%
+
 
 deploy:
   provider: GitHub
