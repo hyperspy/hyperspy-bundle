@@ -360,7 +360,7 @@ Function UN.onInit
 	${EndIf}
 
 	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" IDOK next
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" /SD IDOK next
 		Abort
 	next:
 FunctionEnd
