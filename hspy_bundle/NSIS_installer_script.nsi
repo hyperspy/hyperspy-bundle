@@ -373,6 +373,8 @@ Section "Uninstall"
 		Sleep 3000 ; It needs a bit of time to run before it get deleted...
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
+	# Remove leftover python distribution directory
+	RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
