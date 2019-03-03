@@ -376,6 +376,8 @@ Section "Uninstall"
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	# Remove leftover python distribution directory
 	# RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
+	DetailPrint "Installation directory: ${APP_INSTDIR}"
+	DetailPrint "Python folder: ${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
