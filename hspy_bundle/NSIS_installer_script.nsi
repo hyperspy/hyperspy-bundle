@@ -360,7 +360,8 @@ Function UN.onInit
 	${EndIf}
 
 	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" /SD IDOK IDOK next
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" /SD IDOK IDOK next IDCANCEL cancel
+	cancel:
 		Abort
 	next:
 FunctionEnd
@@ -374,7 +375,7 @@ Section "Uninstall"
 	${EndIf}
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	# Remove leftover python distribution directory
-	RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
+	# RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
 	# Remove StartMenu entries
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
