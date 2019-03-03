@@ -330,7 +330,7 @@ SectionIn RO
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\spyder.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\share\icons\spyder3.png" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" "${UNINSTALLER_FULLPATH}" "/MODE=$InstMode"
 
