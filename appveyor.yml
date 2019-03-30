@@ -57,8 +57,6 @@ before_deploy:
   # Give info about python vesion and compiler used to compile the python
   - "python.exe -c \"import sys; print(sys.version)\""
 
-  # tqdm RuntimeError when running samfire tests, see https://github.com/hyperspy/hyperspy/issues/2077
-  - "pip install tqdm==4.24"
   # Use a specific branch of hyperspy on github
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
@@ -70,16 +68,16 @@ before_deploy:
   - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
   - "ls"
-  - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
-  # Re-run tests in WinPython environment
-  # Use matplotlib 2.2.3 until tests are not compatible with 3.0
-  - "pip install matplotlib==2.2.3 pytest-mpl"
-  - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION}
   # Use hyperspy-bundle tag as version name
   - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
   - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
-  - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
-  - ps: pytest --mpl $Env:HYPERSPY_DIR
+
+  - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
+  # Re-run tests in WinPython environment
+  # For hyperspy>1.4.1 remove matplotlib=2.2.3 and pytest=4.0.2
+  - "pip install matplotlib==2.2.3 pytest==4.0.2 pytest-mpl pytest-qt"
+  - "pytest --mpl --pyargs hyperspy"
+  - "pytest --pyargs hyperspyui"
   - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
   - "appveyor PushArtifact %BUNDLE_INST_NAME%"
   # Report checksums
