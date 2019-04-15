@@ -316,10 +316,8 @@ SectionIn RO
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
 	Exec 'cmd.exe /C "${APP_INSTDIR}\hspy_scripts\compile_all.bat"'
-	${If} $InstMode = 2
-	; Create right-click context menu entries for Hyperspy Here
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
-	${EndIf}
+	; Add jupyter shortcut in context menu
+	Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
 
 	${If} $InstMode <> 1
 	; Create StartMenu shortcuts
@@ -369,10 +367,9 @@ FunctionEnd
 Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
-	${If} $InstMode = 2
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
-		Sleep 3000 ; It needs a bit of time to run before it get deleted...
-	${EndIf}
+	; Remove jupyter shortcut in context menu
+	Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
+	Sleep 3000 ; It needs a bit of time to run before it get deleted...
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	# Remove leftover python distribution directory
 	# RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"

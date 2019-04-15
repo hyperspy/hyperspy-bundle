@@ -61,7 +61,8 @@ before_deploy:
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
   - "pip install hyperspy[all]"
-  - "pip install hyperspyui start_jupyter_cm"
+  - "pip install hyperspyui"
+  - "pip install https://github.com/ericpre/start_jupyter_cm/archive/master.zip"
   - "pip install atomap pixstem"
   - "pip install https://github.com/diffpy/diffpy.structure/archive/v3.0a2.zip"
   - "pip install https://github.com/pyxem/pyxem/archive/master.zip"
