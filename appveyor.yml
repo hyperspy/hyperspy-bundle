@@ -58,16 +58,19 @@ before_deploy:
   - "python.exe -c \"import sys; print(sys.version)\""
 
   # Remove some large package to get below the NSIS 2Gb limit
-  - "pip uninstall -y pygame plotnine holoviews pulp nltk datashader"
+  - "pip uninstall -y tensorflow tensorflow_estimator tensorflow_probability torch torchvision"
 
   # Use a specific branch of hyperspy on github
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
   - "pip install hyperspy[all]"
-  - "pip install hyperspyui"
+  - "pip install hyperspyui atomap pixstem diffpy.structure"
   - "pip install https://github.com/ericpre/start_jupyter_cm/archive/master.zip"
-  - "pip install atomap pixstem diffpy.structure"
   - "pip install https://github.com/pyxem/pyxem/archive/master.zip"
+
+  # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
+  - "pip install pycleanup"
+  - "pushd %WP_INSTDIR% & pycleanup --cache & popd"
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
