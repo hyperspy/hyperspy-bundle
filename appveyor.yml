@@ -71,6 +71,7 @@ before_deploy:
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
+  - ps: 'Get-ChildItem -Recurse $Env:WP_INSTDIR | Measure-Object -Property Length -Sum'
   - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
   - "ls"
