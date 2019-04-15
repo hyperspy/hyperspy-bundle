@@ -370,7 +370,7 @@ Section "Uninstall"
 	Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
 	Sleep 3000 ; It needs a bit of time to run before it get deleted...
 	; Clean cache so there is no left over files after uninstallation
-	Exec 'cmd.exe /C "cd ${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup" --cache"'
+	Exec 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"'
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	; Remove leftover python distribution directory
 	; RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
