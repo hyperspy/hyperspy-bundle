@@ -82,25 +82,18 @@ before_deploy:
   - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
   - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
 
+  - ps: Add-AppveyorMessage "Pushing artefacts..."
+  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+  # Report checksums
+  - md5sum %BUNDLE_INST_NAME%
+  - sha256sum %BUNDLE_INST_NAME%
+
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
   # For hyperspy>1.4.1 remove matplotlib=2.2.3 and pytest=4.0.2
   - "pip install matplotlib==2.2.3 pytest==4.0.2 pytest-mpl pytest-qt"
   - "pytest --mpl --pyargs hyperspy"
   - "pytest --pyargs hyperspyui"
-  - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
-  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
-  # Report checksums
-  - md5sum %BUNDLE_INST_NAME%
-  - sha256sum %BUNDLE_INST_NAME%
-
-on_failure:
-  # In case, the tests fail, we still push the installer to debug the failure if necessary.
-  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
-  # Report checksums
-  - md5sum %BUNDLE_INST_NAME%
-  - sha256sum %BUNDLE_INST_NAME%
-
 
 deploy:
   provider: GitHub
