@@ -374,7 +374,7 @@ Section "Uninstall"
 	Exec 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"'
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	; Remove leftover python distribution directory
-	RMDir /r ""${APP_INSTDIR}"\"${PYTHON_FOLDER}"\DLL"
+	RMDir /r /REBOOTOK "${APP_INSTDIR}\${PYTHON_FOLDER}\DLL"
 	DetailPrint "Installation directory: ${APP_INSTDIR}"
 	DetailPrint "Python folder: ${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
