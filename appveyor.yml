@@ -64,9 +64,7 @@ before_deploy:
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
   - "pip install hyperspy[all]"
-  - "pip install hyperspyui atomap pixstem diffpy.structure"
-  - "pip install https://github.com/ericpre/start_jupyter_cm/archive/master.zip"
-  - "pip install https://github.com/pyxem/pyxem/archive/master.zip"
+  - "pip install start_jupyter_cm hyperspyui atomap pixstem pyxem"
 
   # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
   - "pip install pycleanup"
@@ -90,8 +88,7 @@ before_deploy:
 
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
-  # For hyperspy>1.4.1 remove matplotlib=2.2.3 and pytest=4.0.2
-  - "pip install matplotlib==2.2.3 pytest==4.0.2 pytest-mpl pytest-qt"
+  - "pip install pytest pytest-mpl pytest-qt"
   - "pytest --mpl --pyargs hyperspy"
   - "pytest --pyargs hyperspyui"
 
