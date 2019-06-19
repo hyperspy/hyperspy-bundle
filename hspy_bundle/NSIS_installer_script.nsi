@@ -183,7 +183,7 @@ Function InstModeSelectionPage_Create
 	nsDialogs::OnClick $R0 $8
 	nsDialogs::SetUserData $R0 0
 
-	${NSD_CreateRadioButton} 0 60u 75% 15u "Portable (No startup menu entry)"
+	${NSD_CreateRadioButton} 0 60u 75% 15u "Portable (No startup menu entry and no right-click shortcut)"
 	Pop $R1
 	nsDialogs::OnClick $R1 $8
 	nsDialogs::SetUserData $R1 0
@@ -315,11 +315,12 @@ SectionIn RO
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
 	Exec 'cmd.exe /C "${APP_INSTDIR}\hspy_scripts\compile_all.bat"'
-	; Add jupyter shortcut in context menu
-	Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
 
 	${If} $InstMode <> 1
 	; Create StartMenu shortcuts
+		; Add jupyter shortcuts in context menu
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
+		; Add shortcuts in the start menu
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk" "${APP_INSTDIR}\hspy_scripts\hyperspyui.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspyui\images\icon\hyperspy.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_notebook.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
@@ -373,7 +374,7 @@ Section "Uninstall"
 	Exec 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"'
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
 	; Remove leftover python distribution directory
-	; RMDir "${APP_INSTDIR}\${PYTHON_FOLDER}"
+	RMDir /r ""${APP_INSTDIR}"\"${PYTHON_FOLDER}"\DLL"
 	DetailPrint "Installation directory: ${APP_INSTDIR}"
 	DetailPrint "Python folder: ${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
