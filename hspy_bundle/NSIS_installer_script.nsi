@@ -368,13 +368,13 @@ Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
 	; Remove jupyter shortcut in context menu
-	Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
-	Sleep 3000 ; It needs a bit of time to run before it get deleted...
+	ExecWait 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"' $0
+	DetailPrint "$0"
+	; Sleep 1000 ; It needs a bit of time to run before it get deleted...
 	; Clean cache so there is no left over files after uninstallation
-	Exec 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"'
+	ExecWait 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"' $0
+	DetailPrint "$0"
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
-	; Remove leftover python distribution directory
-	RMDir /r /REBOOTOK "${APP_INSTDIR}\${PYTHON_FOLDER}\DLL"
 	DetailPrint "Installation directory: ${APP_INSTDIR}"
 	DetailPrint "Python folder: ${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
