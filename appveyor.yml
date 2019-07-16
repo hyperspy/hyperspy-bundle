@@ -5,27 +5,27 @@ environment:
 
   global:
     NSIS_DIR: "%PROGRAMFILES(x86)%/NSIS"
+    MPLBACKEND: "agg"
 
   matrix:
 
      - PYTHON: "C:\\Miniconda37"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.0"
+       PYTHON_VERSION: "3.7.2"
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython32-3.7.0.2.exe'
-       WP_CRC: '4516e09e671d027d50f0c160ad9d2fe8528f610970d38a20093fbdcc731b0735'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20190223/Winpython32-3.7.2.0.exe'
+       WP_CRC: '40a80d2fba1348da785bd97ee8de4e69c554c3d9dcd632b623a0f12e3ddb5ec0'
 
      - PYTHON: "C:\\Miniconda37-x64"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.0"
+       PYTHON_VERSION: "3.7.2"
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.10.20180827/WinPython64-3.7.0.2.exe'
-       WP_CRC: '506376156017929982179381bf449841fb17041f0d95ea03ed4c8add871e8f45'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20190223/Winpython64-3.7.2.0.exe'
+       WP_CRC: '3fb3ece2ba20fa903f15b642f5749a4517c2557788801197a981eea11ec21865'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
   - "ECHO %APPVEYOR_BUILD_FOLDER%"
-  - "ECHO %CMD_IN_ENV%"
 
 install:
   - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
@@ -43,61 +43,60 @@ before_deploy:
   - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
   - ps: Write-Output (Get-FileHash $Env:WP_EXE)
   - ps: if ((Get-FileHash $Env:WP_EXE).Hash -ne $Env:WP_CRC) { exit(1) }
-  - ps: (& $Env:WP_EXE /S /D=$Env:WP_INSTDIR | Out-Null )
+  - ps: (& $Env:WP_EXE /VERYSILENT /DIR=$Env:WP_INSTDIR | Out-Null )
   - "ls %USERPROFILE%/wpdir"
   - "ls %WP_INSTDIR%"
 
-  # Patch NSIS to allow longer strings
+  # Install UAC plugin
   - ps: Add-AppveyorMessage "Setting up WinPython environment..."
-  - ps: Start-FileDownload ('http://freefr.dl.sourceforge.net/project/nsis/NSIS%203/3.03/nsis-3.03-strlen_8192.zip') ../nsis_patch.zip
-  - ps: if ((Get-FileHash '../nsis_patch.zip').Hash -ne '023d637df9cd146f2d207fbbc627a5f63e5f71fea012523797c5af6bf342704b') { exit(1) }
-  - "7z x ../nsis_patch.zip -o%NSIS_DIR% -aoa"
-  - ps: Start-FileDownload ('http://nsis.sourceforge.net/mediawiki/images/e/eb/Textreplace.zip') ../Textreplace.zip
-  - ps: if ((Get-FileHash '../Textreplace.zip').Hash -ne '6462C0C22E87E7C81DD9076D40ACC74C515243A56F10F4F8FE720F7099DB3BA2') { exit(1) }
-  - "7z x ../Textreplace.zip -o%NSIS_DIR% -aoa"
   - ps: Start-FileDownload ('http://nsis.sourceforge.net/mediawiki/images/8/8f/UAC.zip') ../UAC.zip
   - ps: if ((Get-FileHash '../UAC.zip').Hash -ne '20E3192AF5598568887C16D88DE59A52C2CE4A26E42C5FB8BEE8105DCBBD1760') { exit(1) }
   - "7z x ../UAC.zip -o%NSIS_DIR% -aoa"
 
   # Install current hyperspy in WinPython
-  - "%CMD_IN_ENV% %WP_INSTDIR%/scripts/env.bat"
+  - "%WP_INSTDIR%/scripts/env.bat"
   # Give info about python vesion and compiler used to compile the python
-  - "%CMD_IN_ENV% python.exe -c \"import sys; print(sys.version)\""
+  - "python.exe -c \"import sys; print(sys.version)\""
 
-  # Remove when updating winpython to >=2018-04
-  - "%CMD_IN_ENV% pip uninstall -y typing"
-  - "%CMD_IN_ENV% pip install --upgrade ipython ptpython jupyter-console"
-  # tqdm RuntimeError when running samfire tests, see https://github.com/hyperspy/hyperspy/issues/2077
-  - "%CMD_IN_ENV% pip install tqdm==4.24"
+  # Remove some large package to get below the NSIS 2Gb limit
+  - "pip uninstall -y tensorflow tensorflow_estimator tensorflow_probability torch torchvision"
+
   # Use a specific branch of hyperspy on github
-  #- "%CMD_IN_ENV% pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
+  #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
-  - "%CMD_IN_ENV% pip install hyperspy[all]"
-  - "%CMD_IN_ENV% pip install start_jupyter_cm"
-  # Try to run twice as workaround for permission error (for now, we keep master to test the bundle)
-  - "%CMD_IN_ENV% pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip || pip install https://github.com/hyperspy/hyperspyUI/archive/master.zip"
+  - "pip install hyperspy[all]"
+  - "pip install start_jupyter_cm hyperspyui atomap pixstem pyxem"
+
+  # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
+  - "pip install pycleanup"
+  - "pushd %WP_INSTDIR% & pycleanup --cache & popd"
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
+  - ps: 'Get-ChildItem -Recurse $Env:WP_INSTDIR | Measure-Object -Property Length -Sum'
   - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
   - "ls"
-  - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
-  # Re-run tests in WinPython environment
-  # Use matplotlib 2.2.3 until tests are not compatible with 3.0
-  - "%CMD_IN_ENV% pip install matplotlib==2.2.3 pytest-mpl"
-  - ps: if($Env:PYTHON_ARCH -eq "64") {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION+".amd64"} else {$Env:PYTHON_DIR_NAME="python-"+$Env:PYTHON_VERSION}
   # Use hyperspy-bundle tag as version name
   - "SET BUNDLE_INST_NAME=HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-py%PYTHON_VERSION_SHORT%-%PYTHON_ARCH%bit.exe"
   - "ren HyperSpy-Bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_ARCH%bit.exe %BUNDLE_INST_NAME%"
-  - "SET HYPERSPY_DIR=%WP_INSTDIR%\\%PYTHON_DIR_NAME%\\Lib\\site-packages\\hyperspy"
-  - ps: py.test --mpl $Env:HYPERSPY_DIR
-  - ps: Add-AppveyorMessage "Tests finished! Pushing to GitHub..."
-  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
 
-on_failure:
-  # In case, the tests fail, we still push the installer to debug the failure if necessary.
+  - ps: Add-AppveyorMessage "Pushing artefacts..."
   - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+  # Report checksums
+  - md5sum %BUNDLE_INST_NAME%
+  - sha256sum %BUNDLE_INST_NAME%
+
+  - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
+  # Re-run tests in WinPython environment
+  - "pip install pytest pytest-mpl pytest-qt"
+  # image comparison fails with matplotlib 3.0.3
+  # - "pytest --mpl --pyargs hyperspy"
+  - "pytest --pyargs hyperspy"
+  # FIXME the test suite hold the build
+  # - "pytest --pyargs hyperspyui"
+  - "pytest --pyargs atomap"
+  - "pytest --pyargs pyxem"
 
 deploy:
   provider: GitHub

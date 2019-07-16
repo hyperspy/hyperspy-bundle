@@ -178,17 +178,17 @@ Function InstModeSelectionPage_Create
 	${NSD_CreateLabel} 0 20u 75% 20u "Please select install type..."
 	Pop $0
 	System::Call "advapi32::GetUserName(t.r0,*i${NSIS_MAX_STRLEN})i"
-	${NSD_CreateRadioButton} 0 40u 75% 15u "Single User ($0) (no right-click shortcut)"
+	${NSD_CreateRadioButton} 0 40u 75% 15u "Single User ($0)"
 	Pop $R0
 	nsDialogs::OnClick $R0 $8
 	nsDialogs::SetUserData $R0 0
 
-	${NSD_CreateRadioButton} 0 60u 75% 15u "Portable (no right-click shortcut and startup menu entry)"
+	${NSD_CreateRadioButton} 0 60u 75% 15u "Portable (No startup menu entry and no right-click shortcut)"
 	Pop $R1
 	nsDialogs::OnClick $R1 $8
 	nsDialogs::SetUserData $R1 0
 
-	${NSD_CreateRadioButton} 0 80u 75% 15u "All users (Right-click shortcut too)"
+	${NSD_CreateRadioButton} 0 80u 75% 15u "All users"
 	Pop $R2
 	nsDialogs::OnClick $R2 $8
 	nsDialogs::SetUserData $R2 1
@@ -312,17 +312,15 @@ FunctionEnd
 ; -------- Sections -----------------------------------------------------------
 Section "Required Files"
 SectionIn RO
-	; Include default MPL RC file
 	SetOutPath "${APP_INSTDIR}"
 	File /r "${WINPYTHON_PATH}\*"
 	Exec 'cmd.exe /C "${APP_INSTDIR}\hspy_scripts\compile_all.bat"'
-	${If} $InstMode = 2
-	; Create right-click context menu entries for Hyperspy Here
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
-	${EndIf}
 
 	${If} $InstMode <> 1
 	; Create StartMenu shortcuts
+		; Add jupyter shortcuts in context menu
+		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" add"'
+		; Add shortcuts in the start menu
 		CreateDirectory "$SMPROGRAMS\${APPNAME}"
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk" "${APP_INSTDIR}\hspy_scripts\hyperspyui.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\hyperspyui\images\icon\hyperspy.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_notebook.bat" "--notebook-dir=$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter.ico" 0
@@ -330,7 +328,7 @@ SectionIn RO
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk" "${APP_INSTDIR}\hspy_scripts\jupyter_qtconsole.bat" "$\"%HOMEPATH%$\"" "${APP_INSTDIR}\${PYTHON_FOLDER}\Lib\site-packages\start_jupyter_cm\icons\jupyter-qtconsole.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython prompt.lnk" "${APP_INSTDIR}\hspy_scripts\cmd.bat" "" "${APP_INSTDIR}\hspy_scripts\cmd.ico" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Python prompt.lnk" "${APP_INSTDIR}\hspy_scripts\python.bat" "" "${APP_INSTDIR}\hspy_scripts\python.ico" 0
-		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\Scripts\spyder.ico" 0
+		CreateShortCut "$SMPROGRAMS\${APPNAME}\Spyder IDE.lnk" "${APP_INSTDIR}\hspy_scripts\spyder.bat" "" "${APP_INSTDIR}\${PYTHON_FOLDER}\share\icons\spyder3.png" 0
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\WinPython Control Panel.lnk" "${APP_INSTDIR}\WinPython Control Panel.exe" ""
 		CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall ${APPNAME}.lnk" "${UNINSTALLER_FULLPATH}" "/MODE=$InstMode"
 
@@ -360,7 +358,8 @@ Function UN.onInit
 	${EndIf}
 
 	#Verify the uninstaller - last chance to back out
-	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" IDOK next
+	MessageBox MB_OKCANCEL "Permanantly remove ${APPNAME} ${APPVERSION}?" /SD IDOK IDOK next IDCANCEL cancel
+	cancel:
 		Abort
 	next:
 FunctionEnd
@@ -368,13 +367,18 @@ FunctionEnd
 Section "Uninstall"
 	; Currently do not create uninstaller for mode 1, so ignore
 	SetOutPath "$TEMP"
-	${If} $InstMode = 2
-		Exec 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"'
-		Sleep 3000 ; It needs a bit of time to run before it get deleted...
-	${EndIf}
+	; Remove jupyter shortcut in context menu
+	ExecWait 'cmd.exe /C ""${APP_INSTDIR}\hspy_scripts\jupyter_cm.bat" remove"' $0
+	DetailPrint "$0"
+	; Sleep 1000 ; It needs a bit of time to run before it get deleted...
+	; Clean cache so there is no left over files after uninstallation
+	ExecWait 'cmd.exe /C "cd "${APP_INSTDIR}\${PYTHON_FOLDER}" & Scripts\pycleanup --cache"' $0
+	DetailPrint "$0"
 	!insertmacro __DELETE_MACRO_NAME__ $INSTDIR
+	DetailPrint "Installation directory: ${APP_INSTDIR}"
+	DetailPrint "Python folder: ${PYTHON_FOLDER}"
 	DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
-	# Remove StartMenu entries
+	; Remove StartMenu entries
 	Delete "$SMPROGRAMS\${APPNAME}\HyperSpyUI.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter Notebook.lnk"
 	Delete "$SMPROGRAMS\${APPNAME}\Jupyter QtConsole.lnk"
