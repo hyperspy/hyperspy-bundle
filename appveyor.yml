@@ -13,15 +13,15 @@ environment:
        PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.2"
        PYTHON_ARCH: "32"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20190223/Winpython32-3.7.2.0.exe'
-       WP_CRC: '40a80d2fba1348da785bd97ee8de4e69c554c3d9dcd632b623a0f12e3ddb5ec0'
+       WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython32-3.7.4.0rc.exe'
+       WP_CRC: '0a53bba8d413278317fa5d5a886973123cad9b2ba837a979b4337464c74fad6a'
 
      - PYTHON: "C:\\Miniconda37-x64"
        PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.2"
        PYTHON_ARCH: "64"
-       WP_URL: 'https://github.com/winpython/winpython/releases/download/1.11.20190223/Winpython64-3.7.2.0.exe'
-       WP_CRC: '3fb3ece2ba20fa903f15b642f5749a4517c2557788801197a981eea11ec21865'
+       WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython64-3.7.4.0rc.exe'
+       WP_CRC: '5701b68128a69926f8b7a136fc3e3b1e0b64b07e6ccb21d1995db3d879617a49'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
@@ -90,9 +90,7 @@ before_deploy:
   - ps: Add-AppveyorMessage "Installer created! Run tests in Winpython environment..."
   # Re-run tests in WinPython environment
   - "pip install pytest pytest-mpl pytest-qt"
-  # image comparison fails with matplotlib 3.0.3
-  # - "pytest --mpl --pyargs hyperspy"
-  - "pytest --pyargs hyperspy"
+  - "pytest --mpl --pyargs hyperspy"
   # FIXME the test suite hold the build
   # - "pytest --pyargs hyperspyui"
   - "pytest --pyargs atomap"
