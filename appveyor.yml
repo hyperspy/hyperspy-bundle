@@ -11,14 +11,14 @@ environment:
 
      - PYTHON: "C:\\Miniconda37"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.2"
+       PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "32"
        WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython32-3.7.4.0rc.exe'
        WP_CRC: '0a53bba8d413278317fa5d5a886973123cad9b2ba837a979b4337464c74fad6a'
 
      - PYTHON: "C:\\Miniconda37-x64"
        PYTHON_VERSION_SHORT: "37"
-       PYTHON_VERSION: "3.7.2"
+       PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "64"
        WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython64-3.7.4.0rc.exe'
        WP_CRC: '5701b68128a69926f8b7a136fc3e3b1e0b64b07e6ccb21d1995db3d879617a49'
