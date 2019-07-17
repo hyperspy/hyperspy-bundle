@@ -22,7 +22,7 @@ environment:
        PYTHON_ARCH: "64"
        WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython64-3.7.4.0rc.exe'
        WP_CRC: '5701b68128a69926f8b7a136fc3e3b1e0b64b07e6ccb21d1995db3d879617a49'
-       WP_DIR_NAME: WPy64-3740"
+       WP_DIR_NAME: 'WPy64-3740'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
@@ -38,13 +38,14 @@ build: false  # Not a C# project, build stuff at the test step instead.
 before_deploy:
   # Download WinPython installer if not cached
   - ps: Add-AppveyorMessage "Installing WinPython..."
-  - "SET WP_DIR=%USERPROFILE%\\%WP_DIR_NAME%"
-  - "SET WP_EXE=%USERPROFILE%\\WinPython3.exe"
+  - "SET WP_DIR=%USERPROFILE%/%WP_DIR_NAME%"
+  - "SET WP_EXE=%USERPROFILE%/WinPython3.exe"
   - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
   - ps: Write-Output (Get-FileHash $Env:WP_EXE)
   - ps: if ((Get-FileHash $Env:WP_EXE).Hash -ne $Env:WP_CRC) { exit(1) }
   - ps: (& $Env:WP_EXE -y | Out-Null )
   - "ls"
+  - "ls %USERPROFILE%"
   - "ls %WP_DIR%"
 
   # Install UAC plugin
@@ -69,12 +70,12 @@ before_deploy:
 
   # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
   - "pip install pycleanup"
-  - "pushd %WP_DIR% & pycleanup --cache & popd"
+  - "pushd %USERPROFILE% & pycleanup --cache & popd"
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
   - ps: 'Get-ChildItem -Recurse $Env:WP_DIR | Measure-Object -Property Length -Sum'
-  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE%/wpdir %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
+  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE% %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
   - "ls"
   # Use hyperspy-bundle tag as version name

@@ -165,7 +165,7 @@ class HSpyBundleInstaller:
         │   ├── package1
         │   ├── package2
         │   └── ...
-        └── WinPython-ARCH*
+        └── WP-ARCH*
             ├── f1
             ├── f2
             └── ...
@@ -182,7 +182,7 @@ class HSpyBundleInstaller:
         self.arch = arch
         try:
             self.wppath = dict((
-                (a, glob(os.path.join(dist_path, "WinPython-%s*" % a))[0])
+                (a, glob(os.path.join(dist_path, "WPy%s-*" % a))[0])
                 for a in arch))
         except IndexError:
             raise RuntimeError("No Winpython distribution can be found.")
@@ -326,8 +326,8 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         arch = sys.argv[2].split(',')
     else:
-        dirs = glob(os.path.join(bundle_dir, "WinPython-*"))
-        dirs = [d.lstrip(os.path.join(bundle_dir, "WinPython-")) for d in dirs]
+        dirs = glob(os.path.join(bundle_dir, "WPy*"))
+        dirs = [d.lstrip(os.path.join(bundle_dir, "WPy")) for d in dirs]
         arch = tuple(set([d[0:2] for d in dirs]))
     if len(sys.argv) > 3:
         version = sys.argv[3]
