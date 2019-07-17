@@ -9,12 +9,13 @@ environment:
 
   matrix:
 
-     #- PYTHON: "C:\\Miniconda37"
-     #  PYTHON_VERSION_SHORT: "37"
-     #  PYTHON_VERSION: "3.7.4"
-     #  PYTHON_ARCH: "32"
-     #  WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython32-3.7.4.0rc.exe'
-     #  WP_CRC: '0a53bba8d413278317fa5d5a886973123cad9b2ba837a979b4337464c74fad6a'
+     - PYTHON: "C:\\Miniconda37"
+       PYTHON_VERSION_SHORT: "37"
+       PYTHON_VERSION: "3.7.4"
+       PYTHON_ARCH: "32"
+       WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/betas/Winpython32-3.7.4.0rc.exe'
+       WP_CRC: '0a53bba8d413278317fa5d5a886973123cad9b2ba837a979b4337464c74fad6a'
+       WP_DIR_NAME: 'WPy32-3740'
 
      - PYTHON: "C:\\Miniconda37-x64"
        PYTHON_VERSION_SHORT: "37"
@@ -70,7 +71,7 @@ before_deploy:
 
   # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
   - "pip install pycleanup"
-  - "pushd %USERPROFILE% & pycleanup --cache & popd"
+  - "pushd %WP_INSTDIR% & pycleanup --cache & popd"
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
