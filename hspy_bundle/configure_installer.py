@@ -165,7 +165,7 @@ class HSpyBundleInstaller:
         │   ├── package1
         │   ├── package2
         │   └── ...
-        └── WP-ARCH*
+        └── WPyARCH-*
             ├── f1
             ├── f2
             └── ...
