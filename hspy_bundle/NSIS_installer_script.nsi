@@ -178,7 +178,7 @@ Function InstModeSelectionPage_Create
 	${NSD_CreateLabel} 0 20u 75% 20u "Please select install type..."
 	Pop $0
 	System::Call "advapi32::GetUserName(t.r0,*i${NSIS_MAX_STRLEN})i"
-	${NSD_CreateRadioButton} 0 40u 75% 15u "Single User ($0)"
+	${NSD_CreateRadioButton} 0 40u 75% 15u "Single User (Recommended; only for $0)"
 	Pop $R0
 	nsDialogs::OnClick $R0 $8
 	nsDialogs::SetUserData $R0 0
@@ -188,7 +188,7 @@ Function InstModeSelectionPage_Create
 	nsDialogs::OnClick $R1 $8
 	nsDialogs::SetUserData $R1 0
 
-	${NSD_CreateRadioButton} 0 80u 75% 15u "All users"
+	${NSD_CreateRadioButton} 0 80u 75% 15u "All users (Admin right required)"
 	Pop $R2
 	nsDialogs::OnClick $R2 $8
 	nsDialogs::SetUserData $R2 1

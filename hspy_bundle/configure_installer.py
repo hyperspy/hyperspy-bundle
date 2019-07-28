@@ -69,8 +69,8 @@ python -m hyperspyui %*
 JUPYTER_CM_BAT = u"""@echo off
 call "%~dp0env.bat"
 cd "%HOMEPATH%"
-if [%1]==[add] cmd.exe /c "jupyter_context-menu_add"
-if [%1]==[remove] cmd.exe /c "jupyter_context-menu_remove"
+if [%1]==[add] cmd.exe /c "start_jupyter_cm"
+if [%1]==[remove] cmd.exe /c "start_jupyter_cm --remove"
 
 """
 
