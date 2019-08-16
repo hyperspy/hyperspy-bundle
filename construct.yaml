@@ -1,6 +1,7 @@
-
 name: HyperSpy-bundle
-version: 2018.07.05
+version: 2019.08.11
+
+install_in_dependency_order: True
 
 channels:
   - http://repo.anaconda.com/pkgs/main/
@@ -11,31 +12,10 @@ specs:
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
-  # constructor takes too long on macosx to solve the package dependencies with spyder...
-  - spyder                                  # [not osx]
-  - hyperspy
-  - hyperspy-gui-traitsui
+  - spyder
   - jupyterlab
-  - cython
-  - nodejs
-
-# Once the following package are on conda-forge
-#  - hyperspyui
-#  - start-jupyter-cm
-
-post_install: post_install.sh               # [linux]
-post_install: post_install-macosx.sh        # [osx]
-post_install: post_install.bat              # [win]
-pre_uninstall: pre_uninstall.bat            # [win]
-
-installer_type: pkg                         # [osx]
-
-install_in_dependency_order: True
+  - hyperspy
 
 license_file: LICENSE
 
-# Icon image for Windows installer
-icon_image: hyperspy_bundle_installer.ico   # [win]
-
-company: The HyperSpy community 
 
