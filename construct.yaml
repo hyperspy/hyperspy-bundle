@@ -14,7 +14,7 @@ conda_default_channels:
 initialize_by_default: True
 
 specs:
-  - python 3.7*
+  #- python 3.7*
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
