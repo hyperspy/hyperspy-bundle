@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2019.08.11
+version: 2019.09.27
 
 install_in_dependency_order: True
 
@@ -7,14 +7,19 @@ channels:
   - http://repo.anaconda.com/pkgs/main/
   - https://conda.anaconda.org/conda-forge
 
+conda_default_channels:
+  - http://repo.anaconda.com/pkgs/main/
+  - https://conda.anaconda.org/conda-forge
+
+initialize_by_default: True
+
 specs:
-  - python
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
   - spyder
-  - jupyterlab
   - hyperspy
+  - hyperspyui
 
 license_file: LICENSE
 
