@@ -31,6 +31,12 @@ test_script:
   - 'set BUNDLE_INST_NAME=HyperSpy-bundle-%APPVEYOR_REPO_TAG_NAME%-%PYTHON_VERSION%-Windows%PYTHON_ARCH%.exe'
   - 'ren HyperSpy-Bundle-* %BUNDLE_INST_NAME%'
 
+  - ps: Add-AppveyorMessage "Pushing artefacts..."
+  - "appveyor PushArtifact %BUNDLE_INST_NAME%"
+  # Report checksums
+  - md5sum %BUNDLE_INST_NAME%
+  - sha256sum %BUNDLE_INST_NAME%
+
   # Install the build
   - 'start /wait "" %BUNDLE_INST_NAME% /S /D=%INSTALL_DIR%'
   - dir

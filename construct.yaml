@@ -21,7 +21,12 @@ specs:
   - spyder
   - hyperspy
   - hyperspyui
+  - start_jupyter_cm                        # [not osx]
+
 
 license_file: LICENSE
 
+installer_type: pkg                         # [osx]
 
+# Icon image for Windows installer
+icon_image: hyperspy_bundle_installer.ico   # [win]
