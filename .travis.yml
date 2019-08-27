@@ -2,11 +2,11 @@ language: generic
 
 matrix:
   include:
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=$HOME/HyperSpy-bundle
-  - env: export PYTHON=3.6; PYTHON_VERSION=py36; INSTALL_DIR=/hyperspy-bundle
+  - env: export PYTHON=3.7; PYTHON_VERSION=py37; INSTALL_DIR=$HOME/HyperSpy-bundle
+  - env: export PYTHON=3.7; PYTHON_VERSION=py37; INSTALL_DIR=/hyperspy-bundle
     os: osx
 
-install:
+before_install:
   - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; 
      PLATFORM='MacOSX';
@@ -14,19 +14,17 @@ install:
      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
      PLATFORM='Linux';
     fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - OLD_PATH=$PATH
-  - export PATH="$HOME/miniconda/bin:$PATH"
+  - chmod +x miniconda.sh;
+    ./miniconda.sh -b -p $HOME/miniconda;
+    export "PATH=$HOME/miniconda/bin:$PATH";
 
-  - conda create -yq -n build-environment python=$PYTHON
-  - source activate build-environment
-  # Install constructor dev version which ignore noarch package.
-  - conda install -yq --only-deps constructor
-  - pip install https://github.com/ericpre/constructor/archive/ignore_noarch_python.zip
+install:
+  - conda update -y conda;
+  - conda install -yq constructor
 
 script:
   # Create the anaconda based hyperspy bundle
-  - travis_wait 40 constructor .
+  - constructor -v
   - source deactivate
 
   # Rename the output file which can have .sh or .pkg extension
