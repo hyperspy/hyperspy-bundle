@@ -43,12 +43,14 @@ script:
   - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
      sudo installer -pkg $BUILD_NAME -target /;
      source /HyperSpy-bundle/bin/activate;
+     ls /;
+     sudo chown -R travis /HyperSpy-bundle;
     else
      bash $BUILD_NAME -b -p $INSTALL_DIR;
+     ls $INSTALL_DIR;
      source $INSTALL_DIR/bin/activate;
     fi
   - ls $HOME
-  - ls $INSTALL_DIR
 
   # Check the installation and environment 
   - conda info
