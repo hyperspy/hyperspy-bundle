@@ -1,10 +1,13 @@
 language: generic
 
-matrix:
-  include:
-  - env: export PYTHON=3.7; PYTHON_VERSION=py37; INSTALL_DIR=$HOME/HyperSpy-bundle
-  - env: export PYTHON=3.7; PYTHON_VERSION=py37; INSTALL_DIR=/hyperspy-bundle
-    os: osx
+env:
+  global:
+    - PYTHON_VERSION=py37
+    - INSTALL_DIR=$HOME/HyperSpy-bundle
+
+os:
+  - linux
+  - osx
 
 before_install:
   - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
@@ -16,7 +19,7 @@ before_install:
     fi
   - chmod +x miniconda.sh;
     ./miniconda.sh -b -p $HOME/miniconda;
-    export "PATH=$HOME/miniconda/bin:$PATH";
+    source $HOME/miniconda/bin/activate;
 
 install:
   - conda update -y conda;
@@ -25,7 +28,7 @@ install:
 script:
   # Create the anaconda based hyperspy bundle
   - constructor -v
-  - source deactivate
+  - conda deactivate
 
   # Rename the output file which can have .sh or .pkg extension
   - ls
@@ -39,22 +42,22 @@ script:
   # Install the build in the subfolder "HyperSpy-bundle"
   - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
      sudo installer -pkg $BUILD_NAME -target /;
-     export PATH=$INSTALL_DIR/bin:$OLD_PATH;
-     ls $PATH;
+     source /HyperSpy-bundle/bin/activate;
     else
      bash $BUILD_NAME -b -p $INSTALL_DIR;
+     source $INSTALL_DIR/bin/activate;
     fi
+  - ls $HOME
   - ls $INSTALL_DIR
-  - ls $INSTALL_DIR/bin
 
-  # Activate the correct environment and check installed package
-  - source $INSTALL_DIR/bin/activate
+  # Check the installation and environment 
+  - conda info
   - conda list
 
   # Re-run tests in the created anaconda build.
   - conda install -yq -c conda-forge pytest pytest-mpl
   - export MPLBACKEND=agg
-  - pytest --mpl --pyargs hyperspy
+  # - pytest --mpl --pyargs hyperspy
 
 deploy:
   provider: releases
