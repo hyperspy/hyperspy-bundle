@@ -1,15 +1,13 @@
 name: HyperSpy-bundle
-version: 2019.09.27
+version: 2019.08.31
 
 install_in_dependency_order: True
 
-channels:
+channels: &channels_list
   - http://repo.anaconda.com/pkgs/main/
   - https://conda.anaconda.org/conda-forge
 
-conda_default_channels:
-  - http://repo.anaconda.com/pkgs/main/
-  - https://conda.anaconda.org/conda-forge
+conda_default_channels: *channels_list
 
 initialize_by_default: True
 
@@ -24,6 +22,8 @@ specs:
 
 
 license_file: LICENSE
+
+write_condarc: True
 
 installer_type: pkg                         # [osx]
 
