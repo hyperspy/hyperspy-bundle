@@ -45,6 +45,7 @@ test_script:
   # Check installed package
   - "CALL %INSTALL_DIR%\\Scripts\\activate.bat"
   - set "PATH=%INSTALL_DIR%\condabin:%PATH%"
+  - conda info
   - conda list
   - 'conda install -yq -c conda-forge pytest pytest-mpl'
   # Re-run tests in the created anaconda build.
