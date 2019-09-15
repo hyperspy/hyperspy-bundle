@@ -31,6 +31,31 @@ jobs:
       constructor -v conda_distribution
     displayName: Build distribution
 
+  - bash: |
+      source activate $ENV_NAME
+      # TODO Add tag name (Use Build.SourceBranch)
+      ls 
+      #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
+      #mv HyperSpy-*.sh $BUILD_NAME
+      ls conda_distribution
+      ls $(System.DefaultWorkingDirectory)
+    displayName: Rename artifact
+
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    displayName: Publish artifact
+
+#  - task: GithubRelease@0 
+#    displayName: 'Create GitHub Release'      
+#    inputs:
+#      gitHubConnection: ericpre
+#      repositoryName: ericpre/hyperspy-bundle
+#      tagSource: manual
+#      tag: $(Build.BuildNumber)
+#      assets: |
+#           $(Build.ArtifactStagingDirectory)/*.exe
+#      Pre-release: true
+
 - job:
   displayName: vs2017-win2016
   pool:
