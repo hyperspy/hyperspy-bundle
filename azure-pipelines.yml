@@ -1,6 +1,7 @@
 variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
+  INSTALL_DIR: $HOME/HyperSpy-bundle
 
 jobs:
 - job:
@@ -41,9 +42,19 @@ jobs:
       ls $(System.DefaultWorkingDirectory)
     displayName: Rename artifact
 
-  - publish: $(Build.SourcesDirectory)
+  - publish: $(Build.SourcesDirectory)/*.sh
     # File to upload defined in the .artifactignore file
     displayName: Publish artifact
+
+  - bash: |
+      bash HyperSpy-bundle*.sh -b -p $INSTALL_DIR
+    displayName: Install new distribution
+
+  - bash: |
+      source $INSTALL_DIR/bin/activate
+      conda install -yq -c conda-forge pytest pytest-mpl
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
 
 #  - task: GithubRelease@0 
 #    displayName: 'Create GitHub Release'      
@@ -82,6 +93,10 @@ jobs:
       constructor -v conda_distribution
     displayName: Build distribution
 
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    displayName: Publish artifact
+
 - job:
   displayName: macOS-10.13
   pool:
@@ -113,4 +128,8 @@ jobs:
       source activate $ENV_NAME
       constructor -v conda_distribution
     displayName: Build distribution
+
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    displayName: Publish artifact
 
