@@ -1,0 +1,7 @@
+name: test_env
+channels:
+- defaults
+dependencies:
+# Minimal dependencies
+- constructor
+

@@ -27,6 +27,7 @@ install:
 
 script:
   # Create the anaconda based hyperspy bundle
+  - cd conda_distribution
   - constructor -v
   - conda deactivate
 

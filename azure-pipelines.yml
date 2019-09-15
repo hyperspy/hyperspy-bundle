@@ -1,0 +1,91 @@
+variables:
+  ENV_NAME: test_env
+  MPLBACKEND: agg
+
+jobs:
+- job:
+  displayName: ubuntu-16.04
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - bash: |
+      echo "##vso[task.prependpath]$CONDA/bin"
+    displayName: Add conda to PATH
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
+- job:
+  displayName: vs2017-win2016
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+    displayName: Add conda to PATH
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
+- job:
+  displayName: macOS-10.13
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - bash: |
+      echo "##vso[task.prependpath]$CONDA/bin"
+    displayName: Add conda to PATH
+
+  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+  # We need to take ownership if we want to update conda or install packages globally
+  - bash: sudo chown -R $USER $CONDA
+    displayName: Take ownership of conda installation
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
