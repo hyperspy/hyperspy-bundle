@@ -1,7 +1,7 @@
 variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
-  INSTALL_DIR: $HOME/HyperSpy-bundle
+  INSTALL_DIR: $AGENT_HOMEDIRECTORY/HyperSpy-bundle
 
 jobs:
 - job:
@@ -38,12 +38,11 @@ jobs:
       ls 
       #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
       #mv HyperSpy-*.sh $BUILD_NAME
-      ls conda_distribution
-      ls $(System.DefaultWorkingDirectory)
     displayName: Rename artifact
 
-  - publish: $(Build.SourcesDirectory)/*.sh
+  - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-Linux
     displayName: Publish artifact
 
   - bash: |
@@ -51,8 +50,8 @@ jobs:
     displayName: Install new distribution
 
   - bash: |
-      source $INSTALL_DIR/bin/activate
-      conda install -yq -c conda-forge pytest pytest-mpl
+      source $AGENT_HOMEDIRECTORY/HyperSpy-bundle/bin/activate
+      conda install -y pytest pytest-mpl
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
 
@@ -95,7 +94,20 @@ jobs:
 
   - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-Windows
     displayName: Publish artifact
+
+#  - script: |
+#      start HyperSy-*.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%INSTALL_DIR%
+#      ls %INSTALL_DIR%
+#      ls
+#    displayName: Install new distribution
+
+#  - bash: |
+#      source $INSTALL_DIR/bin/activate
+#      conda install -y pytest pytest-mpl
+#      pytest --mpl --pyargs hyperspy
+#    displayName: Test new distribution
 
 - job:
   displayName: macOS-10.13
@@ -131,5 +143,18 @@ jobs:
 
   - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-MacOSX
     displayName: Publish artifact
+
+  - bash: |
+      sudo installer -pkg HyperSpy-*.pkg -target /
+    displayName: Install new distribution
+
+  - bash: |
+      sudo chown -R travis /HyperSpy-bundle
+      source /HyperSpy-bundle/bin/activate
+      ls /
+      conda install -y pytest pytest-mpl
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
 

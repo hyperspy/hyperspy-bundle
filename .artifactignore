@@ -1,4 +1,4 @@
 **/*
-!*.exe
-!*.sh
-!*.dmg
+!HyperSpy-*.exe
+!HyperSpy-*.sh
+!HyperSpy-*.pkg
