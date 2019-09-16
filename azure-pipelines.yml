@@ -1,7 +1,8 @@
 variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
-  INSTALL_DIR: $AGENT_HOMEDIRECTORY/HyperSpy-bundle
+  INSTALL_DIR: $AGENT_HOMEDIRECTORY/hyperspy-bundle
+  TEST_DEPS: pytest pytest-mpl pytest-azurepipelines
 
 jobs:
 - job:
@@ -50,13 +51,13 @@ jobs:
     displayName: Install new distribution
 
   - bash: |
-      source $AGENT_HOMEDIRECTORY/HyperSpy-bundle/bin/activate
-      conda install -y pytest pytest-mpl
+      source $AGENT_HOMEDIRECTORY/hyperspy-bundle/bin/activate
+      conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
 
 #  - task: GithubRelease@0 
-#    displayName: 'Create GitHub Release'      
+#    displayName: 'Create GitHub Release'
 #    inputs:
 #      gitHubConnection: ericpre
 #      repositoryName: ericpre/hyperspy-bundle
@@ -105,7 +106,7 @@ jobs:
 
 #  - bash: |
 #      source $INSTALL_DIR/bin/activate
-#      conda install -y pytest pytest-mpl
+#      conda install -y $TEST_DEPS
 #      pytest --mpl --pyargs hyperspy
 #    displayName: Test new distribution
 
@@ -117,6 +118,7 @@ jobs:
     matrix:
       Python37:
         CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: /hyperspy-bundle
 
   steps:
   - bash: |
@@ -150,11 +152,14 @@ jobs:
       sudo installer -pkg HyperSpy-*.pkg -target /
     displayName: Install new distribution
 
+  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+  # We need to take ownership if we want to update conda or install packages globally
+  - bash: sudo chown -R $USER $INSTALL_DIR
+    displayName: Take ownership of conda installation
+
   - bash: |
-      sudo chown -R travis /HyperSpy-bundle
-      source /HyperSpy-bundle/bin/activate
-      ls /
-      conda install -y pytest pytest-mpl
+      source $INSTALL_DIR/bin/activate
+      conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
 
