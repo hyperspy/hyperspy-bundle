@@ -1,6 +1,10 @@
 @echo off
 
-"%PREFIX%\\Scripts\\start_jupyter_cm"
+:: activate environment
+call %PREFIX%\\Scripts\\activate.bat
+
+:: Add context menu
+start_jupyter_cm
 
 :: Installing the JupyterLab Extension
-"%PREFIX%\\Scripts\\jupyter labextension install @jupyter-widgets/jupyterlab-manager"
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
