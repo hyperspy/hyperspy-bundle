@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2019.09.16
+version: 2019.09.18
 
 install_in_dependency_order: True
 
@@ -7,6 +7,7 @@ channels: &channels_list
   - http://repo.anaconda.com/pkgs/main/
   - http://repo.anaconda.com/pkgs/msys2
   - https://conda.anaconda.org/conda-forge
+  - https://conda.anaconda.org/nion
 
 conda_default_channels: *channels_list
 
@@ -15,10 +16,17 @@ specs:
   - menuinst                                # [win]
   - console_shortcut                        # [win]
   - spyder
+  - anaconda-navigator
   - hyperspy
   - hyperspyui
   - start_jupyter_cm                        # [not osx]
-  - anaconda-navigator
+  - atomap
+  - pixstem
+  - pyxem
+  - nionswift
+  - nionswift-tool
+  - nionswift-eels-analysis
+  - nionswift-usim
 
 license_file: LICENSE
 
