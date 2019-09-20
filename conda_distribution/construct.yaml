@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2019.09.18
+version: 2019.09.20
 
 install_in_dependency_order: True
 
@@ -20,6 +20,7 @@ specs:
   - hyperspy
   - hyperspyui
   - start_jupyter_cm                        # [not osx]
+  - ipympl
   - atomap
   - pixstem
   - pyxem
