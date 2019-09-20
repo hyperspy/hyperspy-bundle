@@ -86,10 +86,14 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
+      source activate $ENV_NAME
+      # Test pre uninstall script from a development version of constructor
+      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
     displayName: Setup Anaconda packages
 
   - bash: |
       source activate $ENV_NAME
+      which constructor
       constructor -v conda_distribution
     displayName: Build distribution
 

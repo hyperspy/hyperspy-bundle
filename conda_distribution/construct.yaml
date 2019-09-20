@@ -36,6 +36,8 @@ write_condarc: True
 post_install: post_install.sh               # [unix]
 post_install: post_install.bat              # [win]
 
+pre_uninstall: pre_uninstall.bat            # [win]
+
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer
