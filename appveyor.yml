@@ -21,9 +21,8 @@ install:
   - "conda update -y -n base conda"
   # See https://github.com/conda/conda/issues/8836 & others
   - set "PATH=%MINICONDA%\condabin:%PATH%"
-  #- conda install -yq constructor
+  - conda install -yq constructor
   # Test pre uninstall script from a development version of constructor
-  - conda install -yq constructor --only-deps
   - pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
 
 build: false  # Not a C# project, build stuff at the test step instead.
