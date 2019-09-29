@@ -1,7 +1,6 @@
 variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
-  INSTALL_DIR: $AGENT_HOMEDIRECTORY/hyperspy-bundle
   TEST_DEPS: pytest pytest-mpl pytest-azurepipelines
 
 jobs:
@@ -13,6 +12,7 @@ jobs:
     matrix:
       Python37:
         CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
 
   steps:
   - bash: |
@@ -25,7 +25,6 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
-
     displayName: Setup Anaconda packages
 
   - bash: |
@@ -51,7 +50,7 @@ jobs:
     displayName: Install new distribution
 
   - bash: |
-      source $AGENT_HOMEDIRECTORY/hyperspy-bundle/bin/activate
+      source $INSTALL_DIR/bin/activate
       conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
@@ -75,6 +74,7 @@ jobs:
     matrix:
       Python37:
         CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
 
   steps:
   - bash: |
@@ -93,7 +93,6 @@ jobs:
 
   - bash: |
       source activate $ENV_NAME
-      which constructor
       constructor -v conda_distribution
     displayName: Build distribution
 
@@ -102,17 +101,25 @@ jobs:
     artifact: HyperSpy-bundle-Windows
     displayName: Publish artifact
 
-#  - script: |
-#      start HyperSy-*.exe /InstallationType=JustMe /RegisterPython=0 /S /D=%INSTALL_DIR%
-#      ls %INSTALL_DIR%
-#      ls
-#    displayName: Install new distribution
+  - powershell: |
+      Write-Host "INSTALL_DIR: $Env:INSTALL_DIR"
+      # For info, how azure pipelines install miniconda
+      # See https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/win/scripts/Installers/Install-Miniconda.ps1
+      $fname = Get-ChildItem HyperSpy*.exe
+      Write-Host "Installer name: $fname"
+      Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /D=$Env:INSTALL_DIR"
+      ls $Env:INSTALL_DIR
+    displayName: Install new distribution
 
-#  - bash: |
-#      source $INSTALL_DIR/bin/activate
-#      conda install -y $TEST_DEPS
-#      pytest --mpl --pyargs hyperspy
-#    displayName: Test new distribution
+  - script: |
+      call %INSTALL_DIR%\Scripts\activate.bat
+      conda install -y %TEST_DEPS%
+    displayName: Install test dependencies
+
+  - script: |
+      call %INSTALL_DIR%\Scripts\activate.bat
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
 
 - job:
   displayName: macOS-10.13
