@@ -1,0 +1,176 @@
+variables:
+  ENV_NAME: test_env
+  MPLBACKEND: agg
+  TEST_DEPS: pytest pytest-mpl pytest-azurepipelines
+
+jobs:
+- job:
+  displayName: ubuntu-16.04
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - bash: |
+      echo "##vso[task.prependpath]$CONDA/bin"
+    displayName: Add conda to PATH
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
+  - bash: |
+      source activate $ENV_NAME
+      # TODO Add tag name (Use Build.SourceBranch)
+      ls 
+      #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
+      #mv HyperSpy-*.sh $BUILD_NAME
+    displayName: Rename artifact
+
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-Linux
+    displayName: Publish artifact
+
+  - bash: |
+      bash HyperSpy-bundle*.sh -b -p $INSTALL_DIR
+    displayName: Install new distribution
+
+  - bash: |
+      source $INSTALL_DIR/bin/activate
+      conda install -y $TEST_DEPS
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
+
+#  - task: GithubRelease@0 
+#    displayName: 'Create GitHub Release'
+#    inputs:
+#      gitHubConnection: ericpre
+#      repositoryName: ericpre/hyperspy-bundle
+#      tagSource: manual
+#      tag: $(Build.BuildNumber)
+#      assets: |
+#           $(Build.ArtifactStagingDirectory)/*.exe
+#      Pre-release: true
+
+- job:
+  displayName: vs2017-win2016
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+    displayName: Add conda to PATH
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+      source activate $ENV_NAME
+      # Test pre uninstall script from a development version of constructor
+      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-Windows
+    displayName: Publish artifact
+
+  - powershell: |
+      Write-Host "INSTALL_DIR: $Env:INSTALL_DIR"
+      # For info, how azure pipelines install miniconda
+      # See https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/win/scripts/Installers/Install-Miniconda.ps1
+      $fname = Get-ChildItem HyperSpy*.exe
+      Write-Host "Installer name: $fname"
+      Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /D=$Env:INSTALL_DIR"
+      ls $Env:INSTALL_DIR
+    displayName: Install new distribution
+
+  - script: |
+      call %INSTALL_DIR%\Scripts\activate.bat
+      conda install -y %TEST_DEPS%
+    displayName: Install test dependencies
+
+  - script: |
+      call %INSTALL_DIR%\Scripts\activate.bat
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
+
+- job:
+  displayName: macOS-10.13
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    matrix:
+      Python37:
+        CONDA_PYTHON_VERSION: '3.7'
+        INSTALL_DIR: /hyperspy-bundle
+
+  steps:
+  - bash: |
+      git clone --depth 1 git://github.com/ericpre/ci.git
+    displayName: Clone CI repository
+
+  - bash: |
+      echo "##vso[task.prependpath]$CONDA/bin"
+    displayName: Add conda to PATH
+
+  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+  # We need to take ownership if we want to update conda or install packages globally
+  - bash: sudo chown -R $USER $CONDA
+    displayName: Take ownership of conda installation
+
+  - bash: |
+      source ci/conda_setup_environment.sh
+    displayName: Setup Anaconda packages
+
+  - bash: |
+      source activate $ENV_NAME
+      constructor -v conda_distribution
+    displayName: Build distribution
+
+  - publish: $(Build.SourcesDirectory)
+    # File to upload defined in the .artifactignore file
+    artifact: HyperSpy-bundle-MacOSX
+    displayName: Publish artifact
+
+  - bash: |
+      sudo installer -pkg HyperSpy-*.pkg -target /
+    displayName: Install new distribution
+
+  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+  # We need to take ownership if we want to update conda or install packages globally
+  - bash: sudo chown -R $USER $INSTALL_DIR
+    displayName: Take ownership of conda installation
+
+  - bash: |
+      source $INSTALL_DIR/bin/activate
+      conda install -y $TEST_DEPS
+      pytest --mpl --pyargs hyperspy
+    displayName: Test new distribution
+

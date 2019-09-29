@@ -1,0 +1,73 @@
+language: generic
+
+env:
+  global:
+    - PYTHON_VERSION=py37
+    - INSTALL_DIR=$HOME/HyperSpy-bundle
+
+os:
+  - linux
+  - osx
+
+before_install:
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
+     wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; 
+     PLATFORM='MacOSX';
+    else
+     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+     PLATFORM='Linux';
+    fi
+  - chmod +x miniconda.sh;
+    ./miniconda.sh -b -p $HOME/miniconda;
+    source $HOME/miniconda/bin/activate;
+
+install:
+  - conda update -y conda;
+  - conda install -yq constructor
+
+script:
+  # Create the anaconda based hyperspy bundle
+  - cd conda_distribution
+  - constructor -v
+  - conda deactivate
+
+  # Rename the output file which can have .sh or .pkg extension
+  - ls
+  # We need to "rev" twice to retrieve the last field of the "cut"
+  - EXT=`echo HyperSpy-* | rev | cut -d'.' -f1 | rev`
+  - echo $EXT
+  - BUILD_NAME=HyperSpy-bundle-${TRAVIS_TAG}-${PYTHON_VERSION}-${PLATFORM}-64bit.${EXT}
+  - mv HyperSpy-*.${EXT} $BUILD_NAME
+  - ls
+
+  # Install the build in the subfolder "HyperSpy-bundle"
+  - if [[ $TRAVIS_OS_NAME == 'osx' ]] ; then
+     sudo installer -pkg $BUILD_NAME -target /;
+     source /HyperSpy-bundle/bin/activate;
+     ls /;
+     sudo chown -R travis /HyperSpy-bundle;
+    else
+     bash $BUILD_NAME -b -p $INSTALL_DIR;
+     ls $INSTALL_DIR;
+     source $INSTALL_DIR/bin/activate;
+    fi
+  - ls $HOME
+
+  # Check the installation and environment 
+  - conda info
+  - conda list
+
+  # Re-run tests in the created anaconda build.
+  - conda install -yq -c conda-forge pytest pytest-mpl
+  - export MPLBACKEND=agg
+  # - pytest --mpl --pyargs hyperspy
+
+deploy:
+  provider: releases
+  api_key:
+    # ericpre:
+    secure: ${GITHUB_TOKEN_ERICPRE}
+  file: $BUILD_NAME
+  skip_cleanup: true
+  on:
+    tags: true
