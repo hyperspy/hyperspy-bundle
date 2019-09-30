@@ -3,6 +3,16 @@ variables:
   MPLBACKEND: agg
   TEST_DEPS: pytest pytest-mpl pytest-azurepipelines
 
+trigger:
+  tags:
+    include:
+    # build on any tag
+    - '*'
+  branches:
+    include:
+    # build on all branches
+    - '*'
+
 jobs:
 - job:
   displayName: ubuntu-16.04
