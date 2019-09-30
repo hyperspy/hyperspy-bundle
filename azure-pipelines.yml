@@ -58,7 +58,7 @@ jobs:
   - task: GithubRelease@0 
     displayName: 'Create GitHub Release'
     inputs:
-      gitHubConnection: ericpre
+      gitHubConnection: github_release_token_ericpre_azure
       repositoryName: ericpre/hyperspy-bundle
       assets: |
            $(Build.ArtifactStagingDirectory)/*.sh
@@ -123,7 +123,7 @@ jobs:
   - task: GithubRelease@0 
     displayName: 'Create GitHub Release'
     inputs:
-      gitHubConnection: ericpre
+      gitHubConnection: github_release_token_ericpre_azure
       repositoryName: ericpre/hyperspy-bundle
       assets: |
            $(Build.ArtifactStagingDirectory)/*.exe
@@ -185,7 +185,7 @@ jobs:
   - task: GithubRelease@0 
     displayName: 'Create GitHub Release'
     inputs:
-      gitHubConnection: ericpre
+      gitHubConnection: github_release_token_ericpre_azure
       repositoryName: ericpre/hyperspy-bundle
       assets: |
            $(Build.ArtifactStagingDirectory)/*.pkg
