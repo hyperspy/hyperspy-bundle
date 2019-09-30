@@ -55,16 +55,14 @@ jobs:
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
 
-#  - task: GithubRelease@0 
-#    displayName: 'Create GitHub Release'
-#    inputs:
-#      gitHubConnection: ericpre
-#      repositoryName: ericpre/hyperspy-bundle
-#      tagSource: manual
-#      tag: $(Build.BuildNumber)
-#      assets: |
-#           $(Build.ArtifactStagingDirectory)/*.exe
-#      Pre-release: true
+  - task: GithubRelease@0 
+    displayName: 'Create GitHub Release'
+    inputs:
+      gitHubConnection: ericpre
+      repositoryName: ericpre/hyperspy-bundle
+      assets: |
+           $(Build.ArtifactStagingDirectory)/*.sh
+      Pre-release: true
 
 - job:
   displayName: vs2017-win2016
@@ -121,6 +119,16 @@ jobs:
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
 
+
+  - task: GithubRelease@0 
+    displayName: 'Create GitHub Release'
+    inputs:
+      gitHubConnection: ericpre
+      repositoryName: ericpre/hyperspy-bundle
+      assets: |
+           $(Build.ArtifactStagingDirectory)/*.exe
+      Pre-release: true
+
 - job:
   displayName: macOS-10.13
   pool:
@@ -173,4 +181,13 @@ jobs:
       conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
     displayName: Test new distribution
+
+  - task: GithubRelease@0 
+    displayName: 'Create GitHub Release'
+    inputs:
+      gitHubConnection: ericpre
+      repositoryName: ericpre/hyperspy-bundle
+      assets: |
+           $(Build.ArtifactStagingDirectory)/*.pkg
+      Pre-release: true
 
