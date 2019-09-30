@@ -69,10 +69,10 @@ jobs:
     displayName: 'Create GitHub Release'
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
+      action: edit # Release should already have been created
+      tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: |
-           $(Build.ArtifactStagingDirectory)/*.sh
-      Pre-release: true
+      assets: $(Build.ArtifactStagingDirectory)/*.sh
 
 - job:
   displayName: vs2017-win2016
@@ -131,13 +131,13 @@ jobs:
 
 
   - task: GithubRelease@0 
-    displayName: 'Create GitHub Release'
+    displayName: 'Update GitHub Release'
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
+      action: edit # Release should already have been created
+      tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: |
-           $(Build.ArtifactStagingDirectory)/*.exe
-      Pre-release: true
+      assets: $(Build.ArtifactStagingDirectory)/*.exe
 
 - job:
   displayName: macOS-10.13
@@ -196,8 +196,8 @@ jobs:
     displayName: 'Create GitHub Release'
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
+      action: edit # Release should already have been created
+      tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: |
-           $(Build.ArtifactStagingDirectory)/*.pkg
-      Pre-release: true
+      assets: $(Build.ArtifactStagingDirectory)/*.pkg
 
