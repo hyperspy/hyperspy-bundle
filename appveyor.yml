@@ -12,17 +12,17 @@ environment:
        PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "64"
-       WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/Winpython64-3.7.4.0.exe'
-       WP_CRC: '5701b68128a69926f8b7a136fc3e3b1e0b64b07e6ccb21d1995db3d879617a49'
-       WP_DIR_NAME: 'WPy64-3740'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/2.1.20190928/Winpython64-3.7.4.1.exe'
+       WP_CRC: 'f385737eb6c60460a976adc7d1e9a169cf49425f9851f75789cf3ecabb5d7cd4'
+       WP_DIR_NAME: 'WPy64-3741'
 
      - PYTHON: "C:\\Miniconda37"
        PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "32"
-       WP_URL: 'https://downloads.sourceforge.net/project/winpython/WinPython_3.7/3.7.4.0/Winpython32-3.7.4.0.exe'
-       WP_CRC: '0a53bba8d413278317fa5d5a886973123cad9b2ba837a979b4337464c74fad6a'
-       WP_DIR_NAME: 'WPy32-3740'
+       WP_URL: 'https://github.com/winpython/winpython/releases/download/2.1.20190928/Winpython32-3.7.4.1.exe'
+       WP_CRC: 'fc6c4d52c97cd99830d05ebc33a3e651b329100f36898576823ffa75eb989e2e'
+       WP_DIR_NAME: 'WPy32-3741'
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
