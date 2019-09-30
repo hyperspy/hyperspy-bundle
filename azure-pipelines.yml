@@ -72,7 +72,8 @@ jobs:
       action: edit # Release should already have been created
       tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.ArtifactStagingDirectory)/*.sh
+      assets: $(Build.SourcesDirectory)/*.sh
+      assetUploadMode: replace
 
 - job:
   displayName: vs2017-win2016
@@ -137,7 +138,8 @@ jobs:
       action: edit # Release should already have been created
       tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.ArtifactStagingDirectory)/*.exe
+      assets: $(Build.SourcesDirectory)/*.exe
+      assetUploadMode: replace
 
 - job:
   displayName: macOS-10.13
@@ -199,5 +201,7 @@ jobs:
       action: edit # Release should already have been created
       tag: $(Build.SourceBranchName)
       repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.ArtifactStagingDirectory)/*.pkg
+      assets: $(Build.SourcesDirectory)/*.pkg
+      assetUploadMode: replace
+
 
