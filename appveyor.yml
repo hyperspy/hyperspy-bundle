@@ -4,20 +4,19 @@ shallow_clone: true
 environment:
 
   global:
-    NSIS_DIR: "%PROGRAMFILES(x86)%/NSIS"
+    NSIS_DIR: "%PROGRAMFILES(x86)%\\NSIS"
+    MINICONDA: "C:\\Miniconda37-x64"
     MPLBACKEND: "agg"
 
   matrix:
-     - PYTHON: "C:\\Miniconda37-x64"
-       PYTHON_VERSION_SHORT: "37"
+     - PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "64"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/2.1.20190928/Winpython64-3.7.4.1.exe'
        WP_CRC: 'f385737eb6c60460a976adc7d1e9a169cf49425f9851f75789cf3ecabb5d7cd4'
        WP_DIR_NAME: 'WPy64-3741'
 
-     - PYTHON: "C:\\Miniconda37"
-       PYTHON_VERSION_SHORT: "37"
+     - PYTHON_VERSION_SHORT: "37"
        PYTHON_VERSION: "3.7.4"
        PYTHON_ARCH: "32"
        WP_URL: 'https://github.com/winpython/winpython/releases/download/2.1.20190928/Winpython32-3.7.4.1.exe'
@@ -25,23 +24,24 @@ environment:
        WP_DIR_NAME: 'WPy32-3741'
 
 init:
-  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
-  - "ECHO %APPVEYOR_BUILD_FOLDER%"
+  - ECHO %MINICONDA% %PYTHON_VERSION% %PYTHON_ARCH%
+  - ECHO %APPVEYOR_BUILD_FOLDER%
+  - ls %MINICONDA%
 
 install:
   - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
-  - "%PYTHON%/Scripts/pip install ."
+  - "%MINICONDA%/Scripts/pip install ."
   # Download WinPython installer if not cached
-  - ps: Add-AppveyorMessage "Installing WinPython..."
+  - ps: Add-AppveyorMessage "Installing WinPython Distribution..."
   - "SET WP_DIR=%USERPROFILE%/%WP_DIR_NAME%"
   - "SET WP_EXE=%USERPROFILE%/WinPython3.exe"
   - ps: appveyor DownloadFile $Env:WP_URL -FileName $Env:WP_EXE
   - ps: Write-Output (Get-FileHash $Env:WP_EXE)
   - ps: if ((Get-FileHash $Env:WP_EXE).Hash -ne $Env:WP_CRC) { exit(1) }
   - ps: (& $Env:WP_EXE -y | Out-Null )
-  - "ls"
-  - "ls %USERPROFILE%"
-  - "ls %WP_DIR%"
+  - ls
+  - ls %USERPROFILE%
+  - ls "%WP_DIR%"
 
   # Install UAC plugin
   - ps: Add-AppveyorMessage "Setting up WinPython environment..."
@@ -52,7 +52,7 @@ install:
   # Install current hyperspy in WinPython
   - "%WP_DIR%/scripts/env.bat"
   # Give info about python vesion and compiler used to compile the python
-  - python.exe -c "import sys; print(sys.version)"
+  - python.exe -c "import sys; print(sys.version); print(sys.executable)"
 
   # Remove some large package to get below the NSIS 2Gb limit
   - pip uninstall -y tensorflow tensorflow_estimator tensorflow_probability torch torchvision
@@ -70,7 +70,8 @@ install:
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
   - ps: 'Get-ChildItem -Recurse $Env:WP_DIR | Measure-Object -Property Length -Sum'
-  - "%PYTHON%/python.exe -m hspy_bundle.configure_installer %USERPROFILE% %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
+  - echo %APPVEYOR_REPO_TAG_NAME%
+  - "%MINICONDA%\\python -m hspy_bundle.configure_installer %USERPROFILE% %PYTHON_ARCH% %APPVEYOR_REPO_TAG_NAME%"
   - "\"%NSIS_DIR%/makensis.exe\" /V3 NSIS_installer_script-%PYTHON_ARCH%bit.nsi"
   - "ls"
   # Use hyperspy-bundle tag as version name
