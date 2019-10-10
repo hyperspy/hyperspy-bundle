@@ -42,13 +42,13 @@ jobs:
       constructor -v conda_distribution
     displayName: Build distribution
 
-  - bash: |
-      source activate $ENV_NAME
-      # TODO Add tag name (Use Build.SourceBranch)
-      ls 
-      #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
-      #mv HyperSpy-*.sh $BUILD_NAME
-    displayName: Rename artifact
+  #- bash: |
+  #    source activate $ENV_NAME
+  #    # TODO Add tag name (Use Build.SourceBranch)
+  #    ls 
+  #    #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
+  #    #mv HyperSpy-*.sh $BUILD_NAME
+  #  displayName: Rename artifact
 
   - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
@@ -66,7 +66,9 @@ jobs:
     displayName: Test new distribution
 
   - task: GithubRelease@0 
-    displayName: 'Update GitHub Release'
+    displayName: 'Update GitHub Release on tag only'
+    # Release only on tag (branch name start with 'refs/tags/')
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
       action: edit # Release should already have been created
@@ -132,7 +134,9 @@ jobs:
 
 
   - task: GithubRelease@0 
-    displayName: 'Update GitHub Release'
+    displayName: 'Update GitHub Release on tag only'
+    # Release only on tag (branch name start with 'refs/tags/')
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
       action: edit # Release should already have been created
@@ -195,7 +199,9 @@ jobs:
     displayName: Test new distribution
 
   - task: GithubRelease@0 
-    displayName: 'Update GitHub Release'
+    displayName: 'Update GitHub Release on tag only'
+    # Release only on tag (branch name start with 'refs/tags/')
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
     inputs:
       gitHubConnection: github_release_token_ericpre_azure
       action: edit # Release should already have been created
