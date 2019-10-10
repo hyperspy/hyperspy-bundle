@@ -321,6 +321,8 @@ class HSpyBundleInstaller:
 
 
 if __name__ == "__main__":
+    print("Start configuration bundle:")
+    print(f"Arguments: {sys.argv}")
     if len(sys.argv) > 1:
         bundle_dir = sys.argv[1]
     else:
@@ -338,7 +340,6 @@ if __name__ == "__main__":
         version = get_default_version_name()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
-    print("Start configuration bundle:")
     print(f"Bundle directory: {bundle_dir}")
     print(f"Version: {version}")
     print(f"Architecture: {arch}")

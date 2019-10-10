@@ -52,20 +52,20 @@ install:
   # Install current hyperspy in WinPython
   - "%WP_DIR%/scripts/env.bat"
   # Give info about python vesion and compiler used to compile the python
-  - "python.exe -c \"import sys; print(sys.version)\""
+  - python.exe -c "import sys; print(sys.version)"
 
   # Remove some large package to get below the NSIS 2Gb limit
-  - "pip uninstall -y tensorflow tensorflow_estimator tensorflow_probability torch torchvision"
+  - pip uninstall -y tensorflow tensorflow_estimator tensorflow_probability torch torchvision
 
   # Use a specific branch of hyperspy on github
   #- "pip install https://github.com/francisco-dlp/hyperspy/archive/v1.4.1.zip#egg=hyperspy[all]"
   # Use a release version of hyperspy
-  - "pip install hyperspy[all]"
-  - "pip install start_jupyter_cm hyperspyui atomap pixstem pyxem"
+  - pip install hyperspy[all]
+  - pip install start_jupyter_cm hyperspyui atomap pixstem pyxem
 
   # Clean python cache (*.pyc files and __pycache__ folders) shipped with winpython
-  - "pip install pycleanup"
-  - "pushd %WP_DIR% & pycleanup --cache & popd"
+  - pip install pycleanup
+  - pushd "%WP_DIR%" & pycleanup --cache & popd
 
   # Custom installer step
   - ps: Add-AppveyorMessage "Creating installer..."
