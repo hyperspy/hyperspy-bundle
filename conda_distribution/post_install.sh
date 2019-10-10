@@ -3,11 +3,7 @@
 # Activate conda environment
 source ${PREFIX}/bin/activate base
 
-# add context menu entry:
-if [ "$(uname)" == "Linux" ]; then
-    start_jupyter_cm
-fi
-
+start_jupyter_cm
 
 # Installing the JupyterLab Extension
 jupyter labextension install @jupyter-widgets/jupyterlab-manager

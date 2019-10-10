@@ -19,7 +19,7 @@ specs:
   - anaconda-navigator
   - hyperspy
   - hyperspyui
-  - start_jupyter_cm                        # [not osx]
+  - start_jupyter_cm
   - ipympl
   - atomap
   - pixstem
@@ -33,8 +33,7 @@ license_file: LICENSE
 
 write_condarc: True
 
-post_install: post_install.sh               # [linux]
-post_install: post_install_macosx.sh        # [osx]
+post_install: post_install.sh               # [unix]
 post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
