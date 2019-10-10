@@ -31,11 +31,6 @@ init:
 install:
   - ps: Add-AppveyorMessage "Installing hyperspy-bundle..."
   - "%PYTHON%/Scripts/pip install ."
-
-build: false  # Not a C# project, build stuff at the test step instead.
-
-  # Build bundle installer for tags:
-before_deploy:
   # Download WinPython installer if not cached
   - ps: Add-AppveyorMessage "Installing WinPython..."
   - "SET WP_DIR=%USERPROFILE%/%WP_DIR_NAME%"
@@ -96,6 +91,9 @@ before_deploy:
   # - "pytest --pyargs hyperspyui"
   - "pytest --pyargs atomap"
   - "pytest --pyargs pyxem"
+
+
+build: false  # Not a C# project, build stuff at the test step instead.
 
 deploy:
   provider: GitHub

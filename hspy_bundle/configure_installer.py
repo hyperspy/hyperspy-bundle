@@ -191,6 +191,9 @@ class HSpyBundleInstaller:
                 self.get_full_paths("python-*", a)))
             for a in arch))
         self.version = version
+        print(f"{len(self.wppath)} winpython distribution found.")
+        for arch, wppath in self.wppath.items():
+            print(f"Path to Winpython distribution: {wppath} for {arch}.")
 
     def get_full_paths(self, rel_path, arch):
         fp = glob(os.path.join(self.wppath[arch], rel_path))
@@ -335,6 +338,10 @@ if __name__ == "__main__":
         version = get_default_version_name()
     if not os.path.exists('COPYING.txt'):
         download_hyperspy_license()
+    print("Start configuration bundle:")
+    print(f"Bundle directory: {bundle_dir}")
+    print(f"Version: {version}")
+    print(f"Architecture: {arch}")
     p = HSpyBundleInstaller(bundle_dir, version, arch)
     p.create_hspy_scripts()
     # This is necessary in order to workaround #1009
@@ -343,3 +350,5 @@ if __name__ == "__main__":
     p.clean()
     p.create_delete_macros()
     p.create_installers()
+    print("Configuration bundle completed")
+
