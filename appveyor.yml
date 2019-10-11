@@ -91,7 +91,7 @@ install:
   - "pytest --pyargs hyperspy"
   # FIXME the test suite hold the build
   # - "pytest --pyargs hyperspyui"
-  - "pytest --pyargs atomap"
+  #- "pytest --pyargs atomap"
   - "pytest --pyargs pyxem"
 
 build: false  # Not a C# project, build stuff at the test step instead.
