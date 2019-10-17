@@ -63,6 +63,7 @@ jobs:
       source $INSTALL_DIR/bin/activate
       conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
+      pytest --pyargs pyxem
     displayName: Test new distribution
 
   - task: GithubRelease@0 
@@ -130,6 +131,7 @@ jobs:
   - script: |
       call %INSTALL_DIR%\Scripts\activate.bat
       pytest --mpl --pyargs hyperspy
+      pytest --pyargs pyxem
     displayName: Test new distribution
 
 
@@ -196,6 +198,7 @@ jobs:
       source $INSTALL_DIR/bin/activate
       conda install -y $TEST_DEPS
       pytest --mpl --pyargs hyperspy
+      pytest --pyargs pyxem
     displayName: Test new distribution
 
   - task: GithubRelease@0 
