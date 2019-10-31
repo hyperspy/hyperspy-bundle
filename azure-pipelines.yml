@@ -35,6 +35,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
+      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
     displayName: Setup Anaconda packages
 
   - bash: |
@@ -132,8 +133,12 @@ jobs:
   - script: |
       call %INSTALL_DIR%\Scripts\activate.bat
       conda info
-      conda install -y %TEST_DEPS%
     displayName: Install test dependencies
+
+  - script: |
+      call %INSTALL_DIR%\Scripts\activate.bat
+      conda install -y %TEST_DEPS%
+    displayName: Install test dependencies2
 
   - script: |
       call %INSTALL_DIR%\Scripts\activate.bat
@@ -181,6 +186,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
+      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
     displayName: Setup Anaconda packages
 
   - bash: |
