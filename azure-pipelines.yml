@@ -181,7 +181,9 @@ jobs:
 
   # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
   # We need to take ownership if we want to update conda or install packages globally
-  - bash: sudo chown -R $USER $CONDA
+  - bash: |
+      sudo chown -R $USER $CONDA
+      sudo chown -R $USER /Users/runner/.conda
     displayName: Take ownership of conda installation
 
   - bash: |
