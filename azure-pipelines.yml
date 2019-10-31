@@ -61,9 +61,15 @@ jobs:
 
   - bash: |
       source $INSTALL_DIR/bin/activate
+      conda info
       conda install -y $TEST_DEPS
+    displayName: Install test dependencies
+
+  - bash: |
+      source $INSTALL_DIR/bin/activate
       pytest --mpl --pyargs hyperspy
       pytest --pyargs pyxem
+      pytest --pyargs atomap
     displayName: Test new distribution
 
   - task: GithubRelease@0 
@@ -125,6 +131,7 @@ jobs:
 
   - script: |
       call %INSTALL_DIR%\Scripts\activate.bat
+      conda info
       conda install -y %TEST_DEPS%
     displayName: Install test dependencies
 
@@ -132,6 +139,7 @@ jobs:
       call %INSTALL_DIR%\Scripts\activate.bat
       pytest --mpl --pyargs hyperspy
       pytest --pyargs pyxem
+      pytest --pyargs atomap
     displayName: Test new distribution
 
 
@@ -196,9 +204,15 @@ jobs:
 
   - bash: |
       source $INSTALL_DIR/bin/activate
+      conda info
       conda install -y $TEST_DEPS
+    displayName: Install test dependencies
+
+  - bash: |
+      source $INSTALL_DIR/bin/activate
       pytest --mpl --pyargs hyperspy
       pytest --pyargs pyxem
+      pytest --pyargs atomap
     displayName: Test new distribution
 
   - task: GithubRelease@0 
