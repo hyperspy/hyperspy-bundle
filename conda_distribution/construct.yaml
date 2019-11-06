@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2019.10.31
+version: 2019.11.06
 
 install_in_dependency_order: True
 
@@ -9,6 +9,7 @@ channels:
   - https://conda.anaconda.org/nion
 
 specs:
+  - python 3.7*
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
