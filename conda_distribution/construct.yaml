@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2019.11.06
+version: 2020.01.18
 
 install_in_dependency_order: True
 
@@ -7,7 +7,6 @@ channels:
   - https://repo.anaconda.com/pkgs/main/
   - https://repo.anaconda.com/pkgs/msys2    # [win]
   - https://conda.anaconda.org/conda-forge
-  - https://conda.anaconda.org/nion
 
 specs:
   - python 3.7*
@@ -24,9 +23,8 @@ specs:
   - pixstem
   - pyxem
   - nionswift
-  - nionswift-tool
-  - nionswift-eels-analysis
   - nionswift-usim
+  - nionswift-experimental
 
 license_file: LICENSE
 
