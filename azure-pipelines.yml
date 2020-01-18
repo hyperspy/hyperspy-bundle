@@ -35,6 +35,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
+      source activate $ENV_NAME
       pip install https://github.com/ericpre/constructor/archive/custom_build.zip
     displayName: Setup Anaconda packages
 
@@ -188,6 +189,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
+      source activate $ENV_NAME
       pip install https://github.com/ericpre/constructor/archive/custom_build.zip
     displayName: Setup Anaconda packages
 
