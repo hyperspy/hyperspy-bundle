@@ -10,4 +10,4 @@ start_jupyter_cm
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
 :: Add nionswift desktop shortcut
-nionswift --alias
+::nionswift --alias
