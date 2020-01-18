@@ -4,9 +4,9 @@ version: 2020.01.18
 install_in_dependency_order: True
 
 channels:
-  - https://repo.anaconda.com/pkgs/main/
-  - https://repo.anaconda.com/pkgs/msys2    # [win]
-  - https://conda.anaconda.org/conda-forge
+  - defaults
+  - conda-forge
+  - msys2    # [win]
 
 specs:
   - python 3.7*
@@ -35,6 +35,8 @@ post_install: post_install_macosx.sh        # [osx]
 post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
+
+post_install_desc: Do not run post_install script. # [win]
 
 installer_type: pkg                         # [osx]
 

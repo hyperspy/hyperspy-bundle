@@ -35,7 +35,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
-      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
+      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
     displayName: Setup Anaconda packages
 
   - bash: |
@@ -107,7 +107,7 @@ jobs:
       source ci/conda_setup_environment.sh
       source activate $ENV_NAME
       # Test pre uninstall script from a development version of constructor
-      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
+      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
     displayName: Setup Anaconda packages
 
   - bash: |
@@ -126,7 +126,7 @@ jobs:
       # See https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/win/scripts/Installers/Install-Miniconda.ps1
       $fname = Get-ChildItem HyperSpy*.exe
       Write-Host "Installer name: $fname"
-      Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /D=$Env:INSTALL_DIR"
+      Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=$Env:INSTALL_DIR"
       ls $Env:INSTALL_DIR
     displayName: Install new distribution
 
@@ -188,7 +188,7 @@ jobs:
 
   - bash: |
       source ci/conda_setup_environment.sh
-      pip install https://github.com/ericpre/constructor/archive/add_pre_uninstall_script_win.zip
+      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
     displayName: Setup Anaconda packages
 
   - bash: |
