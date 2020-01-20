@@ -37,7 +37,7 @@ post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
 
-post_install_desc: Do not run the post installation script. # [win]
+post_install_desc: Do not run create right-click shortcut (Not recommended). # [win]
 
 installer_type: pkg                         # [osx]
 
