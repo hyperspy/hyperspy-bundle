@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2020.01.18
+version: 2020.01.26
 
 install_in_dependency_order: True
 
@@ -37,7 +37,7 @@ post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
 
-post_install_desc: Do not run create right-click shortcut (Not recommended). # [win]
+post_install_desc: "Not recommended. The post installation script creates the right click shortcut and builds the jupyter widgets." # [win]
 
 installer_type: pkg                         # [osx]
 
