@@ -25,7 +25,6 @@ specs:
   - nionswift
   - nionswift-usim
   - nionswift-experimental
-  - prismatic                               # [unix]
 
 license_file: LICENSE
 
