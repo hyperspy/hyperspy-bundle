@@ -45,3 +45,10 @@ icon_image: hyperspy_bundle_installer.ico   # [win]
 
 default_prefix: '%USERPROFILE%\HyperSpy-bundle' # [win]
 
+welcome_image_text: |-
+                    HyperSpy
+                    bundle
+header_image_text:  |-
+                    HyperSpy
+                    bundle
+
