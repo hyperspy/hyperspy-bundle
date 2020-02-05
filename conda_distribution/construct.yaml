@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2020.02.04
+version: 2020.02.05
 
 install_in_dependency_order: True
 
@@ -42,3 +42,6 @@ installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer
 icon_image: hyperspy_bundle_installer.ico   # [win]
+
+default_prefix: '%USERPROFILE%\HyperSpy-bundle' # [win]
+
