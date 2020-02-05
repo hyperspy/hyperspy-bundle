@@ -44,6 +44,10 @@ jobs:
       constructor -v conda_distribution
     displayName: Build distribution
 
+  - bash: |
+      sha256sum HyperSpy-*.sh
+    displayName: sha256sum
+
   #- bash: |
   #    source activate $ENV_NAME
   #    # TODO Add tag name (Use Build.SourceBranch)
@@ -115,6 +119,10 @@ jobs:
       source activate $ENV_NAME
       constructor -v conda_distribution
     displayName: Build distribution
+
+  - powershell: |
+      Get-FileHash HyperSpy-*.exe
+    displayName: sha256sum
 
   - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
@@ -197,6 +205,10 @@ jobs:
       source activate $ENV_NAME
       constructor -v conda_distribution
     displayName: Build distribution
+
+  - bash: |
+      sha256sum HyperSpy-*.pkg
+    displayName: sha256sum
 
   - publish: $(Build.SourcesDirectory)
     # File to upload defined in the .artifactignore file
