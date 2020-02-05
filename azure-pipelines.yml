@@ -207,7 +207,7 @@ jobs:
     displayName: Build distribution
 
   - bash: |
-      sha256sum HyperSpy-*.pkg
+      shasum -a 256 HyperSpy-*.pkg
     displayName: sha256sum
 
   - publish: $(Build.SourcesDirectory)
