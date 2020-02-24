@@ -46,8 +46,3 @@ key.
 See [Releases](https://github.com/hyperspy/hyperspy-bundle/releases) for download links.
 
 Older releases (including HyperSpy <= 1.3) are available in [HyperSpy's GitHub repository](https://github.com/hyperspy/hyperspy/releases).
-
-**Note**: If HyperSpy fails to start you may need to install install the Visual C++ 2015
-   [x64 and x86](https://www.visualstudio.com/downloads/download-visual-studio-vs#d-visual-c)
-   for CPython 3.5) redistributable packages.
-
