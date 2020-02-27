@@ -21,6 +21,14 @@ anaconda and miniconda distribution. It uses the conda package manager.
   the context menu entries needs to be removed manually using `start_jupyter_cm --remove` from the conda environment before
   deleting the distribution.
 
+### Silent installation on Windows
+
+```
+start /wait "" HyperSpy-bundle-2020.02.05-Windows-x86_64.exe /S /D=%UserProfile%\HyperSpy-bundle
+```
+
+See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/silent-mode) for more information.
+
 ## Winpython based distribution
 
 A customised, installable [WinPython](http://winpython.github.io/) distribution
