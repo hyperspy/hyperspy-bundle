@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2020.02.05
+version: 2020.04.18
 
 install_in_dependency_order: True
 
@@ -18,13 +18,10 @@ specs:
   - hyperspy
   - hyperspyui
   - start_jupyter_cm
-  - ipympl
+  - ipympl >=0.5.6
   - atomap
   - pixstem
   - pyxem
-  - nionswift
-  - nionswift-usim
-  - nionswift-experimental
 
 license_file: LICENSE
 

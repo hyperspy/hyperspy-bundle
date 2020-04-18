@@ -1,7 +1,7 @@
 variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
-  TEST_DEPS: pytest pytest-mpl pytest-azurepipelines
+  TEST_DEPS: pytest pytest-mpl
 
 trigger:
   tags:
@@ -12,6 +12,15 @@ trigger:
     include:
     # build on all branches
     - '*'
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: ericpre/ci-scripts
+      # For more details on service connection endpoint, see
+      # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
+      endpoint: ericpre # Azure DevOps service connection
 
 jobs:
 - job:
@@ -25,19 +34,14 @@ jobs:
         INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
 
   steps:
-  - bash: |
-      git clone --depth 1 git://github.com/ericpre/ci.git
-    displayName: Clone CI repository
+  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
+  - template: azure_pipelines/activate_conda_linux.yml@templates
+  - template: azure_pipelines/setup_anaconda_packages.yml@templates
 
   - bash: |
-      echo "##vso[task.prependpath]$CONDA/bin"
-    displayName: Add conda to PATH
-
-  - bash: |
-      source ci/conda_setup_environment.sh
       source activate $ENV_NAME
-      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
-    displayName: Setup Anaconda packages
+      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
+    displayName: Setup Anaconda packages 2
 
   - bash: |
       source activate $ENV_NAME
@@ -73,7 +77,7 @@ jobs:
 
   - bash: |
       source $INSTALL_DIR/bin/activate
-      pytest --mpl --pyargs hyperspy
+      pytest --pyargs hyperspy
       pytest --pyargs pyxem
       pytest --pyargs atomap
     displayName: Test new distribution
@@ -101,19 +105,14 @@ jobs:
         INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
 
   steps:
-  - bash: |
-      git clone --depth 1 git://github.com/ericpre/ci.git
-    displayName: Clone CI repository
-
-  - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
-    displayName: Add conda to PATH
+  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
+  - template: azure_pipelines/activate_conda_windows.yml@templates
+  - template: azure_pipelines/setup_anaconda_packages.yml@templates
 
   - bash: |
-      source ci/conda_setup_environment.sh
       source activate $ENV_NAME
-      # Test pre uninstall script from a development version of constructor
-      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
-    displayName: Setup Anaconda packages
+      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
+    displayName: Setup Anaconda packages 2
 
   - bash: |
       source activate $ENV_NAME
@@ -151,7 +150,7 @@ jobs:
 
   - script: |
       call %INSTALL_DIR%\Scripts\activate.bat
-      pytest --mpl --pyargs hyperspy
+      pytest --pyargs hyperspy
       pytest --pyargs pyxem
       pytest --pyargs atomap
     displayName: Test new distribution
@@ -180,26 +179,14 @@ jobs:
         INSTALL_DIR: /hyperspy-bundle
 
   steps:
-  - bash: |
-      git clone --depth 1 git://github.com/ericpre/ci.git
-    displayName: Clone CI repository
+  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
+  - template: azure_pipelines/activate_conda_macos.yml@templates
+  - template: azure_pipelines/setup_anaconda_packages.yml@templates
 
   - bash: |
-      echo "##vso[task.prependpath]$CONDA/bin"
-    displayName: Add conda to PATH
-
-  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
-  # We need to take ownership if we want to update conda or install packages globally
-  - bash: |
-      sudo chown -R $USER $CONDA
-      sudo chown -R $USER /Users/runner/.conda
-    displayName: Take ownership of conda installation
-
-  - bash: |
-      source ci/conda_setup_environment.sh
       source activate $ENV_NAME
-      pip install https://github.com/ericpre/constructor/archive/custom_build.zip
-    displayName: Setup Anaconda packages
+      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
+    displayName: Setup Anaconda packages 2
 
   - bash: |
       source activate $ENV_NAME
@@ -232,7 +219,7 @@ jobs:
 
   - bash: |
       source $INSTALL_DIR/bin/activate
-      pytest --mpl --pyargs hyperspy
+      pytest --pyargs hyperspy
       pytest --pyargs pyxem
       pytest --pyargs atomap
     displayName: Test new distribution
