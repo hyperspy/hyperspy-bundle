@@ -2,6 +2,7 @@ variables:
   ENV_NAME: test_env
   MPLBACKEND: agg
   TEST_DEPS: pytest pytest-mpl
+  PYTHON_VERSION: '3.7'
 
 trigger:
   tags:
@@ -22,218 +23,152 @@ resources:
       # https://docs.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints
       endpoint: ericpre # Azure DevOps service connection
 
-jobs:
-- job:
-  displayName: ubuntu-latest
-  pool:
-    vmImage: 'ubuntu-latest'
-  strategy:
-    matrix:
-      Python37:
-        CONDA_PYTHON_VERSION: '3.7'
-        INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
+strategy:
+  matrix:
+    Linux:
+      vmImage: 'ubuntu-latest'
+      INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
+      INSTALLER_EXTENSION: 'sh'
+    MacOS:
+      vmImage: 'macOS-latest'
+      INSTALL_DIR: /hyperspy-bundle
+      INSTALLER_EXTENSION: 'pkg'
+    Windows:
+      vmImage: 'windows-latest'
+      INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
+      INSTALLER_EXTENSION: 'exe'
 
-  steps:
-  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
-  - template: azure_pipelines/activate_conda_linux.yml@templates
-  - template: azure_pipelines/setup_anaconda_packages.yml@templates
+pool:
+  vmImage: '$(vmImage)'
 
-  - bash: |
-      source activate $ENV_NAME
-      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
-    displayName: Setup Anaconda packages 2
+steps:
 
-  - bash: |
-      source activate $ENV_NAME
-      constructor -v conda_distribution
-    displayName: Build distribution
+#################
+# All Plafforms #
+#################
 
-  - bash: |
-      sha256sum HyperSpy-*.sh
-    displayName: sha256sum
+- template: azure_pipelines/clone_ci-scripts_repo.yml@templates
+- template: azure_pipelines/activate_conda.yml@templates
+- template: azure_pipelines/setup_anaconda_packages.yml@templates
 
-  #- bash: |
-  #    source activate $ENV_NAME
-  #    # TODO Add tag name (Use Build.SourceBranch)
-  #    ls 
-  #    #BUILD_NAME=HyperSpy-bundle-py37-${PLATFORM}-64bit.sh
-  #    #mv HyperSpy-*.sh $BUILD_NAME
-  #  displayName: Rename artifact
+- bash: |
+    source activate $ENV_NAME
+    pip install https://github.com/conda/constructor/archive/master.zip --no-deps
+  displayName: Setup Anaconda packages 2
 
-  - publish: $(Build.SourcesDirectory)
-    # File to upload defined in the .artifactignore file
-    artifact: HyperSpy-bundle-Linux
-    displayName: Publish artifact
+- bash: |
+    source activate $ENV_NAME
+    constructor -v conda_distribution
+  displayName: Build distribution
 
-  - bash: |
-      bash HyperSpy-bundle*.sh -b -p $INSTALL_DIR
-    displayName: Install new distribution
+- bash: |
+    ls
+    sha256sum HyperSpy-*.$INSTALLER_EXTENSION
+  displayName: sha256sum
 
-  - bash: |
-      source $INSTALL_DIR/bin/activate
-      conda info
-      conda install -y $TEST_DEPS
-    displayName: Install test dependencies
+- publish: $(Build.SourcesDirectory)
+  # File to upload defined in the .artifactignore file
+  artifact: HyperSpy-bundle-$(Agent.Name)
+  displayName: Publish artifact
 
-  - bash: |
-      source $INSTALL_DIR/bin/activate
-      pytest --pyargs hyperspy
-      pytest --pyargs pyxem
-      pytest --pyargs atomap
-    displayName: Test new distribution
+#################
+#     Linux     #
+#################
 
-  - task: GithubRelease@0 
-    displayName: 'Update GitHub Release on tag only'
-    # Release only on tag (branch name start with 'refs/tags/')
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-    inputs:
-      gitHubConnection: github_release_token_ericpre_azure
-      action: edit # Release should already have been created
-      tag: $(Build.SourceBranchName)
-      repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.SourcesDirectory)/*.sh
-      assetUploadMode: replace
+- bash: |
+    bash HyperSpy-bundle*.sh -b -p $INSTALL_DIR
+  displayName: Install new distribution
+  condition: eq(variables['Agent.OS'], 'Linux')
 
-- job:
-  displayName: windows-latest
-  pool:
-    vmImage: 'windows-latest'
-  strategy:
-    matrix:
-      Python37:
-        CONDA_PYTHON_VERSION: '3.7'
-        INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
+- bash: |
+    source $INSTALL_DIR/bin/activate
+    conda info
+    conda install -y $TEST_DEPS
+  displayName: Install test dependencies
+  condition: eq(variables['Agent.OS'], 'Linux')
 
-  steps:
-  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
-  - template: azure_pipelines/activate_conda_windows.yml@templates
-  - template: azure_pipelines/setup_anaconda_packages.yml@templates
+- bash: |
+    source $INSTALL_DIR/bin/activate
+    pytest --pyargs hyperspy
+    pytest --pyargs pyxem
+    pytest --pyargs atomap
+  displayName: Test new distribution
+  condition: eq(variables['Agent.OS'], 'Linux')
 
-  - bash: |
-      source activate $ENV_NAME
-      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
-    displayName: Setup Anaconda packages 2
+#################
+#    Windows    #
+#################
 
-  - bash: |
-      source activate $ENV_NAME
-      constructor -v conda_distribution
-    displayName: Build distribution
+- powershell: |
+    Write-Host "INSTALL_DIR: $Env:INSTALL_DIR"
+    # For info, how azure pipelines install miniconda
+    # See https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/win/scripts/Installers/Install-Miniconda.ps1
+    $fname = Get-ChildItem HyperSpy*.exe
+    Write-Host "Installer name: $fname"
+    Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=$Env:INSTALL_DIR"
+    ls $Env:INSTALL_DIR
+  displayName: Install new distribution
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
-  - powershell: |
-      Get-FileHash HyperSpy-*.exe
-    displayName: sha256sum
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    conda info
+  displayName: Install test dependencies
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
-  - publish: $(Build.SourcesDirectory)
-    # File to upload defined in the .artifactignore file
-    artifact: HyperSpy-bundle-Windows
-    displayName: Publish artifact
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    conda install -y %TEST_DEPS%
+  displayName: Install test dependencies2
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
-  - powershell: |
-      Write-Host "INSTALL_DIR: $Env:INSTALL_DIR"
-      # For info, how azure pipelines install miniconda
-      # See https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/win/scripts/Installers/Install-Miniconda.ps1
-      $fname = Get-ChildItem HyperSpy*.exe
-      Write-Host "Installer name: $fname"
-      Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=$Env:INSTALL_DIR"
-      ls $Env:INSTALL_DIR
-    displayName: Install new distribution
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    pytest --pyargs hyperspy
+    pytest --pyargs pyxem
+    pytest --pyargs atomap
+  displayName: Test new distribution
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
-  - script: |
-      call %INSTALL_DIR%\Scripts\activate.bat
-      conda info
-    displayName: Install test dependencies
+#################
+#     MacOS     #
+#################
 
-  - script: |
-      call %INSTALL_DIR%\Scripts\activate.bat
-      conda install -y %TEST_DEPS%
-    displayName: Install test dependencies2
+- bash: |
+    sudo installer -pkg HyperSpy-*.pkg -target /
+  displayName: Install new distribution
+  condition: eq(variables['Agent.OS'], 'Darwin')
 
-  - script: |
-      call %INSTALL_DIR%\Scripts\activate.bat
-      pytest --pyargs hyperspy
-      pytest --pyargs pyxem
-      pytest --pyargs atomap
-    displayName: Test new distribution
+# On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+# We need to take ownership if we want to update conda or install packages globally
+- bash: sudo chown -R $USER $INSTALL_DIR
+  displayName: Take ownership of conda installation
+  condition: eq(variables['Agent.OS'], 'Darwin')
 
+- bash: |
+    source $INSTALL_DIR/bin/activate
+    conda info
+    conda install -y $TEST_DEPS
+  displayName: Install test dependencies
+  condition: eq(variables['Agent.OS'], 'Darwin')
 
-  - task: GithubRelease@0 
-    displayName: 'Update GitHub Release on tag only'
-    # Release only on tag (branch name start with 'refs/tags/')
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-    inputs:
-      gitHubConnection: github_release_token_ericpre_azure
-      action: edit # Release should already have been created
-      tag: $(Build.SourceBranchName)
-      repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.SourcesDirectory)/*.exe
-      assetUploadMode: replace
-
-- job:
-  displayName: macOS-latest
-  pool:
-    vmImage: 'macOS-latest'
-  strategy:
-    matrix:
-      Python37:
-        CONDA_PYTHON_VERSION: '3.7'
-        INSTALL_DIR: /hyperspy-bundle
-
-  steps:
-  - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
-  - template: azure_pipelines/activate_conda_macos.yml@templates
-  - template: azure_pipelines/setup_anaconda_packages.yml@templates
-
-  - bash: |
-      source activate $ENV_NAME
-      pip install https://github.com/conda/constructor/archive/master.zip --no-deps
-    displayName: Setup Anaconda packages 2
-
-  - bash: |
-      source activate $ENV_NAME
-      constructor -v conda_distribution
-    displayName: Build distribution
-
-  - bash: |
-      shasum -a 256 HyperSpy-*.pkg
-    displayName: sha256sum
-
-  - publish: $(Build.SourcesDirectory)
-    # File to upload defined in the .artifactignore file
-    artifact: HyperSpy-bundle-MacOSX
-    displayName: Publish artifact
-
-  - bash: |
-      sudo installer -pkg HyperSpy-*.pkg -target /
-    displayName: Install new distribution
-
-  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
-  # We need to take ownership if we want to update conda or install packages globally
-  - bash: sudo chown -R $USER $INSTALL_DIR
-    displayName: Take ownership of conda installation
-
-  - bash: |
-      source $INSTALL_DIR/bin/activate
-      conda info
-      conda install -y $TEST_DEPS
-    displayName: Install test dependencies
-
-  - bash: |
-      source $INSTALL_DIR/bin/activate
-      pytest --pyargs hyperspy
-      pytest --pyargs pyxem
-      pytest --pyargs atomap
-    displayName: Test new distribution
-
-  - task: GithubRelease@0 
-    displayName: 'Update GitHub Release on tag only'
-    # Release only on tag (branch name start with 'refs/tags/')
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-    inputs:
-      gitHubConnection: github_release_token_ericpre_azure
-      action: edit # Release should already have been created
-      tag: $(Build.SourceBranchName)
-      repositoryName: ericpre/hyperspy-bundle
-      assets: $(Build.SourcesDirectory)/*.pkg
-      assetUploadMode: replace
+- bash: |
+    source $INSTALL_DIR/bin/activate
+    pytest --pyargs hyperspy
+    pytest --pyargs pyxem
+    pytest --pyargs atomap
+  displayName: Test new distribution
+  condition: eq(variables['Agent.OS'], 'Darwin')
 
 
+- task: GithubRelease@0
+  displayName: 'Update GitHub Release on tag only'
+  # Release only on tag (branch name start with 'refs/tags/')
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+  inputs:
+    gitHubConnection: github_release_token_ericpre_azure
+    action: edit # Release should already have been created
+    tag: $(Build.SourceBranchName)
+    repositoryName: ericpre/hyperspy-bundle
+    assets: $(Build.SourcesDirectory)/*.$(INSTALLER_EXTENSION)
+    assetUploadMode: replace
