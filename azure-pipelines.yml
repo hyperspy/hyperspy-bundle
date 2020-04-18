@@ -63,7 +63,7 @@ steps:
 
 - bash: |
     ls
-    sha256sum HyperSpy-*.$INSTALLER_EXTENSION
+    shasum -a 256 HyperSpy-*.$INSTALLER_EXTENSION
   displayName: sha256sum
 
 - publish: $(Build.SourcesDirectory)
@@ -77,14 +77,14 @@ steps:
 
 - bash: |
     bash HyperSpy-bundle*.sh -b -p $INSTALL_DIR
-  displayName: Install new distribution
+  displayName: Install new distribution (Linux)
   condition: eq(variables['Agent.OS'], 'Linux')
 
 - bash: |
     source $INSTALL_DIR/bin/activate
     conda info
     conda install -y $TEST_DEPS
-  displayName: Install test dependencies
+  displayName: Install test dependencies (Linux)
   condition: eq(variables['Agent.OS'], 'Linux')
 
 - bash: |
@@ -92,7 +92,7 @@ steps:
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
-  displayName: Test new distribution
+  displayName: Test new distribution (Linux)
   condition: eq(variables['Agent.OS'], 'Linux')
 
 #################
@@ -107,19 +107,14 @@ steps:
     Write-Host "Installer name: $fname"
     Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=$Env:INSTALL_DIR"
     ls $Env:INSTALL_DIR
-  displayName: Install new distribution
+  displayName: Install new distribution (Win)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - script: |
     call %INSTALL_DIR%\Scripts\activate.bat
     conda info
-  displayName: Install test dependencies
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-- script: |
-    call %INSTALL_DIR%\Scripts\activate.bat
     conda install -y %TEST_DEPS%
-  displayName: Install test dependencies2
+  displayName: Install test dependencies (Win)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - script: |
@@ -127,7 +122,7 @@ steps:
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
-  displayName: Test new distribution
+  displayName: Test new distribution (Win)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 #################
@@ -135,21 +130,23 @@ steps:
 #################
 
 - bash: |
-    sudo installer -pkg HyperSpy-*.pkg -target /
+    sudo installer -pkg HyperSpy-*.pkg -target ~
+    ls /
+    ls $INSTALL_DIR
   displayName: Install new distribution
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
 # We need to take ownership if we want to update conda or install packages globally
 - bash: sudo chown -R $USER $INSTALL_DIR
-  displayName: Take ownership of conda installation
+  displayName: Take ownership of conda installation (Mac)
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 - bash: |
     source $INSTALL_DIR/bin/activate
     conda info
     conda install -y $TEST_DEPS
-  displayName: Install test dependencies
+  displayName: Install test dependencies (Mac)
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 - bash: |
@@ -157,7 +154,7 @@ steps:
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
-  displayName: Test new distribution
+  displayName: Test new distribution (Mac)
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 
