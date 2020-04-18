@@ -29,20 +29,14 @@ strategy:
       vmImage: 'ubuntu-latest'
       INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
       INSTALLER_EXTENSION: 'sh'
-      HASH_CMD: 'shasum -a 256'
-      ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
     MacOS:
       vmImage: 'macOS-latest'
-      INSTALL_DIR: ~/hyperspy-bundle
+      INSTALL_DIR: /Users/runner/hyperspy-bundle
       INSTALLER_EXTENSION: 'pkg'
-      HASH_CMD: 'shasum -a 256'
-      ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
     Windows:
       vmImage: 'windows-latest'
       INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
       INSTALLER_EXTENSION: 'exe'
-      HASH_CMD: 'shasum -a 256'
-      ACTIVATE_CMD: 'call %INSTALL_DIR%\Scripts\activate.bat'
 
 pool:
   vmImage: '$(vmImage)'
@@ -63,8 +57,9 @@ steps:
   displayName: Build distribution
 
 - bash: |
-    $(HASH_CMD) HyperSpy-*.$INSTALLER_EXTENSION
+    shasum -a 256 HyperSpy-*.$INSTALLER_EXTENSION
   displayName: sha256sum
+  condition: in(variables['Agent.OS'], 'Linux', 'Darwin')
 
 - publish: $(Build.SourcesDirectory)
   # File to upload defined in the .artifactignore file
@@ -81,8 +76,39 @@ steps:
   condition: eq(variables['Agent.OS'], 'Linux')
 
 #################
+#     MacOS     #
+#################
+
+- bash: |
+    # Print installer information
+    echo "installer -dominfo"
+    installer -dominfo -pkg HyperSpy-*.pkg -verbose
+    echo "installer -volinfo"
+    installer -volinfo -pkg HyperSpy-*.pkg -verbose
+    # Run the installer
+    echo "Running installer"
+    installer -pkg HyperSpy-*.pkg -target CurrentUserHomeDirectory
+    echo "~:"
+    ls ~
+    echo "$INSTALL_DIR:"
+    ls $INSTALL_DIR
+  displayName: Install new distribution (MacOS)
+  condition: eq(variables['Agent.OS'], 'Darwin')
+
+# On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+# We need to take ownership if we want to update conda or install packages globally
+- bash: sudo chown -R $USER $INSTALL_DIR
+  displayName: Take ownership of conda installation (MacOs)
+  condition: eq(variables['Agent.OS'], 'Darwin')
+
+#################
 #    Windows    #
 #################
+
+- powershell: |
+    Get-FileHash HyperSpy-*.exe
+  displayName: sha256sum (Win)
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - powershell: |
     Write-Host "INSTALL_DIR: $Env:INSTALL_DIR"
@@ -95,47 +121,53 @@ steps:
   displayName: Install new distribution (Win)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    conda info
+  displayName: Install test dependencies (Win)
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    conda install -y %TEST_DEPS%
+  displayName: Install test dependencies2 (Win)
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+- script: |
+    call %INSTALL_DIR%\Scripts\activate.bat
+    pytest --pyargs hyperspy
+    pytest --pyargs pyxem
+    pytest --pyargs atomap
+  displayName: Test new distribution (Win)
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+
 #################
-#     MacOS     #
+# Linux & MacOS #
 #################
 
 - bash: |
-    # Print installer information
-    installer -dominfo -pkg HyperSpy-*.pkg
-    installer -volinfo -pkg HyperSpy-*.pkg
-    # Run the installer
-    installer -pkg HyperSpy-*.pkg -target CurrentUserHomeDirectory
-    ls ~
-    ls $INSTALL_DIR
-  displayName: Install new distribution (Mac)
-  condition: eq(variables['Agent.OS'], 'Darwin')
-
-# On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
-# We need to take ownership if we want to update conda or install packages globally
-- bash: sudo chown -R $USER $INSTALL_DIR
-  displayName: Take ownership of conda installation (Mac)
-  condition: eq(variables['Agent.OS'], 'Darwin')
-
-#################
-# All Plafforms #
-#################
-
-- bash: |
-    $(ACTIVATE_CMD)
-    conda install -y $TEST_DEPS
+    source activate $(INSTALL_DIR)
+    conda install -y $TEST_DEPS -c conda-forge
   displayName: Install test dependencies
+  condition: in(variables['Agent.OS'], 'Linux', 'Darwin')
 
 - bash: |
-    $(ACTIVATE_CMD)
+    source activate $(INSTALL_DIR)
     conda info
   displayName: Conda info new install
+  condition: in(variables['Agent.OS'], 'Linux', 'Darwin')
 
 - bash: |
-    $(ACTIVATE_CMD)
+    source activate $(INSTALL_DIR)
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
   displayName: Test new distribution
+  condition: in(variables['Agent.OS'], 'Linux', 'Darwin')
+
+#################
+# All Platforms #
+#################
 
 - task: GithubRelease@0
   displayName: 'Update GitHub Release on tag only'
