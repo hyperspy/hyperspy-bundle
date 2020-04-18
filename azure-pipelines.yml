@@ -33,7 +33,7 @@ strategy:
       ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
     MacOS:
       vmImage: 'macOS-latest'
-      INSTALL_DIR: /hyperspy-bundle
+      INSTALL_DIR: ~/hyperspy-bundle
       INSTALLER_EXTENSION: 'pkg'
       HASH_CMD: 'shasum -a 256'
       ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
@@ -48,11 +48,6 @@ pool:
   vmImage: '$(vmImage)'
 
 steps:
-
-#################
-# All Plafforms #
-#################
-
 - template: azure_pipelines/clone_ci-scripts_repo.yml@templates
 - template: azure_pipelines/activate_conda.yml@templates
 - template: azure_pipelines/setup_anaconda_packages.yml@templates
@@ -105,10 +100,14 @@ steps:
 #################
 
 - bash: |
-    sudo installer -pkg HyperSpy-*.pkg -target ~
-    ls /
+    # Print installer information
+    installer -dominfo -pkg HyperSpy-*.pkg
+    installer -volinfo -pkg HyperSpy-*.pkg
+    # Run the installer
+    installer -pkg HyperSpy-*.pkg -target CurrentUserHomeDirectory
+    ls ~
     ls $INSTALL_DIR
-  displayName: Install new distribution
+  displayName: Install new distribution (Mac)
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
@@ -128,7 +127,7 @@ steps:
 
 - bash: |
     $(ACTIVATE_CMD)
-    conda install -y $TEST_DEPS
+    conda info
   displayName: Conda info new install
 
 - bash: |
@@ -136,8 +135,7 @@ steps:
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
-  displayName: Test new distribution (Mac)
-
+  displayName: Test new distribution
 
 - task: GithubRelease@0
   displayName: 'Update GitHub Release on tag only'
