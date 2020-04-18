@@ -29,14 +29,20 @@ strategy:
       vmImage: 'ubuntu-latest'
       INSTALL_DIR: $(Agent.HomeDirectory)/hyperspy-bundle
       INSTALLER_EXTENSION: 'sh'
+      HASH_CMD: 'shasum -a 256'
+      ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
     MacOS:
       vmImage: 'macOS-latest'
       INSTALL_DIR: /hyperspy-bundle
       INSTALLER_EXTENSION: 'pkg'
+      HASH_CMD: 'shasum -a 256'
+      ACTIVATE_CMD: 'source $INSTALL_DIR/bin/activate'
     Windows:
       vmImage: 'windows-latest'
       INSTALL_DIR: $(Agent.HomeDirectory)\hyperspy-bundle
       INSTALLER_EXTENSION: 'exe'
+      HASH_CMD: 'shasum -a 256'
+      ACTIVATE_CMD: 'call %INSTALL_DIR%\Scripts\activate.bat'
 
 pool:
   vmImage: '$(vmImage)'
@@ -62,8 +68,7 @@ steps:
   displayName: Build distribution
 
 - bash: |
-    ls
-    shasum -a 256 HyperSpy-*.$INSTALLER_EXTENSION
+    $(HASH_CMD) HyperSpy-*.$INSTALLER_EXTENSION
   displayName: sha256sum
 
 - publish: $(Build.SourcesDirectory)
@@ -80,21 +85,6 @@ steps:
   displayName: Install new distribution (Linux)
   condition: eq(variables['Agent.OS'], 'Linux')
 
-- bash: |
-    source $INSTALL_DIR/bin/activate
-    conda info
-    conda install -y $TEST_DEPS
-  displayName: Install test dependencies (Linux)
-  condition: eq(variables['Agent.OS'], 'Linux')
-
-- bash: |
-    source $INSTALL_DIR/bin/activate
-    pytest --pyargs hyperspy
-    pytest --pyargs pyxem
-    pytest --pyargs atomap
-  displayName: Test new distribution (Linux)
-  condition: eq(variables['Agent.OS'], 'Linux')
-
 #################
 #    Windows    #
 #################
@@ -108,21 +98,6 @@ steps:
     Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=$Env:INSTALL_DIR"
     ls $Env:INSTALL_DIR
   displayName: Install new distribution (Win)
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-- script: |
-    call %INSTALL_DIR%\Scripts\activate.bat
-    conda info
-    conda install -y %TEST_DEPS%
-  displayName: Install test dependencies (Win)
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-- script: |
-    call %INSTALL_DIR%\Scripts\activate.bat
-    pytest --pyargs hyperspy
-    pytest --pyargs pyxem
-    pytest --pyargs atomap
-  displayName: Test new distribution (Win)
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 #################
@@ -142,20 +117,26 @@ steps:
   displayName: Take ownership of conda installation (Mac)
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-- bash: |
-    source $INSTALL_DIR/bin/activate
-    conda info
-    conda install -y $TEST_DEPS
-  displayName: Install test dependencies (Mac)
-  condition: eq(variables['Agent.OS'], 'Darwin')
+#################
+# All Plafforms #
+#################
 
 - bash: |
-    source $INSTALL_DIR/bin/activate
+    $(ACTIVATE_CMD)
+    conda install -y $TEST_DEPS
+  displayName: Install test dependencies
+
+- bash: |
+    $(ACTIVATE_CMD)
+    conda install -y $TEST_DEPS
+  displayName: Conda info new install
+
+- bash: |
+    $(ACTIVATE_CMD)
     pytest --pyargs hyperspy
     pytest --pyargs pyxem
     pytest --pyargs atomap
   displayName: Test new distribution (Mac)
-  condition: eq(variables['Agent.OS'], 'Darwin')
 
 
 - task: GithubRelease@0
