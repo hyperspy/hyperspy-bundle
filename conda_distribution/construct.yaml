@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2020.04.27
+version: 2020.05.28
 
 install_in_dependency_order: True
 
@@ -25,6 +25,7 @@ specs:
   - atomap
   - pixstem
   - pyxem
+  - nionswift
 
 license_file: LICENSE
 
