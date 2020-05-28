@@ -25,7 +25,6 @@ specs:
   - atomap
   - pixstem
   - pyxem
-  - nionswift
 
 license_file: LICENSE
 
