@@ -17,6 +17,7 @@ specs:
   - console_shortcut                        # [win]
   - spyder
   - anaconda-navigator
+  - nb_conda_kernels
   - hyperspy
   - hyperspyui
   - start_jupyter_cm
