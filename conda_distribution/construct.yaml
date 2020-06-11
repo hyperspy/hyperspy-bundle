@@ -11,7 +11,7 @@ channels:
   - msys2    # [win]
 
 specs:
-  - python 3.7*
+  - python 3.8*
   - conda
   - menuinst                                # [win]
   - console_shortcut                        # [win]
