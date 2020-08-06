@@ -27,12 +27,25 @@ jobs:
   #        prerelease: false
 
   build:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.config.os }}
+    runs-on: ${{ matrix.config.os }}-latest
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        config:
+          - os: macos
+            INSTALLER_EXTENSION: pkg
+            INSTALL_DIR: /Users/runner/work
+          - os: ubuntu
+            INSTALLER_EXTENSION: sh
+            INSTALL_DIR: ${{ github.workspace }}/install
+          - os: windows
+            INSTALLER_EXTENSION: exe
+            INSTALL_DIR: ${{ github.workspace }}\install
+    env:
+      INSTALLER_EXTENSION: ${{ matrix.config.INSTALLER_EXTENSION }}
+      INSTALL_DIR: ${{ matrix.config.INSTALL_DIR }}
+
     steps:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
@@ -57,9 +70,19 @@ jobs:
         run: |
           constructor -v conda_distribution
 
+      - name: sha256sum
+        if: runner.os == 'Linux'
+        run: |
+          shasum -a 256 HyperSpy-*.${{ env.INSTALLER_EXTENSION }}
+
+      - name: Install new distribution
+        run: |
+          ls ${{ github.workspace }}
+          ls $${{ github.HOME }}
+
       - uses: actions/upload-artifact@v2
         with:
-          path: ./dist/*.whl
+          path: HyperSpy-*.${{ env.INSTALLER_EXTENSION }}
 
       #- name: Upload Release Asset
       #  uses: actions/upload-release-asset@v1
