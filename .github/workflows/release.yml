@@ -75,10 +75,26 @@ jobs:
         run: |
           shasum -a 256 HyperSpy-*.${{ env.INSTALLER_EXTENSION }}
 
-      - name: Install new distribution
+      - name: Install new distribution (Linux)
+        if: runner.os == 'Linux'
+        env:
+          install_dir: '${{ github.workspace }}/new_distribution'
         run: |
-          ls ${{ github.workspace }}
-          ls $${{ github.HOME }}
+          bash HyperSpy-bundle*.sh -b -p ${{ env.install_dir }}
+
+      - name: Install new distribution (MacOS)
+        if: runner.os == 'macos'
+        run: |
+          installer -pkg HyperSpy-*.pkg -target CurrentUserHomeDirectory
+
+      - name: Install new distribution (Windows)
+        if: runner.os == 'windows'
+        shell: powershell
+        env:
+          install_dir: '${{ github.workspace }}\new_distribution'
+        run: |
+          $fname = Get-ChildItem HyperSpy*.exe
+          Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - uses: actions/upload-artifact@v2
         with:
