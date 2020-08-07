@@ -29,9 +29,9 @@ jobs:
 
   build:
     name: ${{ matrix.config.os }}
+    if: startsWith(github.ref, 'refs/tags/')
     needs: create_release
     runs-on: ${{ matrix.config.os }}-latest
-    if: startsWith(github.ref, 'refs/tags/')
     strategy:
       fail-fast: false
       matrix:
@@ -133,14 +133,14 @@ jobs:
           args: ${{ env.asset_name }}
 
   build_portable:
-    name: ${{ matrix.config.os }} (Portable)
+    name: windows (Portable)
     needs: create_release
     runs-on: windows-latest
     env:
       WP_URL: https://github.com/winpython/winpython/releases/download/2.3.20200530/Winpython64-3.8.3.0cod.exe
       WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
       WP_EXE: winpython.exe
-      WP_DIR_NAME: 'WPy64-3830'
+      WP_DIR_NAME: WPy64-3830
       INSTALLER_NAME: HyperSpy-bundle-TAG-Windows-x86_64-Portable.exe
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
@@ -155,21 +155,24 @@ jobs:
           $file_hash = (Get-FileHash "${{ env.WP_EXE }}" ).Hash
           $file_hash 
           if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
+          $file_hash = (Get-FileHash ${{ env.WP_EXE }} ).Hash
+          $file_hash 
 
       - name: Extract Winpython
         run: |
-          .\${{ env.WP_EXE }} -y -o .
+          .\${{ env.WP_EXE }} -y | Out-Null
           ls
-          ls "${{ env.WP_DIR_NAME }}"
+          ls ${{ env.WP_DIR_NAME }}
 
       - name: Install libraries
         run: |
           "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pip install wheel
           pip install ${{ env.LIB_TO_INSTALL }}
 
       - name: Create installer
         run: |
-          7z -mx5 a {{ env.INSTALLER_NAME }} {{ env.WP_DIR_NAME }} -sfx7z.sfx
+          7za -mx5 -sfx7z.sfx a "{{ env.INSTALLER_NAME }}" "{{ env.WP_DIR_NAME }}"
           ls
 
       - uses: actions/upload-artifact@v2
