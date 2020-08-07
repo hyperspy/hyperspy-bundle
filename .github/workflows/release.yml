@@ -31,6 +31,7 @@ jobs:
     name: ${{ matrix.config.os }}
     needs: create_release
     runs-on: ${{ matrix.config.os }}-latest
+    if: startsWith(github.ref, 'refs/tags/')
     strategy:
       fail-fast: false
       matrix:
@@ -124,11 +125,12 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v1
+        uses: skx/github-action-publish-binaries@release-0.14
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          releaseId: ${{ needs.create_release.outputs.id }}
+          args: ${{ env.asset_name }}
 
   build_portable:
     name: ${{ matrix.config.os }} (Portable)
@@ -142,19 +144,23 @@ jobs:
       INSTALLER_NAME: HyperSpy-bundle-TAG-Windows-x86_64-Portable.exe
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
-      LIB_TO_INSTALL: hyperspy pyxem, atomap
+      LIB_TO_INSTALL: hyperspy pyxem atomap
       LIB_TO_TEST: hyperspy
 
     steps:
       - name: Download Winpython
         run: |
-          curl -o ${{ env.WP_EXE }} ${{ env.WP_URL }}
+          Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
           ls
+          $file_hash = (Get-FileHash "${{ env.WP_EXE }}" ).Hash
+          $file_hash 
+          if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
 
       - name: Extract Winpython
         run: |
-          .\${{ env.WP_EXE }} -y
+          .\${{ env.WP_EXE }} -y -o .
           ls
+          ls "${{ env.WP_DIR_NAME }}"
 
       - name: Install libraries
         run: |
