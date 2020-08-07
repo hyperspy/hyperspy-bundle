@@ -101,7 +101,7 @@ jobs:
           install_dir: '${{ github.workspace }}\new_distribution'
         shell: powershell
         run: |
-          echo ::set-env name=install_dir::"${{ env.install_dir }}"
+          echo "::set-env name=install_dir::${{ env.install_dir }}"
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - name: Upload artifact
@@ -143,7 +143,7 @@ jobs:
       WP_DIR_NAME: WPy64-3830
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
-      LIB_TO_INSTALL: hyperspy hyperspyui pyxem atomap kikuchipy
+      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_TEST: hyperspy
 
     steps:
