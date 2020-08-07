@@ -4,7 +4,7 @@ on: [push]
   #push:
   #   Sequence of patterns matched against refs/tags
   #  tags:
-  #  - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  #  - '*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   create_release:
@@ -141,10 +141,10 @@ jobs:
       WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3830
-      INSTALLER_NAME: HyperSpy-bundle-TAG-Windows-x86_64-Portable.exe
+      INSTALLER_NAME: HyperSpy-bundle-${GITHUB_REF#refs/*/}-Windows-x86_64-Portable.exe
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
-      LIB_TO_INSTALL: hyperspy pyxem atomap
+      LIB_TO_INSTALL: hyperspy hyperspyui pyxem atomap
       LIB_TO_TEST: hyperspy
 
     steps:
@@ -152,11 +152,9 @@ jobs:
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
           ls
-          $file_hash = (Get-FileHash "${{ env.WP_EXE }}" ).Hash
-          $file_hash 
-          if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
           $file_hash = (Get-FileHash ${{ env.WP_EXE }} ).Hash
           $file_hash 
+          if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
 
       - name: Extract Winpython
         run: |
@@ -172,7 +170,9 @@ jobs:
 
       - name: Create installer
         run: |
-          7za -mx5 -sfx7z.sfx a "{{ env.INSTALLER_NAME }}" "{{ env.WP_DIR_NAME }}"
+          $wp_dir_name = (Resolve-Path -Path "${{ env.WP_DIR_NAME }}")
+          $wp_dir_name
+          7z -mx5 -sfx a ${{ env.INSTALLER_NAME }} ${{ env.WP_DIR_NAME }}
           ls
 
       - uses: actions/upload-artifact@v2
@@ -189,4 +189,12 @@ jobs:
           "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
+      - name: Upload Release Asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: skx/github-action-publish-binaries@release-0.14
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          releaseId: ${{ needs.create_release.outputs.id }}
+          args: ${{ env.INSTALLER_NAME }}
 
