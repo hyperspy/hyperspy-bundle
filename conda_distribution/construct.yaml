@@ -24,10 +24,10 @@ specs:
   - start_jupyter_cm
   - ipympl >=0.5.7
   - jupyterlab
-  - numba
+  - qtconsole
   - atomap
   - pyxem
-  - qtconsole
+  - kikuchipy
 
 license_file: LICENSE
 

@@ -29,7 +29,6 @@ jobs:
 
   build:
     name: ${{ matrix.config.os }}
-    if: startsWith(github.ref, 'refs/tags/')
     needs: create_release
     runs-on: ${{ matrix.config.os }}-latest
     strategy:
@@ -102,10 +101,11 @@ jobs:
           install_dir: '${{ github.workspace }}\new_distribution'
         shell: powershell
         run: |
-          echo "::set-env name=install_dir::${{ env.install_dir }}"
+          echo ::set-env name=install_dir::"${{ env.install_dir }}"
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
           path: ${{ env.asset_name }}
 
@@ -141,10 +141,9 @@ jobs:
       WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3830
-      INSTALLER_NAME: HyperSpy-bundle-${GITHUB_REF#refs/*/}-Windows-x86_64-Portable.exe
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
-      LIB_TO_INSTALL: hyperspy hyperspyui pyxem atomap
+      LIB_TO_INSTALL: hyperspy hyperspyui pyxem atomap kikuchipy
       LIB_TO_TEST: hyperspy
 
     steps:
@@ -156,7 +155,7 @@ jobs:
           $file_hash 
           if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
 
-      - name: Extract Winpython
+      - name: Install Winpython
         run: |
           .\${{ env.WP_EXE }} -y | Out-Null
           ls
@@ -168,25 +167,38 @@ jobs:
           pip install wheel
           pip install ${{ env.LIB_TO_INSTALL }}
 
+      - name: Set installer name
+        run: |
+          $tag_name = "${{ github.event.release.tag_name }}"
+          $installer_name = "HyperSpy-bundle-$tag_name-Windows-x86_64-Portable.exe"
+          echo "::set-env name=asset_name::$installer_name"
+
       - name: Create installer
         run: |
-          $wp_dir_name = (Resolve-Path -Path "${{ env.WP_DIR_NAME }}")
-          $wp_dir_name
-          7z -mx5 -sfx a ${{ env.INSTALLER_NAME }} ${{ env.WP_DIR_NAME }}
+          7z -mx5 -sfx a ${{ env.asset_name }} ${{ env.WP_DIR_NAME }}
           ls
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          path: ${{ env.INSTALLER_NAME }}
+          path: ${{ env.asset_name }}
+
+      - name: Install new distribution
+        run: |
+          Remove-Item -recurse ${{ env.WP_DIR_NAME }}
+          ls
+          .\${{ env.asset_name }} -y | Out-Null
+          ls
+          ls ${{ env.asset_name }}
 
       - name: Install testing libraries
         run: |
-          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          "${{ env.asset_name }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
       - name: Run test suite
         run: |
-          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          "${{ env.asset_name }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
@@ -196,5 +208,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.create_release.outputs.id }}
-          args: ${{ env.INSTALLER_NAME }}
+          args: ${{ env.asset_name }}
 
