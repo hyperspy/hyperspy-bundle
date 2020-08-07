@@ -8,7 +8,7 @@ on: [push]
 
 jobs:
   create_release:
-    name: Create Release
+    name: Create Release (on tag only)
     runs-on: ubuntu-latest
     outputs: 
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -29,7 +29,7 @@ jobs:
 
   build:
     name: ${{ matrix.config.os }}
-    #needs: create_release
+    needs: create_release
     runs-on: ${{ matrix.config.os }}-latest
     strategy:
       fail-fast: false
@@ -42,7 +42,6 @@ jobs:
           - os: windows
             INSTALLER_EXTENSION: exe
     env:
-      INSTALLER_EXTENSION: ${{ matrix.config.INSTALLER_EXTENSION }}
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
       LIB_TO_TEST: hyperspy
@@ -71,24 +70,30 @@ jobs:
         run: |
           constructor -v conda_distribution
 
-      - name: sha256sum
-        if: runner.os == 'Linux'
+      - shell: bash -l {0}
+        name: Set asset name
         run: |
-          shasum -a 256 HyperSpy-*.${{ env.INSTALLER_EXTENSION }}
+          fname=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
+          echo ::set-env name=asset_name::$fname
+          echo $fname
+
+      - name: Get hash
+        run: |
+          shasum -a 256 ${{ env.asset_name }}
 
       - name: Install new distribution (Linux)
-        if: runner.os == 'Linux'
+        if: runner.os == 'linux'
         env:
           install_dir: '${{ github.workspace }}/new_distribution'
         run: |
           echo ::set-env name=install_dir::${{ env.install_dir }}
-          bash HyperSpy-bundle*.sh -b -p ${{ env.install_dir }}
+          bash ${{ env.asset_name }} -b -p ${{ env.install_dir }}
 
       - name: Install new distribution (MacOS)
         if: runner.os == 'macos'
         run: |
           echo "::set-env name=install_dir::/Users/runner"
-          installer -pkg HyperSpy-*.pkg -target CurrentUserHomeDirectory
+          installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
       - name: Install new distribution (Windows)
         if: runner.os == 'windows'
@@ -97,13 +102,11 @@ jobs:
         shell: powershell
         run: |
           echo "::set-env name=install_dir::${{ env.install_dir }}"
-          $fname = Get-ChildItem HyperSpy*.exe
-          echo "::set-env name=asset_name::$fname"
-          Start-Process -Wait -FilePath $fname -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
+          Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - uses: actions/upload-artifact@v2
         with:
-          path: HyperSpy-*.${{ env.INSTALLER_EXTENSION }}
+          path: ${{ env.asset_name }}
 
       - shell: bash -l {0}
         name: Info new distribution
@@ -126,6 +129,55 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.asset_name }}
-          asset_name: ${{ env.asset_name }}
-          asset_content_type: 
+
+  build_portable:
+    name: ${{ matrix.config.os }} (Portable)
+    needs: create_release
+    runs-on: windows-latest
+    env:
+      WP_URL: https://github.com/winpython/winpython/releases/download/2.3.20200530/Winpython64-3.8.3.0cod.exe
+      WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
+      WP_EXE: winpython.exe
+      WP_DIR_NAME: 'WPy64-3830'
+      INSTALLER_NAME: HyperSpy-bundle-TAG-Windows-x86_64-Portable.exe
+      MPLBACKEND: agg
+      TEST_DEPS: pytest pytest-mpl
+      LIB_TO_INSTALL: hyperspy pyxem, atomap
+      LIB_TO_TEST: hyperspy
+
+    steps:
+      - name: Download Winpython
+        run: |
+          curl -o ${{ env.WP_EXE }} ${{ env.WP_URL }}
+          ls
+
+      - name: Extract Winpython
+        run: |
+          .\${{ env.WP_EXE }} -y
+          ls
+
+      - name: Install libraries
+        run: |
+          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pip install ${{ env.LIB_TO_INSTALL }}
+
+      - name: Create installer
+        run: |
+          7z -mx5 a {{ env.INSTALLER_NAME }} {{ env.WP_DIR_NAME }} -sfx7z.sfx
+          ls
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ${{ env.INSTALLER_NAME }}
+
+      - name: Install testing libraries
+        run: |
+          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pip install ${{ env.TEST_DEPS }}
+
+      - name: Run test suite
+        run: |
+          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs ${{ env.LIB_TO_TEST }}
+
+
