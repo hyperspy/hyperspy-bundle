@@ -7,24 +7,25 @@ on: [push]
   #  - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  #create_release:
-  #  name: Create Release
-  #  runs-on: ubuntu-latest
-  #  outputs: 
-  #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #  steps:
-  #    - name: Checkout code
-  #      uses: actions/checkout@v2
-  #    - name: Create Release
-  #      id: create_release
-  #      uses: actions/create-release@v1
-  #      env:
-  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
-  #      with:
-  #        tag_name: ${{ github.ref }}
-  #        release_name: Release ${{ github.ref }}
-  #        draft: false
-  #        prerelease: false
+  create_release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs: 
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
   build:
     name: ${{ matrix.config.os }}
@@ -118,12 +119,13 @@ jobs:
           conda install ${{ env.TEST_DEPS }}
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
-      #- name: Upload Release Asset
-      #  uses: actions/upload-release-asset@v1
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    upload_url: ${{ needs.create_release.outputs.upload_url }}
-      #    asset_path: ./${{ env.asset_name }}
-      #    asset_name: ${{ env.asset_name }}
-      #    asset_content_type: 
+      - name: Upload Release Asset
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.asset_name }}
+          asset_name: ${{ env.asset_name }}
+          asset_content_type: 
