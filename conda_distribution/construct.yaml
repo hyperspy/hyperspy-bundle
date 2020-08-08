@@ -1,5 +1,5 @@
 name: HyperSpy-bundle
-version: 2020.08.06
+version: 2020.08.08
 
 install_in_dependency_order: True
 # Error: File 'lib/libiomp5.dylib' found in multiple packages: intel-openmp-2019.4-233.conda, llvm-openmp-10.0.0-h28b9765_0.conda
