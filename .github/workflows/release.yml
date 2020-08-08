@@ -163,15 +163,23 @@ jobs:
           ls ${{ env.WP_DIR_NAME }}
 
       - name: Install libraries
+        shell: cmd
         run: |
-          "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          where python
+          where pip
           pip install wheel
           pip install ${{ env.LIB_TO_INSTALL }}
 
+      - name: Get tag
+        id: get_tag
+        uses: battila7/get-version-action@v2
+
       - name: Set installer name
+        env:
+          tag: ${{ steps.get_tag.outputs.version-without-v }}
         run: |
-          $tag_name = "${{ github.event.release.tag_name }}"
-          $installer_name = "HyperSpy-bundle-$tag_name-Windows-x86_64-Portable.exe"
+          $installer_name = "HyperSpy-bundle-${{ env.tag }}-Windows-x86_64-Portable.exe"
           echo "::set-env name=asset_name::$installer_name"
 
       - name: Create installer
@@ -190,17 +198,20 @@ jobs:
           Remove-Item -recurse ${{ env.WP_DIR_NAME }}
           ls
           .\${{ env.asset_name }} -y | Out-Null
+          echo "After installation"
           ls
-          ls ${{ env.asset_name }}
+          echo ${{ env.asset_name }}
 
       - name: Install testing libraries
+        shell: cmd
         run: |
-          "${{ env.asset_name }}\scripts\env.bat"
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
       - name: Run test suite
+        shell: cmd
         run: |
-          "${{ env.asset_name }}\scripts\env.bat"
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
 

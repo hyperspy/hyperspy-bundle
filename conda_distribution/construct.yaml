@@ -24,6 +24,7 @@ specs:
   - start_jupyter_cm
   - ipympl >=0.5.7
   - jupyterlab
+  - nodejs
   - qtconsole
   - atomap
   - pyxem
@@ -39,7 +40,7 @@ post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
 
-post_install_desc: "Not recommended. The post installation script creates the right click shortcut and builds the jupyter widgets." # [win]
+post_install_desc: "Don't install jupyterlab widgets and context menu shortcuts." # [win]
 
 installer_type: pkg                         # [osx]
 
