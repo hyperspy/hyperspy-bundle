@@ -145,6 +145,7 @@ jobs:
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
+      LIB_TO_UPGRADE: pint numba
       LIB_TO_TEST: hyperspy
 
     steps:
@@ -170,6 +171,7 @@ jobs:
           where pip
           pip install wheel
           pip install ${{ env.LIB_TO_INSTALL }}
+          pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
 
       - name: Get tag
         id: get_tag
