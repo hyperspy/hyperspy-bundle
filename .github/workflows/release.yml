@@ -96,7 +96,7 @@ jobs:
       - name: Install new distribution (Windows)
         if: runner.os == 'windows'
         env:
-          install_dir: '${{ github.workspace }}\new_distribution'
+          install_dir: '${{ github.workspace }}\nd'
         shell: powershell
         run: |
           echo "::set-env name=install_dir::${{ env.install_dir }}"
