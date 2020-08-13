@@ -12,7 +12,7 @@ These python distributions include:
 - [pyxem](www.pyxem.org)
 - [kikuchipy](https://kikuchipy.org)
 
-## Conda based distribution
+## Anaconda-type distribution
 
 This distribution is very similar to the Anaconda distribution and is available for Windows, MacOSX and Linux.
 It is built using the [constructor](https://github.com/conda/constructor) tool, which is used to build the
@@ -47,7 +47,7 @@ start /wait "" HyperSpy-bundle-2020.02.05-Windows-x86_64.exe /S /D=%UserProfile%
 
 See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/silent-mode) for more information.
 
-## Winpython based distribution (Portable)
+## Portable distribution
 
 HyperSpy Bundle does not interact with any other Python installation, so it can be safely installed alongside other
 Python distributions. Since it is a portable distribution, it can be installed on external harddrive or it can be moved to any other
