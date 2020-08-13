@@ -60,8 +60,9 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          conda install constructor
-          pip install https://github.com/conda/constructor/archive/master.zip --no-deps
+          conda install constructor --only-deps
+          conda install conda-standalone
+          pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
 
       - shell: bash -l {0}
         name: Build distribution
