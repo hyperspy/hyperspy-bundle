@@ -5,7 +5,7 @@
 
 # HyperSpy Bundle Distribution
 
-These python distribution includes:
+These python distributions include:
 - [HyperSpy](https://hyperspy.org)
 - [HyperSpyUI](https://hyperspy.org/hyperspyUI)
 - [atomap](https://atomap.org)
@@ -30,7 +30,7 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 
 ### Differences with Anaconda/Miniconda
 
-* Includes the packages mentioned above
+* Include the packages mentioned above
 * The conda packages are download from the *anaconda main*, *conda-forge* channels in this order of priority 
   and these channels are set up in the installed environment.
 * Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jyputer Lab* or *Juypter QtConsole*.
@@ -50,7 +50,7 @@ See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/sile
 ## Winpython based distribution (Portable)
 
 HyperSpy Bundle does not interact with any other Python installation, so it can be safely installed alongside other
-Python distributions. Since it is portable, it can be installed on external harddrive or the distribution can be moved to another
+Python distributions. Since it is a portable distribution, it can be installed on external harddrive or it can be moved to any other
 folder.
 
 ### Installation
@@ -59,7 +59,7 @@ Run the installer (self-extracting archive), the distribution will be installed 
 
 ### Differences with WinPython
 
-* Includes the packages mentioned above.
+* Include the packages mentioned above.
 
 ## Download
 
