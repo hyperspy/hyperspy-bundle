@@ -72,7 +72,7 @@ jobs:
         name: Set asset name
         run: |
           fname=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
-          echo ::set-env name=asset_name::$fname
+          echo "asset_name=$fname >> $GITHUB_ENV
           echo $fname
 
       - name: Get hash
@@ -84,13 +84,13 @@ jobs:
         env:
           install_dir: '${{ github.workspace }}/new_distribution'
         run: |
-          echo ::set-env name=install_dir::${{ env.install_dir }}
+          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
           bash ${{ env.asset_name }} -b -p ${{ env.install_dir }}
 
       - name: Install new distribution (MacOS)
         if: runner.os == 'macos'
         run: |
-          echo "::set-env name=install_dir::/Users/runner"
+          echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
       - name: Install new distribution (Windows)
@@ -99,7 +99,7 @@ jobs:
           install_dir: '${{ github.workspace }}\nd'
         shell: powershell
         run: |
-          echo "::set-env name=install_dir::${{ env.install_dir }}"
+          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_EN
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - name: Upload artifact
@@ -182,7 +182,7 @@ jobs:
           tag: ${{ steps.get_tag.outputs.version-without-v }}
         run: |
           $installer_name = "HyperSpy-bundle-${{ env.tag }}-Windows-x86_64-Portable.exe"
-          echo "::set-env name=asset_name::$installer_name"
+          echo "asset_name=$installer_name" >> $GITHUB_ENV
 
       - name: Create installer
         run: |
