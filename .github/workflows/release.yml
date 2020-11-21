@@ -72,7 +72,7 @@ jobs:
         name: Set asset name
         run: |
           fname=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
-          echo "asset_name=$fname >> $GITHUB_ENV
+          echo "asset_name=$fname" >> $GITHUB_ENV
           echo $fname
 
       - name: Get hash
