@@ -1,4 +1,4 @@
-{% set version = os.environ.get("tag", "2020.11.15") %}
+{% set version = os.environ.get("version", "2020.11.15") %}
 
 name: HyperSpy-bundle
 version: {{ version }}
