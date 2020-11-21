@@ -146,10 +146,10 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/2.3.20200530/Winpython64-3.8.3.0cod.exe
-      WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
+      WP_URL: https://github.com/winpython/winpython/releases/download/3.0.20201028/Winpython64-3.8.6.0cod.exe
+      WP_SHA256: d1457a5732825d0717f54e45e9d1f8ea890974e317d0b797a99b5d70b59d6839
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-3830
+      WP_DIR_NAME: WPy64-3860
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
@@ -179,13 +179,13 @@ jobs:
           where pip
           pip install wheel
           pip install ${{ env.LIB_TO_INSTALL }}
-          pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
+          pip install --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
 
       - name: Set installer name
         env:
           version: ${{ needs.create_release_job.outputs.version }}
         run: |
-          $installer_name = "HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe"
+          $installer_name="HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe"
           echo "asset_name=$installer_name" >> $GITHUB_ENV
 
       - name: Create installer
