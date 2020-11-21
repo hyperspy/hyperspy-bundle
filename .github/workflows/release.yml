@@ -61,6 +61,7 @@ jobs:
         name: Install constructor
         run: |
           conda install constructor --only-deps
+          conda install jinja2
           pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
 
       - shell: bash -l {0}
