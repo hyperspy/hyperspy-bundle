@@ -46,7 +46,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: 3.7
@@ -61,7 +61,7 @@ jobs:
         name: Install constructor
         run: |
           conda install constructor --only-deps
-          pip install https://github.com/conda/constructor/archive/3.1.0.zip --no-deps
+          pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
 
       - shell: bash -l {0}
         name: Build distribution
