@@ -31,9 +31,9 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 ### Differences with Anaconda/Miniconda
 
 * Include the packages mentioned above
-* The conda packages are download from the *anaconda main*, *conda-forge* channels in this order of priority 
+* The conda packages are download from the *conda-forge* and *anaconda main* channels in this order of priority 
   and these channels are set up in the installed environment.
-* Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jyputer Lab* or *Juypter QtConsole*.
+* Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jupyter Lab* or *Juypter QtConsole*.
   See [start_jupyter_cm](https://github.com/hyperspy/start_jupyter_cm) for details.
 * Remove context menu entries when uninstalling on Windows only. For Linux and MaxOSX, no uninstall is provided and
   the context menu entries needs to be removed manually using `start_jupyter_cm --remove` from the conda environment before
