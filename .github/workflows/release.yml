@@ -151,7 +151,9 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3860
       MPLBACKEND: agg
-      TEST_DEPS: pytest pytest-mpl
+      # remove `pytest-tornasync` test dependency when more recent jupyter_server is available
+      # https://github.com/jupyter-server/jupyter_server/issues/337
+      TEST_DEPS: pytest pytest-mpl pytest-tornasync
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: hyperspy
