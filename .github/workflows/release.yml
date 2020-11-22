@@ -79,9 +79,9 @@ jobs:
       - shell: bash -l {0}
         name: Set asset name
         run: |
-          fname=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
-          echo "asset_name=$fname" >> $GITHUB_ENV
-          echo $fname
+          installer_name=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
+          echo "asset_name=$installer_name" >> $GITHUB_ENV
+          echo $installer_name
 
       - name: Get hash
         run: |
@@ -153,10 +153,19 @@ jobs:
       MPLBACKEND: agg
       TEST_DEPS: pytest pytest-mpl
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
-      LIB_TO_UPGRADE: pint numba
+      LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: hyperspy
 
     steps:
+      - shell: bash -l {0}
+        name: Set installer name
+        env:
+          version: ${{ needs.create_release_job.outputs.version }}
+        run: |
+          installer_name=HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe
+          echo "asset_name=$installer_name" >> $GITHUB_ENV
+          echo $installer_name
+
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
@@ -178,15 +187,17 @@ jobs:
           where python
           where pip
           pip install wheel
-          pip install ${{ env.LIB_TO_INSTALL }}
-          pip install --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
+          pip install --use-feature=2020-resolver ${{ env.LIB_TO_INSTALL }}
+          pip install --upgrade --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
 
-      - name: Set installer name
+      - shell: bash -l {0}
+        name: Set installer name
         env:
           version: ${{ needs.create_release_job.outputs.version }}
         run: |
-          $installer_name="HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe"
+          installer_name=HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe
           echo "asset_name=$installer_name" >> $GITHUB_ENV
+          echo $installer_name
 
       - name: Create installer
         run: |
