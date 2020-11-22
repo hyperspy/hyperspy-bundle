@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       upload_url: ${{ steps.create_release.outputs.upload_url }}
-      version: ${{ steps.get_version.outputs.version }}
+      VERSION: ${{ env.VERSION }}
     steps:
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
@@ -28,7 +28,10 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          echo "version=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Display version
+        run: |
+          echo ${{ env.VERSION }}
 
   build:
     name: ${{ matrix.config.os }}
@@ -72,7 +75,7 @@ jobs:
       - shell: bash -l {0}
         name: Build distribution
         env:
-          version: ${{ needs.create_release_job.outputs.version }}
+          VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
           constructor -v conda_distribution
 
@@ -185,9 +188,9 @@ jobs:
       - shell: bash -l {0}
         name: Set installer name
         env:
-          version: ${{ needs.create_release_job.outputs.version }}
+          VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
-          installer_name=HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe
+          installer_name=HyperSpy-bundle-${{ env.VERSION }}-Windows-x86_64-Portable.exe
           echo "asset_name=$installer_name" >> $GITHUB_ENV
           echo $installer_name
 
