@@ -157,15 +157,6 @@ jobs:
       LIB_TO_TEST: hyperspy
 
     steps:
-      - shell: bash -l {0}
-        name: Set installer name
-        env:
-          version: ${{ needs.create_release_job.outputs.version }}
-        run: |
-          installer_name=HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe
-          echo "asset_name=$installer_name" >> $GITHUB_ENV
-          echo $installer_name
-
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
@@ -186,7 +177,6 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          pip install wheel
           pip install --use-feature=2020-resolver ${{ env.LIB_TO_INSTALL }}
           pip install --upgrade --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
 
@@ -198,6 +188,14 @@ jobs:
           installer_name=HyperSpy-bundle-${{ env.version }}-Windows-x86_64-Portable.exe
           echo "asset_name=$installer_name" >> $GITHUB_ENV
           echo $installer_name
+
+      - name: Run pyclean in distribution folder
+        shell: cmd
+        run: |
+          where pip
+          pip install pyclean
+          where pyclean
+          pyclean ${{ env.WP_DIR_NAME }}
 
       - name: Create installer
         run: |
