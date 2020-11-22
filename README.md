@@ -49,9 +49,7 @@ See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/sile
 
 ## Portable distribution
 
-HyperSpy Bundle does not interact with any other Python installation, so it can be safely installed alongside other
-Python distributions. Since it is a portable distribution, it can be installed on external harddrive or it can be moved to any other
-folder.
+The portable version of the HyperSpy Bundle does not interact with other Python installation, and it can be safely installed alongside other Python distributions. As a portable distribution, no shortcut is installed and it can be installed on external harddrive or it can be moved to any other folder.
 
 ### Installation
 
