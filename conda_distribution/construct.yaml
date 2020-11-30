@@ -8,24 +8,25 @@ ignore_duplicate_files: True
 channels:
   - conda-forge
   - defaults
-  - msys2    # [win]
+  - msys2  # [win]
 
 specs:
   - anaconda-navigator
   - atomap
   - conda
-  - console_shortcut                        # [win]
-  - hyperspy >=1.6
+  - console_shortcut  # [win]
+  - hyperspy >=1.6.1
   - hyperspyui
-  - ipympl >=0.5.7
+  - ipympl
   - jupyterlab
   - kikuchipy
   - mamba
-  - menuinst                                # [win]
+  - menuinst  # [win]
   - nb_conda_kernels
   - nodejs
   - python 3.8*
   - pyxem
+  - qt !=5.12.9  # [osx]
   - qtconsole
   - spyder
   - start_jupyter_cm
