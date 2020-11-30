@@ -11,24 +11,24 @@ channels:
   - msys2    # [win]
 
 specs:
-  - python 3.8*
-  - conda
-  - menuinst                                # [win]
-  - console_shortcut                        # [win]
-  - spyder
   - anaconda-navigator
-  - nb_conda_kernels
+  - atomap
+  - conda
+  - console_shortcut                        # [win]
   - hyperspy >=1.6
   - hyperspyui
-  - start_jupyter_cm
   - ipympl >=0.5.7
   - jupyterlab
-  - nodejs
-  - qtconsole
-  - atomap
-  - pyxem
   - kikuchipy
   - mamba
+  - menuinst                                # [win]
+  - nb_conda_kernels
+  - nodejs
+  - python 3.8*
+  - pyxem
+  - qtconsole
+  - spyder
+  - start_jupyter_cm
 
 license_file: LICENSE
 
