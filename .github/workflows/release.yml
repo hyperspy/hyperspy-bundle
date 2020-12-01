@@ -114,13 +114,18 @@ jobs:
           echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
-      - name: Install new distribution (Windows)
+      - name: Install new distribution 1 (Windows)
         if: runner.os == 'windows'
         env:
           install_dir: '${{ github.workspace }}\nd'
-        shell: powershell
+        shell: bash
         run: |
           echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
+
+      - name: Install new distribution 2 (Windows)
+        if: runner.os == 'windows'
+        shell: powershell
+        run: |
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - name: Upload artifact
