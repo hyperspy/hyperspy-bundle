@@ -120,7 +120,7 @@ jobs:
           install_dir: '${{ github.workspace }}\nd'
         shell: powershell
         run: |
-          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_EN
+          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - name: Upload artifact
