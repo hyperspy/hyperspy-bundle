@@ -41,8 +41,14 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 
 ### Silent installation on Windows
 
+Using the command prompt
 ```
 start /wait "" HyperSpy-bundle-2020.02.05-Windows-x86_64.exe /S /D=%UserProfile%\HyperSpy-bundle
+```
+
+Using PowerShell
+```
+Start-Process -Wait -FilePath HyperSpy-bundle-2020.02.05-Windows-x86_64.exe -ArgumentList /S /D=$env:UserProfile\HyperSpy-bundle
 ```
 
 See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/silent-mode) for more information.
