@@ -1,34 +1,35 @@
-name: HyperSpy-bundle
-version: 2020.08.13
+{% set version = os.environ.get("version", "2020.11.15") %}
 
-install_in_dependency_order: True
-# Error: File 'lib/libiomp5.dylib' found in multiple packages: intel-openmp-2019.4-233.conda, llvm-openmp-10.0.0-h28b9765_0.conda
-# Error: File 'lib/python3.8/__pycache__/_sysconfigdata_x86_64_conda_cos6_linux_gnu.cpython-38.pyc' found in multiple packages: ujson-1.35-py38h7b6447c_0.conda, pyqt-5.9.2-py38h05f1152_4.conda, lazy-object-proxy-1.4.3-py38h7b6447c_0.conda, python-blosc-1.7.0-py38h7b6447c_0.conda, markupsafe-1.1.1-py38h7b6447c_0.conda, python-3.8.5-hcff3b4d_0.conda, pycifrw-4.4.1-py38h516909a_0.tar.bz2, wrapt-1.11.2-py38h7b6447c_0.conda, gmpy2-2.0.8-py38hd5f6e3b_3.conda, fastcache-1.1.0-py38h7b6447c_0.conda
-ignore_duplicate_files: True  # [unix]
+name: HyperSpy-bundle
+version: {{ version }}
+
+ignore_duplicate_files: True
 
 channels:
-  - defaults
   - conda-forge
-  - msys2    # [win]
+  - defaults
+  - msys2  # [win]
 
 specs:
-  - python 3.8*
-  - conda
-  - menuinst                                # [win]
-  - console_shortcut                        # [win]
-  - spyder
   - anaconda-navigator
-  - nb_conda_kernels
-  - hyperspy >=1.6
-  - hyperspyui
-  - start_jupyter_cm
-  - ipympl >=0.5.7
-  - jupyterlab
-  - nodejs
-  - qtconsole
   - atomap
-  - pyxem
+  - conda
+  - console_shortcut  # [win]
+  - hyperspy >=1.6.1
+  - hyperspyui
+  - ipympl
+  - jupyterlab
   - kikuchipy
+  - mamba
+  - menuinst  # [win]
+  - nb_conda_kernels
+  - nodejs
+  - python 3.8*
+  - pyxem
+  - qt !=5.12.9  # [osx]
+  - qtconsole
+  - spyder
+  - start_jupyter_cm
 
 license_file: LICENSE
 
@@ -40,10 +41,10 @@ post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
 
-post_install_desc: "Don't install jupyterlab widgets and context menu shortcuts." # [win]
+post_install_desc: "Build jupyterlab widgets and add context menu shortcuts." # [win]
 
 check_path_length: True                     # [win]
-
+transmute_file_type: ".conda"
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer

@@ -31,9 +31,9 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 ### Differences with Anaconda/Miniconda
 
 * Include the packages mentioned above
-* The conda packages are download from the *anaconda main*, *conda-forge* channels in this order of priority 
+* The conda packages are download from the *conda-forge* and *anaconda main* channels in this order of priority 
   and these channels are set up in the installed environment.
-* Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jyputer Lab* or *Juypter QtConsole*.
+* Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jupyter Lab* or *Juypter QtConsole*.
   See [start_jupyter_cm](https://github.com/hyperspy/start_jupyter_cm) for details.
 * Remove context menu entries when uninstalling on Windows only. For Linux and MaxOSX, no uninstall is provided and
   the context menu entries needs to be removed manually using `start_jupyter_cm --remove` from the conda environment before
@@ -41,17 +41,21 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 
 ### Silent installation on Windows
 
+Using the command prompt
 ```
 start /wait "" HyperSpy-bundle-2020.02.05-Windows-x86_64.exe /S /D=%UserProfile%\HyperSpy-bundle
+```
+
+Using PowerShell
+```
+Start-Process -Wait -FilePath HyperSpy-bundle-2020.02.05-Windows-x86_64.exe -ArgumentList /S /D=$env:UserProfile\HyperSpy-bundle
 ```
 
 See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/silent-mode) for more information.
 
 ## Portable distribution
 
-HyperSpy Bundle does not interact with any other Python installation, so it can be safely installed alongside other
-Python distributions. Since it is a portable distribution, it can be installed on external harddrive or it can be moved to any other
-folder.
+The portable version of the HyperSpy Bundle does not interact with other Python installation, and it can be safely installed alongside other Python distributions. As a portable distribution, no shortcut is installed and it can be installed on external harddrive or it can be moved to any other folder.
 
 ### Installation
 

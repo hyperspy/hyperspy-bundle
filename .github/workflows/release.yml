@@ -1,10 +1,14 @@
 name: Release
 
-on: [push]
-  #push:
-  #   Sequence of patterns matched against refs/tags
-  #  tags:
-  #  - '*' # Push events to matching v*, i.e. v1.0, v20.15.10
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   create_release_job:
@@ -12,7 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs: 
       upload_url: ${{ steps.create_release.outputs.upload_url }}
+      VERSION: ${{ env.VERSION }}
     steps:
+      - uses: actions/checkout@v2
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
@@ -24,6 +30,18 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+      - name: Get version (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Get version (short hash)
+        if: "!startsWith(github.ref, 'refs/tags/')"
+        run: |
+          # Use git short hash instead of tag
+          echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Display version
+        run: |
+          echo ${{ env.VERSION }}
 
   build:
     name: ${{ matrix.config.os }}
@@ -46,7 +64,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
           python-version: 3.7
@@ -61,20 +79,22 @@ jobs:
         name: Install constructor
         run: |
           conda install constructor --only-deps
-          conda install conda-standalone
+          conda install jinja2
           pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
 
       - shell: bash -l {0}
         name: Build distribution
+        env:
+          VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
           constructor -v conda_distribution
 
       - shell: bash -l {0}
         name: Set asset name
         run: |
-          fname=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
-          echo ::set-env name=asset_name::$fname
-          echo $fname
+          installer_name=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
+          echo "asset_name=$installer_name" >> $GITHUB_ENV
+          echo $installer_name
 
       - name: Get hash
         run: |
@@ -85,22 +105,27 @@ jobs:
         env:
           install_dir: '${{ github.workspace }}/new_distribution'
         run: |
-          echo ::set-env name=install_dir::${{ env.install_dir }}
+          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
           bash ${{ env.asset_name }} -b -p ${{ env.install_dir }}
 
       - name: Install new distribution (MacOS)
         if: runner.os == 'macos'
         run: |
-          echo "::set-env name=install_dir::/Users/runner"
+          echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
-      - name: Install new distribution (Windows)
+      - name: Install new distribution 1 (Windows)
         if: runner.os == 'windows'
         env:
           install_dir: '${{ github.workspace }}\nd'
+        shell: bash
+        run: |
+          echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
+
+      - name: Install new distribution 2 (Windows)
+        if: runner.os == 'windows'
         shell: powershell
         run: |
-          echo "::set-env name=install_dir::${{ env.install_dir }}"
           Start-Process -Wait -FilePath ${{ env.asset_name }} -ArgumentList "/S /AddToPath=0 /RegisterPython=0 /NoScripts=1 /D=${{ env.install_dir }}"
 
       - name: Upload artifact
@@ -139,14 +164,16 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/2.3.20200530/Winpython64-3.8.3.0cod.exe
-      WP_SHA256: f3870e8570b5f3e31821756089af1237859a6db8a971c1fea14a560d4c85a314
+      WP_URL: https://github.com/winpython/winpython/releases/download/3.0.20201028/Winpython64-3.8.6.0cod.exe
+      WP_SHA256: d1457a5732825d0717f54e45e9d1f8ea890974e317d0b797a99b5d70b59d6839
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-3830
+      WP_DIR_NAME: WPy64-3860
       MPLBACKEND: agg
-      TEST_DEPS: pytest pytest-mpl
+      # remove `pytest-tornasync` test dependency when more recent jupyter_server is available
+      # https://github.com/jupyter-server/jupyter_server/issues/337
+      TEST_DEPS: pytest pytest-mpl pytest-tornasync
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
-      LIB_TO_UPGRADE: pint numba
+      LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: hyperspy
 
     steps:
@@ -170,20 +197,25 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          pip install wheel
-          pip install ${{ env.LIB_TO_INSTALL }}
-          pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
+          pip install --use-feature=2020-resolver ${{ env.LIB_TO_INSTALL }}
+          pip install --upgrade --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
 
-      - name: Get tag
-        id: get_tag
-        uses: battila7/get-version-action@v2
-
-      - name: Set installer name
+      - shell: bash -l {0}
+        name: Set installer name
         env:
-          tag: ${{ steps.get_tag.outputs.version-without-v }}
+          VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
-          $installer_name = "HyperSpy-bundle-${{ env.tag }}-Windows-x86_64-Portable.exe"
-          echo "::set-env name=asset_name::$installer_name"
+          installer_name=HyperSpy-bundle-${{ env.VERSION }}-Windows-x86_64-Portable.exe
+          echo "asset_name=$installer_name" >> $GITHUB_ENV
+          echo $installer_name
+
+      - name: Run pyclean in distribution folder
+        shell: cmd
+        run: |
+          where pip
+          pip install pyclean
+          where pyclean
+          pyclean ${{ env.WP_DIR_NAME }}
 
       - name: Create installer
         run: |
@@ -216,7 +248,6 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
-
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
