@@ -139,6 +139,8 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           conda info
+          conda config --show channels
+          conda config --show channel_priority
           conda list
 
       - shell: bash -l {0}

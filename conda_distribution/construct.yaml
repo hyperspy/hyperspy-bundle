@@ -3,7 +3,12 @@
 name: HyperSpy-bundle
 version: {{ version }}
 
-ignore_duplicate_files: True
+condarc:
+  channels:
+    - conda-forge
+    - defaults
+    - msys2  # [win]
+  channel_priority: strict
 
 channels:
   - conda-forge
@@ -33,8 +38,6 @@ specs:
   - start_jupyter_cm
 
 license_file: LICENSE
-
-write_condarc: True
 
 post_install: post_install.sh               # [linux]
 post_install: post_install_macosx.sh        # [osx]
