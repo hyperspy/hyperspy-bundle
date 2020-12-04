@@ -20,6 +20,7 @@ specs:
   - ipympl
   - jupyterlab
   - kikuchipy
+  - libblas=*=*mkl
   - mamba
   - menuinst  # [win]
   - nb_conda_kernels
