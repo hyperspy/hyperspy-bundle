@@ -87,6 +87,7 @@ jobs:
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
+          conda config --set channel_priority strict
           constructor -v conda_distribution
 
       - shell: bash -l {0}
