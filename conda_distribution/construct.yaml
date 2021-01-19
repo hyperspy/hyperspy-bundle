@@ -4,22 +4,15 @@ name: HyperSpy-bundle
 version: {{ version }}
 
 condarc:
-  channels:
-    - conda-forge
-    - defaults
-    - msys2  # [win]
-  channel_priority: strict
+  pinned_packages:
+    - libblas=*=*mkl
 
 channels:
   - conda-forge
-  - defaults
-  - msys2  # [win]
 
 specs:
-  - anaconda-navigator
   - atomap
   - conda
-  - console_shortcut  # [win]
   - hyperspy >=1.6.1
   - hyperspyui
   - ipympl
@@ -27,11 +20,12 @@ specs:
   - kikuchipy
   - libblas=*=*mkl
   - mamba
-  - menuinst  # [win]
+  - miniforge_console_shortcut  # [win]
+  - notebook
   - nb_conda_kernels
   - python 3.8*
-  - pyxem >=0.12.3
-  - qt !=5.12.9  # [osx]
+  - pyxem
+  - qt
   - qtconsole
   - spyder
   - start_jupyter_cm
