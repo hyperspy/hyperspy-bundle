@@ -23,13 +23,12 @@ specs:
   - hyperspy >=1.6.1
   - hyperspyui
   - ipympl
-  - jupyterlab
+  - jupyterlab >=3.0.0
   - kikuchipy
   - libblas=*=*mkl
   - mamba
   - menuinst  # [win]
   - nb_conda_kernels
-  - nodejs
   - python 3.8*
   - pyxem >=0.12.3
   - qt !=5.12.9  # [osx]
@@ -45,9 +44,8 @@ post_install: post_install.bat              # [win]
 
 pre_uninstall: pre_uninstall.bat            # [win]
 
-post_install_desc: "Build jupyterlab widgets and add context menu shortcuts." # [win]
+post_install_desc: "Add context menu shortcuts." # [win]
 
-check_path_length: True                     # [win]
 transmute_file_type: ".conda"
 installer_type: pkg                         # [osx]
 
