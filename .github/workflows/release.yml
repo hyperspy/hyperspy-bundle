@@ -59,6 +59,8 @@ jobs:
             INSTALLER_EXTENSION: exe
     env:
       MPLBACKEND: agg
+      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
+      # is merged and released.
       TEST_DEPS: pytest pytest-mpl
       LIB_TO_TEST: hyperspy
 
@@ -148,7 +150,7 @@ jobs:
         name: Test new distribution
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install ${{ env.TEST_DEPS }}
+          conda install ${{ env.TEST_DEPS }} -c conda-forge
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
@@ -172,7 +174,9 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3870
       MPLBACKEND: agg
-      TEST_DEPS: pytest
+      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
+      # is merged and released.
+      TEST_DEPS: pytest pytest-mpl
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: hyperspy
