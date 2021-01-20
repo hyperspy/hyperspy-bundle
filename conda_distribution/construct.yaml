@@ -4,6 +4,8 @@ name: HyperSpy-bundle
 version: {{ version }}
 
 condarc:
+  channels:
+    - conda-forge
   pinned_packages:
     - libblas=*=*mkl
 
