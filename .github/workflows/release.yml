@@ -62,7 +62,7 @@ jobs:
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
       TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_TEST: hyperspy hyperspyui
+      LIB_TO_TEST: hyperspy
 
     steps:
       - uses: actions/checkout@v2
@@ -158,6 +158,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           conda install ${{ env.TEST_DEPS }} -c conda-forge
+          pytest --pyargs hyperspyui
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
@@ -185,7 +186,7 @@ jobs:
       TEST_DEPS: pytest pytest-mpl pytest-qt
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_UPGRADE: hyperspy
-      LIB_TO_TEST: hyperspy hyperspyui
+      LIB_TO_TEST: hyperspy
 
     steps:
       - name: Download Winpython
@@ -259,6 +260,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs hyperspyui
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
