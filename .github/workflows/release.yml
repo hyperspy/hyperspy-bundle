@@ -58,7 +58,6 @@ jobs:
           - os: windows
             INSTALLER_EXTENSION: exe
     env:
-      MPLBACKEND: agg
       DISPLAY: :0
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
@@ -181,7 +180,6 @@ jobs:
       WP_SHA256: d17e9f0b837d1f9d63909ff39b7c44545b79268affd0ac848fd8f05af57745ea
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3870
-      MPLBACKEND: agg
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
       TEST_DEPS: pytest pytest-mpl pytest-qt
