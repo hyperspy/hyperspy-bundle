@@ -58,11 +58,11 @@ jobs:
           - os: windows
             INSTALLER_EXTENSION: exe
     env:
-      DISPLAY: :0
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
       TEST_DEPS: pytest pytest-mpl pytest-qt
       LIB_TO_TEST: hyperspy
+      DISPLAY: :0
 
     steps:
       - uses: actions/checkout@v2
@@ -147,18 +147,29 @@ jobs:
           conda config --show channel_priority
           conda list
 
-      - name: Install and Start xvfb
+      - name: Install xvfb
         if: runner.os == 'linux'
         run: |
           sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
-          sudo /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 & 
+
+      - name: Start xvfb
+        if: runner.os == 'linux'
+        run: |
+          sudo /usr/bin/Xvfb ${{ env.DISPLAY }} -screen 0 1280x1024x24 & 
 
       - shell: bash -l {0}
-        name: Test new distribution
+        name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
           conda install ${{ env.TEST_DEPS }} -c conda-forge
           pytest --pyargs hyperspyui
+
+      - shell: bash -l {0}
+        name: Test new distribution
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          conda activate "${{ env.install_dir }}"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
@@ -256,11 +267,18 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
-      - name: Run test suite
+      - name: Run test suite (HyperSpyUI)
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspyui
+
+      - name: Run test suite
+        shell: cmd
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
