@@ -1,4 +1,5 @@
 {% set version = os.environ.get("version", "2020.11.15") %}
+{% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
 version: {{ version }}
@@ -7,7 +8,7 @@ condarc:
   channels:
     - conda-forge
   pinned_packages:
-    - libblas=*=*mkl
+    - libblas=*=*{{ blas_impl }}
 
 channels:
   - conda-forge
@@ -20,7 +21,7 @@ specs:
   - ipympl
   - jupyterlab >=3.0.0
   - kikuchipy >=0.3.1
-  - libblas=*=*mkl
+  - libblas=*=*{{ blas_impl }}
   - mamba
   - miniforge_console_shortcut  # [win]
   - notebook
@@ -42,7 +43,7 @@ pre_uninstall: pre_uninstall.bat            # [win]
 
 post_install_desc: "Add context menu shortcuts." # [win]
 
-transmute_file_type: ".conda"
+#transmute_file_type: ".conda"
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer

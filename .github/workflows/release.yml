@@ -44,19 +44,24 @@ jobs:
           echo ${{ env.VERSION }}
 
   build:
-    name: ${{ matrix.config.os }}
+    name: ${{ matrix.os }}-${{ matrix.BLAS_IMPL }}
     needs: create_release_job
-    runs-on: ${{ matrix.config.os }}-latest
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - os: macos
-            INSTALLER_EXTENSION: pkg
+        os: [ubuntu, windows, macos]
+        BLAS_IMPL: [mkl, openblas]
+        include:
           - os: ubuntu
             INSTALLER_EXTENSION: sh
           - os: windows
             INSTALLER_EXTENSION: exe
+          - os: macos
+            INSTALLER_EXTENSION: pkg
+        exclude:
+          - os: macos
+            BLAS_IMPL: openblas
     env:
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
@@ -88,6 +93,7 @@ jobs:
         name: Build distribution
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
+          BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
         run: |
           conda config --set channel_priority strict
           constructor -v conda_distribution
@@ -95,7 +101,12 @@ jobs:
       - shell: bash -l {0}
         name: Set asset name
         run: |
-          installer_name=(HyperSpy-*.${{ matrix.config.INSTALLER_EXTENSION }})
+          if [ ${{ matrix.BLAS_IMPL }} = "MKL" ]; then
+             CPU=Intel
+          else
+             CPU=AMD
+          fi          
+          installer_name=(HyperSpy-*$CPU.${{ matrix.INSTALLER_EXTENSION }})
           echo "asset_name=$installer_name" >> $GITHUB_ENV
           echo $installer_name
 
