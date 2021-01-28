@@ -43,7 +43,7 @@ pre_uninstall: pre_uninstall.bat            # [win]
 
 post_install_desc: "Add context menu shortcuts." # [win]
 
-#transmute_file_type: ".conda"
+transmute_file_type: ".conda"
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer

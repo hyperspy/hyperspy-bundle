@@ -108,15 +108,22 @@ jobs:
 
       - shell: bash -l {0}
         name: Set asset name
-        run: |
-          if [ ${{ matrix.BLAS_IMPL }} = "MKL" ]; then
+        env:
+          ext: ${{ matrix.INSTALLER_EXTENSION }}
+        run: |  
+          installer_name=(HyperSpy-*.${{ env.ext }})
+          echo "Original installer name: " $installer_name
+          # Rename installer name according to BLAS_IMPL
+          if [ ${{ matrix.BLAS_IMPL }} = mkl ]; then
              CPU=Intel
           else
              CPU=AMD
-          fi          
-          installer_name=(HyperSpy-*$CPU.${{ matrix.INSTALLER_EXTENSION }})
-          echo "asset_name=$installer_name" >> $GITHUB_ENV
-          echo $installer_name
+          fi    
+          new_installer_name=$(basename $installer_name .${{ env.ext }})-$CPU.${{ env.ext }}   
+          mv $installer_name $new_installer_name
+          echo "asset_name=$new_installer_name" >> $GITHUB_ENV
+          echo "Installer name: "$new_installer_name
+          ls
 
       - name: Get hash
         run: |
