@@ -58,9 +58,11 @@ jobs:
           - os: windows
             INSTALLER_EXTENSION: exe
     env:
-      MPLBACKEND: agg
-      TEST_DEPS: pytest pytest-mpl
+      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
+      # is merged and released.
+      TEST_DEPS: pytest pytest-mpl pytest-qt
       LIB_TO_TEST: hyperspy
+      DISPLAY: :0
 
     steps:
       - uses: actions/checkout@v2
@@ -134,6 +136,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: ${{ env.asset_name }}
+          name: ${{ env.asset_name }}
 
       - shell: bash -l {0}
         name: Info new distribution
@@ -144,11 +147,36 @@ jobs:
           conda config --show channel_priority
           conda list
 
+      - name: Install xvfb
+        if: runner.os == 'linux'
+        run: |
+          sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
+
+      - name: Start xvfb
+        if: runner.os == 'linux'
+        run: |
+          sudo /usr/bin/Xvfb ${{ env.DISPLAY }} -screen 0 1280x1024x24 & 
+
       - shell: bash -l {0}
-        name: Test new distribution
+        name: Install test dependencies
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install ${{ env.TEST_DEPS }}
+          conda install ${{ env.TEST_DEPS }} -c conda-forge
+
+      - shell: bash -l {0}
+        # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
+        if: runner.os != 'linux'
+        name: Test new distribution (HyperSpyUI)
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs hyperspyui
+
+      - shell: bash -l {0}
+        name: Test new distribution
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          conda activate "${{ env.install_dir }}"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
 
       - name: Upload Release Asset
@@ -167,14 +195,13 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/3.0.20201028/Winpython64-3.8.6.0cod.exe
-      WP_SHA256: d1457a5732825d0717f54e45e9d1f8ea890974e317d0b797a99b5d70b59d6839
+      WP_URL: https://github.com/winpython/winpython/releases/download/3.0.202011219/Winpython64-3.8.7.0cod.exe
+      WP_SHA256: d17e9f0b837d1f9d63909ff39b7c44545b79268affd0ac848fd8f05af57745ea
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-3860
-      MPLBACKEND: agg
-      # remove `pytest-tornasync` test dependency when more recent jupyter_server is available
-      # https://github.com/jupyter-server/jupyter_server/issues/337
-      TEST_DEPS: pytest pytest-mpl pytest-tornasync
+      WP_DIR_NAME: WPy64-3870
+      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
+      # is merged and released.
+      TEST_DEPS: pytest pytest-mpl pytest-qt
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: hyperspy
@@ -200,8 +227,8 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          pip install --use-feature=2020-resolver ${{ env.LIB_TO_INSTALL }}
-          pip install --upgrade --use-feature=2020-resolver ${{ env.LIB_TO_UPGRADE }}
+          pip install ${{ env.LIB_TO_INSTALL }}
+          pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
 
       - shell: bash -l {0}
         name: Set installer name
@@ -230,6 +257,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: ${{ env.asset_name }}
+          name: ${{ env.asset_name }}
 
       - name: Install new distribution
         run: |
@@ -246,8 +274,16 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
+      - name: Run test suite (HyperSpyUI)
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs hyperspyui
+
       - name: Run test suite
         shell: cmd
+        env:
+          MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs ${{ env.LIB_TO_TEST }}
