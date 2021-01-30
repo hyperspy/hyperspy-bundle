@@ -30,9 +30,10 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 
 ### Differences with Anaconda/Miniconda
 
-* Include the packages mentioned above
-* The conda packages are download from the *conda-forge* and *anaconda main* channels in this order of priority 
-  and these channels are set up in the installed environment.
+* Include the libraries and software mentioned above.
+* The packages are download from the [*conda-forge*](https://conda-forge.org) channel only to avoid incompatibilities between the anaconda defaults and conda-forge channels.
+* Include the `mamba` package manager, as faster alternative to `conda`.
+* A configuration file `condarc` is added in the root folder of the installation to save the channels setting and pin the blas implementation.
 * Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jupyter Lab* or *Juypter QtConsole*.
   See [start_jupyter_cm](https://github.com/hyperspy/start_jupyter_cm) for details.
 * Remove context menu entries when uninstalling on Windows only. For Linux and MaxOSX, no uninstall is provided and
