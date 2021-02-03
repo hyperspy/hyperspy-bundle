@@ -74,7 +74,7 @@ jobs:
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
       TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_TEST: hyperspy
+      LIB_TO_TEST: hyperspy atomap pyxem kikuchipy
       DISPLAY: :0
 
     steps:
@@ -230,7 +230,7 @@ jobs:
       TEST_DEPS: pytest pytest-mpl pytest-qt
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
       LIB_TO_UPGRADE: hyperspy
-      LIB_TO_TEST: hyperspy
+      LIB_TO_TEST: hyperspy atomap pyxem kikuchipy
 
     steps:
       - name: Download Winpython
