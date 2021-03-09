@@ -1,4 +1,4 @@
-{% set version = os.environ.get("VERSION", "2020.11.15") %}
+{% set version = os.environ.get("VERSION", "2021.03.09") %}
 {% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
@@ -23,6 +23,8 @@ specs:
   - kikuchipy >=0.3.1
   - libblas=*=*{{ blas_impl }}
   - mamba
+  - mamba_gator
+  - matplotlib-scalebar
   - miniforge_console_shortcut  # [win]
   - notebook
   - nb_conda_kernels

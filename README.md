@@ -27,6 +27,11 @@ On MacOSX, the installer is currently not identified as trusted party by macOS, 
 to run the installer simply by double-clicking on it. However, control-clicking the app icon, then choosing Open
 from the shortcut menu will allow to run the installer, as explained in the [macOS documentation](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac).
 
+### Package manager (GUI)
+
+As an alternative to the [Anaconda Navigator](https://docs.anaconda.com/anaconda/navigator/index.html), the HyperSpy bundle includes
+[`mamba_gator`](https://github.com/mamba-org/gator) to manage conda environments and packages.
+
 
 ### Differences with Anaconda/Miniconda
 
