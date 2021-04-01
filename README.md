@@ -6,11 +6,12 @@
 # HyperSpy Bundle Distribution
 
 These python distributions include:
+- [atomap](https://atomap.org)
 - [HyperSpy](https://hyperspy.org)
 - [HyperSpyUI](https://hyperspy.org/hyperspyUI)
-- [atomap](https://atomap.org)
-- [pyxem](www.pyxem.org)
+- [LumiSpy](https://github.com/LumiSpy/lumispy)
 - [kikuchipy](https://kikuchipy.org)
+- [pyxem](www.pyxem.org)
 
 ## Anaconda-type distribution
 
