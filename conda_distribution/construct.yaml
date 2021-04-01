@@ -30,6 +30,7 @@ specs:
   - notebook
   - nb_conda_kernels
   - python 3.8*
+  - pystackreg
   - pyxem >=0.13.0
   - qt
   - qtconsole
