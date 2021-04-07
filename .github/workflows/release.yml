@@ -93,9 +93,7 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          conda install constructor --only-deps
-          conda install jinja2
-          pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
+          conda install constructor jinja2
 
       - shell: bash -l {0}
         name: Build distribution
@@ -187,7 +185,8 @@ jobs:
         name: Install test dependencies
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install ${{ env.TEST_DEPS }} -c conda-forge
+          conda install numpy=1.19
+          conda install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
@@ -299,6 +298,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
+          pip install numpy==1.19
 
       - name: Run test suite (HyperSpyUI)
         shell: cmd
