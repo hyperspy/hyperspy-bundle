@@ -194,7 +194,16 @@ jobs:
           pytest --pyargs hyperspyui
 
       - shell: bash -l {0}
-        name: Test new distribution
+        name: Test hyperspy
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
+
+      - shell: bash -l {0}
+        name: Run other test suites
+        if: ${{ env.LIB_TO_TEST }} != ''
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -221,10 +230,8 @@ jobs:
       WP_SHA256: b680565c1ec5cc2667e84ed930c02a2d255fbc3c666e968d8d0cd16a017b66b0
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3880
-      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
-      # is merged and released.
-      TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy
+      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-instafail
+      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy nglview
       LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: atomap pyxem kikuchipy
 
@@ -302,7 +309,15 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspyui
 
-      - name: Run test suite
+      - name: Run test hyperspy
+        shell: cmd
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
+
+      - name: Run other test suites
         shell: cmd
         env:
           MPLBACKEND: 'agg'
@@ -320,3 +335,4 @@ jobs:
           asset_path: ./${{ env.asset_name }}
           asset_name: ${{ env.asset_name }}
           asset_content_type: application/zip
+
