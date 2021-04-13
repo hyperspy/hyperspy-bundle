@@ -71,10 +71,8 @@ jobs:
           - os: macos
             BLAS_IMPL: openblas
     env:
-      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
-      # is merged and released.
-      TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_TEST: hyperspy atomap pyxem kikuchipy
+      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-instafail
+      LIB_TO_TEST: pyxem kikuchipy
       DISPLAY: :0
 
     steps:
@@ -185,7 +183,6 @@ jobs:
         name: Install test dependencies
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install numpy=1.19
           conda install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
@@ -227,9 +224,9 @@ jobs:
       # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
       # is merged and released.
       TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm
+      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy
       LIB_TO_UPGRADE: hyperspy
-      LIB_TO_TEST: hyperspy atomap pyxem kikuchipy
+      LIB_TO_TEST: atomap pyxem kikuchipy
 
     steps:
       - name: Download Winpython
@@ -298,7 +295,6 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
-          pip install numpy==1.19
 
       - name: Run test suite (HyperSpyUI)
         shell: cmd
