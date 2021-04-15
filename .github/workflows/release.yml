@@ -71,8 +71,8 @@ jobs:
           - os: macos
             BLAS_IMPL: openblas
     env:
-      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-instafail
-      LIB_TO_TEST: pyxem kikuchipy
+      TEST_DEPS: pytest pytest-qt
+      LIB_TO_TEST: '' #atomap pyxem kikuchipy
       DISPLAY: :0
 
     steps:
@@ -199,7 +199,7 @@ jobs:
           MPLBACKEND: 'agg'
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
+          pytest --pyargs hyperspy
 
       - shell: bash -l {0}
         name: Run other test suites
@@ -230,7 +230,7 @@ jobs:
       WP_SHA256: b680565c1ec5cc2667e84ed930c02a2d255fbc3c666e968d8d0cd16a017b66b0
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-3880
-      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-instafail
+      TEST_DEPS: pytest pytest-qt
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy nglview
       LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: atomap pyxem kikuchipy
@@ -310,12 +310,13 @@ jobs:
           pytest --pyargs hyperspyui
 
       - name: Run test hyperspy
+        if: ${{ env.LIB_TO_TEST }} != ''
         shell: cmd
         env:
           MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 2 --instafail
+          pytest --pyargs hyperspy
 
       - name: Run other test suites
         shell: cmd
