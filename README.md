@@ -6,12 +6,17 @@
 # HyperSpy Bundle Distribution
 
 These python distributions include:
+- [ase](https://wiki.fysik.dtu.dk/ase)
 - [atomap](https://atomap.org)
 - [HyperSpy](https://hyperspy.org)
 - [HyperSpyUI](https://hyperspy.org/hyperspyUI)
 - [LumiSpy](https://github.com/LumiSpy/lumispy)
 - [kikuchipy](https://kikuchipy.org)
+- [particlespy](https://epsic-dls.github.io/ParticleSpy/index.html)
+- [pystackreg](https://github.com/glichtner/pystackreg)
 - [pyxem](www.pyxem.org)
+- [nglview](http://nglviewer.org/nglview/latest)
+
 
 ## Anaconda-type distribution
 
@@ -33,6 +38,9 @@ from the shortcut menu will allow to run the installer, as explained in the [mac
 As an alternative to the [Anaconda Navigator](https://docs.anaconda.com/anaconda/navigator/index.html), the HyperSpy bundle includes
 [`mamba_gator`](https://github.com/mamba-org/gator) to manage conda environments and packages.
 
+### Command prompt on Windows
+
+Similarly to the `Anaconda Prompt` shortcut available in the Anaconda distribution, the HyperSpy bundle provides a start menu shortcut of a command prompt with the base environment activated and it is called `Miniforge Prompt`.
 
 ### Differences with Anaconda/Miniconda
 
