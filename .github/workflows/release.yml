@@ -72,7 +72,7 @@ jobs:
             BLAS_IMPL: openblas
     env:
       TEST_DEPS: pytest pytest-qt
-      LIB_TO_TEST: '' #atomap pyxem kikuchipy
+      LIB_TO_TEST: atomap pyxem kikuchipy
       DISPLAY: :0
 
     steps:
@@ -195,6 +195,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Test hyperspy
+        continue-on-error: true
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -203,7 +204,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Run other test suites
-        if: ${{ env.LIB_TO_TEST }} != ''
+        continue-on-error: true
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -310,7 +311,7 @@ jobs:
           pytest --pyargs hyperspyui
 
       - name: Run test hyperspy
-        if: ${{ env.LIB_TO_TEST }} != ''
+        continue-on-error: true
         shell: cmd
         env:
           MPLBACKEND: 'agg'
@@ -319,6 +320,7 @@ jobs:
           pytest --pyargs hyperspy
 
       - name: Run other test suites
+        continue-on-error: true
         shell: cmd
         env:
           MPLBACKEND: 'agg'
