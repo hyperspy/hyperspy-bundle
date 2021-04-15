@@ -1,4 +1,4 @@
-{% set version = os.environ.get("VERSION", "2020.11.15") %}
+{% set version = os.environ.get("VERSION", "2021.04.13") %}
 {% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
@@ -14,23 +14,31 @@ channels:
   - conda-forge
 
 specs:
+  - ase
   - atomap
   - conda
-  - hyperspy >=1.6.1
+  - hyperspy >=1.6.2
   - hyperspyui >=1.1.3
   - ipympl
   - jupyterlab >=3.0.0
   - kikuchipy >=0.3.1
   - libblas=*=*{{ blas_impl }}
+  - lumispy
   - mamba
+  - mamba_gator
+  - matplotlib-scalebar
   - miniforge_console_shortcut  # [win]
-  - notebook
   - nb_conda_kernels
+  - nglview
+  - notebook
+  - particlespy
   - python 3.8*
+  - pystackreg
   - pyxem >=0.13.0
   - qt
   - qtconsole
-  - spyder
+  # latest spyder 5.0 has issue
+  - spyder 4*
   - start_jupyter_cm
 
 license_file: LICENSE

@@ -71,10 +71,8 @@ jobs:
           - os: macos
             BLAS_IMPL: openblas
     env:
-      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
-      # is merged and released.
-      TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_TEST: hyperspy
+      TEST_DEPS: pytest pytest-qt
+      LIB_TO_TEST: atomap pyxem kikuchipy
       DISPLAY: :0
 
     steps:
@@ -93,9 +91,7 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          conda install constructor --only-deps
-          conda install jinja2
-          pip install https://github.com/ericpre/constructor/archive/master.zip --no-deps
+          conda install constructor jinja2
 
       - shell: bash -l {0}
         name: Build distribution
@@ -187,7 +183,7 @@ jobs:
         name: Install test dependencies
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install ${{ env.TEST_DEPS }} -c conda-forge
+          conda install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
@@ -198,7 +194,17 @@ jobs:
           pytest --pyargs hyperspyui
 
       - shell: bash -l {0}
-        name: Test new distribution
+        name: Test hyperspy
+        continue-on-error: true
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs hyperspy
+
+      - shell: bash -l {0}
+        name: Run other test suites
+        continue-on-error: true
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -221,16 +227,14 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/3.0.202011219/Winpython64-3.8.7.0cod.exe
-      WP_SHA256: d17e9f0b837d1f9d63909ff39b7c44545b79268affd0ac848fd8f05af57745ea
+      WP_URL: https://github.com/winpython/winpython/releases/download/4.0.20210307/Winpython64-3.8.8.0.exe
+      WP_SHA256: b680565c1ec5cc2667e84ed930c02a2d255fbc3c666e968d8d0cd16a017b66b0
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-3870
-      # Remove pytest-mpl once https://github.com/hyperspy/hyperspy/pull/2624
-      # is merged and released.
-      TEST_DEPS: pytest pytest-mpl pytest-qt
-      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy
+      WP_DIR_NAME: WPy64-3880
+      TEST_DEPS: pytest pytest-qt
+      LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy nglview
       LIB_TO_UPGRADE: hyperspy
-      LIB_TO_TEST: hyperspy
+      LIB_TO_TEST: atomap pyxem kikuchipy
 
     steps:
       - name: Download Winpython
@@ -306,7 +310,17 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspyui
 
-      - name: Run test suite
+      - name: Run test hyperspy
+        continue-on-error: true
+        shell: cmd
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs hyperspy
+
+      - name: Run other test suites
+        continue-on-error: true
         shell: cmd
         env:
           MPLBACKEND: 'agg'
@@ -324,3 +338,4 @@ jobs:
           asset_path: ./${{ env.asset_name }}
           asset_name: ${{ env.asset_name }}
           asset_content_type: application/zip
+
