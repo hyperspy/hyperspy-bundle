@@ -10,6 +10,10 @@ on:
     branches:
       - master
 
+permissions:
+  # needs write permission at workflow level to create release and upload artifacts
+  contents: write
+
 jobs:
   create_release_job:
     name: Create Release (on tag only)
