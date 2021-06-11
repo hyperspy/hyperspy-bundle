@@ -37,8 +37,6 @@ specs:
   - pyxem >=0.13.0
   - qt
   - qtconsole
-  # latest spyder 5.0 has issue
-  - spyder 4*
   - start_jupyter_cm
 
 license_file: LICENSE
