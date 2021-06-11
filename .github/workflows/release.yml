@@ -227,6 +227,8 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
+      # when updating winpython version, check status of https://github.com/dask/dask/issues/7583
+      # to know if dask needs to be downgraded
       WP_URL: https://github.com/winpython/winpython/releases/download/4.0.20210307/Winpython64-3.8.8.0.exe
       WP_SHA256: b680565c1ec5cc2667e84ed930c02a2d255fbc3c666e968d8d0cd16a017b66b0
       WP_EXE: winpython.exe
