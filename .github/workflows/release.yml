@@ -259,6 +259,8 @@ jobs:
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
           pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
+          # remove when pyxem >0.13.2 is released
+          pip install pyxem==0.13.2 --no-deps
 
       - shell: bash -l {0}
         name: Set installer name
