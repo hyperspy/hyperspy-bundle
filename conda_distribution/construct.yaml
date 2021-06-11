@@ -17,6 +17,7 @@ specs:
   - ase
   - atomap
   - conda
+  - dask <2021.04.0
   - hyperspy >=1.6.3
   - hyperspyui >=1.1.4
   - ipympl
