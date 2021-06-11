@@ -1,6 +1,8 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    workflow: "*"
   push:
     branches:
       - '*'
@@ -9,6 +11,10 @@ on:
   pull_request:
     branches:
       - master
+
+permissions:
+  # needs write permission at workflow level to create release and upload artifacts
+  contents: write
 
 jobs:
   create_release_job:
@@ -227,6 +233,8 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
+      # when updating winpython version, check status of https://github.com/dask/dask/issues/7583
+      # to know if dask needs to be downgraded
       WP_URL: https://github.com/winpython/winpython/releases/download/4.0.20210307/Winpython64-3.8.8.0.exe
       WP_SHA256: b680565c1ec5cc2667e84ed930c02a2d255fbc3c666e968d8d0cd16a017b66b0
       WP_EXE: winpython.exe
@@ -259,6 +267,8 @@ jobs:
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
           pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
+          # remove when pyxem >0.13.2 is released
+          pip install pyxem==0.13.2 --no-deps
 
       - shell: bash -l {0}
         name: Set installer name
