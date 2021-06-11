@@ -1,4 +1,4 @@
-{% set version = os.environ.get("VERSION", "2021.04.13") %}
+{% set version = os.environ.get("VERSION", "2021.06.11") %}
 {% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
@@ -17,8 +17,8 @@ specs:
   - ase
   - atomap
   - conda
-  - hyperspy >=1.6.2
-  - hyperspyui >=1.1.3
+  - hyperspy >=1.6.3
+  - hyperspyui >=1.1.4
   - ipympl
   - jupyterlab >=3.0.0
   - kikuchipy >=0.3.1
