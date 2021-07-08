@@ -16,6 +16,7 @@ These python distributions include:
 - [pystackreg](https://github.com/glichtner/pystackreg)
 - [pyxem](www.pyxem.org)
 - [nglview](http://nglviewer.org/nglview/latest)
+- [scanning_drift_corr](https://github.com/ptim0626/scanning-drift-corr/)
 
 
 ## Anaconda-type distribution
@@ -24,7 +25,7 @@ This distribution is very similar to the Anaconda distribution and is available 
 It is built using the [constructor](https://github.com/conda/constructor) tool, which is used to build the
 anaconda and miniconda distribution. It uses the conda package manager.
 
-### Installation
+#### Installation
 
 Run the installer. *Single user* installation is recommended.
 For more details, see the [Anaconda installation instructions](https://docs.anaconda.com/anaconda/install).
@@ -33,16 +34,19 @@ On MacOSX, the installer is currently not identified as trusted party by macOS, 
 to run the installer simply by double-clicking on it. However, control-clicking the app icon, then choosing Open
 from the shortcut menu will allow to run the installer, as explained in the [macOS documentation](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac).
 
-### Package manager (GUI)
+#### Managing packages
 
 As an alternative to the [Anaconda Navigator](https://docs.anaconda.com/anaconda/navigator/index.html), the HyperSpy bundle includes
 [`mamba_gator`](https://github.com/mamba-org/gator) to manage conda environments and packages.
 
-### Command prompt on Windows
+The packages can also be managed from the command line using [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-pkgs.html) or
+[`mamba`](https://mamba.readthedocs.io/en/latest/index.html) and the distribution can be updated easily using `conda update --all` or `mamba update --all`
+
+#### Command prompt on Windows
 
 Similarly to the `Anaconda Prompt` shortcut available in the Anaconda distribution, the HyperSpy bundle provides a start menu shortcut of a command prompt with the base environment activated and it is called `Miniforge Prompt`.
 
-### Differences with Anaconda/Miniconda
+#### Differences with Anaconda/Miniconda
 
 * Include the libraries and software mentioned above.
 * The packages are download from the [*conda-forge*](https://conda-forge.org) channel only to avoid incompatibilities between the anaconda defaults and conda-forge channels.
@@ -54,7 +58,7 @@ Similarly to the `Anaconda Prompt` shortcut available in the Anaconda distributi
   the context menu entries needs to be removed manually using `start_jupyter_cm --remove` from the conda environment before
   deleting the distribution.
 
-### Silent installation on Windows
+#### Silent installation on Windows
 
 Using the command prompt
 ```
@@ -72,11 +76,11 @@ See the [Anaconda documentation](https://docs.anaconda.com/anaconda/install/sile
 
 The portable version of the HyperSpy Bundle does not interact with other Python installation, and it can be safely installed alongside other Python distributions. As a portable distribution, no shortcut is installed and it can be installed on external harddrive or it can be moved to any other folder.
 
-### Installation
+#### Installation
 
 Run the installer (self-extracting archive), the distribution will be installed in the current folder.
 
-### Differences with WinPython
+#### Differences with WinPython
 
 * Include the packages mentioned above.
 
