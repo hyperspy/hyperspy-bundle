@@ -265,10 +265,10 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
+          # pin dask until https://github.com/dask/dask/issues/7583 is fixed
+          pip install dask==2021.3.1 distributed==2021.3.1
           pip install ${{ env.LIB_TO_INSTALL }}
           pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
-          # pin dask until https://github.com/dask/dask/issues/7583 is fixed
-          pip install dask==2021.3.1
 
       - shell: bash -l {0}
         name: Set installer name
