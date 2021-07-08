@@ -16,6 +16,7 @@ These python distributions include:
 - [pystackreg](https://github.com/glichtner/pystackreg)
 - [pyxem](www.pyxem.org)
 - [nglview](http://nglviewer.org/nglview/latest)
+- [scanning_drift_corr](https://github.com/ptim0626/scanning-drift-corr/)
 
 
 ## Anaconda-type distribution

@@ -1,4 +1,4 @@
-{% set version = os.environ.get("VERSION", "2021.06.11") %}
+{% set version = os.environ.get("VERSION", "2021.07.08") %}
 {% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
@@ -22,7 +22,7 @@ specs:
   - hyperspyui >=1.1.4
   - ipympl
   - jupyterlab >=3.0.0
-  - kikuchipy >=0.3.1
+  - kikuchipy >=0.4.0
   - libblas=*=*{{ blas_impl }}
   - lumispy
   - mamba
@@ -35,10 +35,12 @@ specs:
   - particlespy
   - python 3.8*
   - pystackreg
-  - pyxem >=0.13.0
+  - pyxem >=0.13.3
   - qt
   - qtconsole
+  - scanning_drift_corr
   - start_jupyter_cm
+
 
 license_file: LICENSE
 
