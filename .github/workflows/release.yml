@@ -48,7 +48,7 @@ jobs:
           find: "__TAG__"
           replace: ${{ env.VERSION }}
           include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
-          
+
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
           body_path: "RELEASE_TEXT.md"
-          draft: true
+          prerelease: true
 
 
   build:
@@ -227,7 +227,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: ${{ env.asset_name }}
-          draft: true
+          prerelease: true
 
 
   build_portable:
@@ -347,7 +347,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: ${{ env.asset_name }}
-          draft: true
+          prerelease: true
 
 
   finalise_release_job:
@@ -361,5 +361,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
-          draft: false
+          prerelease: false
 
