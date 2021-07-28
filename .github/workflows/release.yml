@@ -243,7 +243,6 @@ jobs:
       WP_DIR_NAME: WPy64-3950
       TEST_DEPS: pytest pytest-qt
       LIB_TO_INSTALL: hyperspy[all] hyperspyui pyxem atomap kikuchipy pystackreg matplotlib-scalebar start_jupyter_cm particlespy nglview scanning_drift_corr
-      LIB_TO_UPGRADE: hyperspy
       LIB_TO_TEST: atomap pyxem kikuchipy
 
     steps:
@@ -273,7 +272,6 @@ jobs:
           # https://github.com/silx-kit/pyFAI/issues/1537
           pip install pyfai==0.20 numpy==1.21.0 --no-binary pyfai --no-build-isolation
           pip install ${{ env.LIB_TO_INSTALL }}
-          pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
 
       - shell: bash -l {0}
         name: Set installer name
