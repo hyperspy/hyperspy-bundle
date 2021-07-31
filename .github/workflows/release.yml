@@ -269,6 +269,9 @@ jobs:
           where pip
           # pin dask until https://github.com/dask/dask/issues/7583 is fixed
           pip install dask==2021.3.1 distributed==2021.3.1
+          # pyfai 0.20 is built against numpy 1.21.1
+          # https://github.com/silx-kit/pyFAI/issues/1537
+          pip install pyfai==0.20 numpy==1.21.0 --no-binary pyfai --no-build-isolation
           pip install ${{ env.LIB_TO_INSTALL }}
           pip install --upgrade ${{ env.LIB_TO_UPGRADE }}
 
