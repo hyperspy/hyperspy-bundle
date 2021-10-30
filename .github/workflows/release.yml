@@ -10,7 +10,7 @@ on:
       - '*'
   pull_request:
     branches:
-      - master
+      - main
 
 permissions:
   # needs write permission at workflow level to create release and upload artifacts
