@@ -39,6 +39,9 @@ specs:
   - qt
   - qtconsole
   - scanning_drift_corr
+  # sphinx >=4.0 pins docutils <0.18
+  - sphinx >=4.0
+  - spyder
   - start_jupyter_cm
 
 
