@@ -152,7 +152,7 @@ jobs:
           echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
-      - name: Install new distribution 1 (Windows)
+      - name: Install new distribution (Windows)
         if: runner.os == 'windows'
         env:
           install_dir: '${{ github.workspace }}\nd'
@@ -160,7 +160,7 @@ jobs:
         run: |
           echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
 
-      - name: Install new distribution 2 (Windows)
+      - name: Install new distribution (Windows)
         if: runner.os == 'windows'
         shell: powershell
         run: |
@@ -182,25 +182,33 @@ jobs:
           conda config --show channel_priority
           conda list
 
+      - shell: bash -l {0}
+        name: Check latest available hyperspy version
+        run: |
+          conda activate "${{ env.install_dir }}"     
+          conda install johnnydep
+          python check_hyperspy_latest.py
+
       - name: Install xvfb
-        if: runner.os == 'linux'
+        if: runner.os == 'linux' && always()
         run: |
           sudo apt-get install -y xvfb libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xinput0 libxcb-xfixes0
 
       - name: Start xvfb
-        if: runner.os == 'linux'
+        if: runner.os == 'linux' && always()
         run: |
           sudo /usr/bin/Xvfb ${{ env.DISPLAY }} -screen 0 1280x1024x24 & 
 
       - shell: bash -l {0}
         name: Install test dependencies
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           conda install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
-        if: runner.os != 'linux'
+        if: runner.os != 'linux' && always()
         name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
@@ -208,7 +216,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Test hyperspy
-        continue-on-error: true
+        if: always()
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -217,7 +225,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Run other test suites
-        continue-on-error: true
+        if: always()
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -250,6 +258,7 @@ jobs:
       LIB_TO_TEST: atomap pyxem kikuchipy
 
     steps:
+      - uses: actions/checkout@v2
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
@@ -315,20 +324,29 @@ jobs:
           ls
           echo ${{ env.asset_name }}
 
+      - name: Check latest available hyperspy version
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pip install johnnydep
+          python check_hyperspy_latest.py
+
       - name: Install testing libraries
+        if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
       - name: Run test suite (HyperSpyUI)
+        if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspyui
 
       - name: Run test hyperspy
-        continue-on-error: true
+        if: always()
         shell: cmd
         env:
           MPLBACKEND: 'agg'
@@ -337,7 +355,7 @@ jobs:
           pytest --pyargs hyperspy
 
       - name: Run other test suites
-        continue-on-error: true
+        if: always()
         shell: cmd
         env:
           MPLBACKEND: 'agg'
