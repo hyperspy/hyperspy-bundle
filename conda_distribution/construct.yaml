@@ -17,7 +17,9 @@ specs:
   - ase
   - atomap
   - conda
-  - dask <2021.04.0
+  - dask >=2021.08.1
+  - dask-labextension
+  - hdf5plugin
   - hyperspy >=1.6.5
   - hyperspyui >=1.1.4
   - ipympl
@@ -33,6 +35,7 @@ specs:
   - nglview
   - notebook
   - particlespy
+  - python-graphviz
   - python 3.8*
   - pystackreg
   - pyxem >=0.13.3
