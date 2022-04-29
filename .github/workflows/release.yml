@@ -2,15 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
-    workflow: "*"
   push:
-    branches:
-      - '*'
-    tags:
-      - '*'
+    branches: ['*']
+    tags: ['*']
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   # needs write permission at workflow level to create release and upload artifacts
@@ -42,7 +38,7 @@ jobs:
           echo ${{ env.VERSION }}
 
       - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@0.1.4
+        uses: jacobtomlinson/gha-find-replace@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           find: "__TAG__"
@@ -52,7 +48,7 @@ jobs:
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
-        uses: softprops/action-gh-release@v0.1.7
+        uses: softprops/action-gh-release@v0.1.14
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
@@ -81,15 +77,16 @@ jobs:
             BLAS_IMPL: openblas
     env:
       TEST_DEPS: pytest pytest-qt
-      LIB_TO_TEST: atomap pyxem kikuchipy
+      LIB_TO_TEST: hyperspy
       DISPLAY: :0
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
-          python-version: 3.7
+          channels: conda-forge
+          channel-priority: strict
 
       - shell: bash -l {0}
         name: Conda info
@@ -101,10 +98,6 @@ jobs:
         name: Install constructor
         run: |
           conda install constructor jinja2
-          # include fixes for start menu shortcut
-          # https://github.com/conda-forge/conda-standalone-feedstock/pull/18
-          conda install -y conda-standalone -c ericpre --override-channels
-          pip install https://github.com/ericpre/constructor/archive/refs/heads/workhorse.zip --force --no-deps
 
       - shell: bash -l {0}
         name: Build distribution
@@ -112,7 +105,6 @@ jobs:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
         run: |
-          conda config --set channel_priority strict
           constructor -v conda_distribution
 
       - shell: bash -l {0}
@@ -168,7 +160,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -234,7 +226,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v0.1.7
+        uses: softprops/action-gh-release@v0.1.14
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -254,10 +246,10 @@ jobs:
       TEST_DEPS: pytest pytest-qt
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_UPGRADE: hyperspy ipympl dask
-      LIB_TO_TEST: atomap pyxem kikuchipy
+      LIB_TO_TEST: hyperspy
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
@@ -278,11 +270,6 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          # pin dask until https://github.com/dask/dask/issues/7583 is fixed
-          pip install dask==2021.3.1 distributed==2021.3.1
-          # pyfai 0.20 is built against numpy 1.21.1
-          # https://github.com/silx-kit/pyFAI/issues/1537
-          pip install pyfai==0.20 numpy==1.21.0 --no-binary pyfai --no-build-isolation
           pip install ${{ env.LIB_TO_INSTALL }}
 
       - shell: bash -l {0}
@@ -309,7 +296,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -364,7 +351,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v0.1.7
+        uses: softprops/action-gh-release@v0.1.14
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -379,7 +366,7 @@ jobs:
     steps:
       - name: Finalise release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v0.1.14
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
