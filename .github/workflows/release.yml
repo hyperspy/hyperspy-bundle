@@ -247,15 +247,13 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      # when updating winpython version, check status of https://github.com/dask/dask/issues/7583
-      # to know if dask needs to be downgraded
-      WP_URL: https://github.com/winpython/winpython/releases/download/4.3.20210620/Winpython64-3.9.5.0.exe
-      WP_SHA256: 9a2f25ee58a35656a06bafeddba87c47de28cf11931cdbafe0ebd5b5a4eac2d5
+      WP_URL: https://github.com/winpython/winpython/releases/download/4.6.20220116/Winpython64-3.9.10.0.exe
+      WP_SHA256: 09d197889b86062e9090fdc716bd16f5f604290cec3c68a0444eb7cd18f24f93
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-3950
+      WP_DIR_NAME: WPy64-39100
       TEST_DEPS: pytest pytest-qt
-      LIB_TO_INSTALL: abtem ase atomap dask-labextension graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_UPGRADE: hyperspy ipympl
+      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_UPGRADE: hyperspy ipympl dask
       LIB_TO_TEST: atomap pyxem kikuchipy
 
     steps:
