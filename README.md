@@ -6,12 +6,14 @@
 # HyperSpy Bundle Distribution
 
 These python distributions include:
+- [abtem](https://abtem.readthedocs.io)
 - [ase](https://wiki.fysik.dtu.dk/ase)
 - [atomap](https://atomap.org)
 - [HyperSpy](https://hyperspy.org)
 - [HyperSpyUI](https://hyperspy.org/hyperspyUI)
 - [LumiSpy](https://github.com/LumiSpy/lumispy)
 - [kikuchipy](https://kikuchipy.org)
+- [ovito](https://www.ovito.org)
 - [particlespy](https://epsic-dls.github.io/ParticleSpy/index.html)
 - [pystackreg](https://github.com/glichtner/pystackreg)
 - [pyxem](www.pyxem.org)
