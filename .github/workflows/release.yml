@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          auto-update-conda: true
+          miniforge-variant: Mambaforge
           channels: conda-forge
           channel-priority: strict
 
@@ -117,7 +117,7 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          conda install constructor jinja2
+          mamba install constructor jinja2
 
       - shell: bash -l {0}
         if: matrix.ARCH == 'arm64'
@@ -220,7 +220,7 @@ jobs:
         name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
-          conda install johnnydep
+          mamba install johnnydep
           python check_hyperspy_latest.py
 
       - name: Install xvfb
@@ -238,7 +238,7 @@ jobs:
         if: matrix.ARCH == 'x86_64' && always()
         run: |
           conda activate "${{ env.install_dir }}"
-          conda install ${{ env.TEST_DEPS }}
+          mamba install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
