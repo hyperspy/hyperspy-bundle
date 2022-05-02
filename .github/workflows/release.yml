@@ -98,6 +98,7 @@ jobs:
       TEST_DEPS: pytest pytest-qt
       LIB_TO_TEST: lumispy pyxem
       DISPLAY: :0
+      MICROMAMBA_VERSION: '0.23.0'
 
     steps:
       - uses: actions/checkout@v3
@@ -119,13 +120,30 @@ jobs:
           conda install constructor jinja2
 
       - shell: bash -l {0}
+        if: matrix.ARCH == 'arm64'
+        name: Install micromamba
+        run: |
+          TEMP_DIR=$(mktemp -d)
+          mkdir "${TEMP_DIR}/micromamba"
+          pushd "${TEMP_DIR}/micromamba"
+          curl -L -O "https://anaconda.org/conda-forge/micromamba/${{ env.MICROMAMBA_VERSION }}/download/${{ matrix.TARGET_PLATFORM }}/micromamba-${{ env.MICROMAMBA_VERSION }}-0.tar.bz2"
+          bsdtar -xf "micromamba-${{ env.MICROMAMBA_VERSION }}-0.tar.bz2"
+          echo "MICROMAMBA_FILE=${PWD}/bin/micromamba" >> $GITHUB_ENV
+          ls ${PWD}
+          ls ${PWD}/bin  
+          popd
+
+      - shell: bash -l {0}
         name: Build distribution
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
-          TARGET_PLATFORM: ${{ matrix.TARGET_PLATFORM }}
         run: |
-          constructor -v conda_distribution --platform ${{ env.TARGET_PLATFORM }}
+          if [ ${{ matrix.TARGET_PLATFORM }} = osx-arm64 ]; then
+             constructor -v conda_distribution --platform ${{ matrix.TARGET_PLATFORM }} --conda-exe ${{ env.MICROMAMBA_FILE }}
+          else
+             constructor -v conda_distribution
+          fi
 
       - shell: bash -l {0}
         name: Set asset name
@@ -224,7 +242,7 @@ jobs:
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
-        if: runner.os != 'linux' && always()
+        if: runner.os != 'linux' && matrix.ARCH == 'x86_64' && always()
         name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
