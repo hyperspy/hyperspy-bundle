@@ -22,31 +22,31 @@ specs:
   - dask-labextension
   - hdf5plugin
   - hyperspy >=1.7.0
-  - hyperspyui >=1.1.5
+  - hyperspyui >=1.1.5                      # [not arm64]
   - ipympl
   - jupyterlab >=3.0.0,<4.0
-  - kikuchipy >=0.5.7
+  - kikuchipy >=0.5.7                       # [not arm64]
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.2
   - mamba
   - mamba_gator
   - matplotlib-scalebar
-  - miniforge_console_shortcut  # [win]
+  - miniforge_console_shortcut              # [win]
   - nb_conda_kernels
   - nglview
   - notebook
-  - ovito
-  - particlespy
+  - ovito                                   # [not arm64]
+  - particlespy                             # [not arm64]
   - python-graphviz
   - python 3.9*
-  - pystackreg
-  - pyxem >=0.14
-  - qt
-  - qtconsole
+  - pystackreg                              # [not arm64]
+  - pyxem >=0.14                            # [not arm64]
+  - qt                                      # [not arm64]
+  - qtconsole                               # [not arm64]
   - scanning_drift_corr
   # sphinx >=4.0 pins docutils <0.18
-  - sphinx >=4.0
-  - spyder
+  - sphinx >=4.0                            # [not arm64]
+  - spyder                                  # [not arm64]
   - start_jupyter_cm
 
 license_file: LICENSE
@@ -59,7 +59,9 @@ pre_uninstall: pre_uninstall.bat            # [win]
 
 post_install_desc: "Add context menu shortcuts." # [win]
 
-transmute_file_type: ".conda"
+# transmute not supported yet by micromamba
+# https://github.com/conda-forge/miniforge/pull/270
+transmute_file_type: ".conda"               # [not arm64]
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer
