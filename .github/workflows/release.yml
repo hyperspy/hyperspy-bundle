@@ -57,24 +57,43 @@ jobs:
 
 
   build:
-    name: ${{ matrix.os }}-${{ matrix.BLAS_IMPL }}
+    name: ${{ matrix.TARGET_PLATFORM }}-${{ matrix.BLAS_IMPL }}
     needs: create_release_job
     runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu, windows, macos]
-        BLAS_IMPL: [mkl, openblas]
         include:
           - os: ubuntu
             INSTALLER_EXTENSION: sh
+            BLAS_IMPL: mkl
+            ARCH: x86_64
+            TARGET_PLATFORM: linux-64
+          - os: ubuntu
+            INSTALLER_EXTENSION: sh
+            BLAS_IMPL: openblas
+            ARCH: x86_64
+            TARGET_PLATFORM: linux-64
           - os: windows
             INSTALLER_EXTENSION: exe
+            BLAS_IMPL: mkl
+            ARCH: x86_64
+            TARGET_PLATFORM: win-64
+          - os: windows
+            INSTALLER_EXTENSION: exe
+            BLAS_IMPL: openblas
+            ARCH: x86_64
+            TARGET_PLATFORM: win-64
           - os: macos
             INSTALLER_EXTENSION: pkg
-        exclude:
+            BLAS_IMPL: mkl
+            ARCH: x86_64
+            TARGET_PLATFORM: osx-64
           - os: macos
+            INSTALLER_EXTENSION: pkg
             BLAS_IMPL: openblas
+            ARCH: arm64
+            TARGET_PLATFORM: osx-arm64
     env:
       TEST_DEPS: pytest pytest-qt
       LIB_TO_TEST: lumispy pyxem
@@ -104,8 +123,9 @@ jobs:
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
+          TARGET_PLATFORM: ${{ matrix.TARGET_PLATFORM }}
         run: |
-          constructor -v conda_distribution
+          constructor -v conda_distribution --platform ${{ env.TARGET_PLATFORM }}
 
       - shell: bash -l {0}
         name: Set asset name
@@ -115,7 +135,9 @@ jobs:
           installer_name=(HyperSpy-*.${{ env.ext }})
           echo "Original installer name: " $installer_name
           # Rename installer name according to BLAS_IMPL
-          if [ ${{ matrix.BLAS_IMPL }} = mkl ]; then
+          if [ ${{ matrix.TARGET_PLATFORM }} = osx-arm64 ]; then
+             CPU=M1
+          elif [ ${{ matrix.BLAS_IMPL }} = mkl ]; then
              CPU=Intel
           else
              CPU=AMD
@@ -139,7 +161,7 @@ jobs:
           bash ${{ env.asset_name }} -b -p ${{ env.install_dir }}
 
       - name: Install new distribution (MacOS)
-        if: runner.os == 'macos'
+        if: runner.os == 'macos' && matrix.ARCH == 'x86_64'
         run: |
           echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
@@ -166,6 +188,7 @@ jobs:
           name: ${{ env.asset_name }}
 
       - shell: bash -l {0}
+        if: matrix.ARCH == 'x86_64'
         name: Info new distribution
         run: |
           conda activate "${{ env.install_dir }}"
@@ -175,6 +198,7 @@ jobs:
           conda list
 
       - shell: bash -l {0}
+        if: matrix.ARCH == 'x86_64'
         name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
@@ -193,7 +217,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Install test dependencies
-        if: always()
+        if: matrix.ARCH == 'x86_64' && always()
         run: |
           conda activate "${{ env.install_dir }}"
           conda install ${{ env.TEST_DEPS }}
@@ -208,7 +232,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Test hyperspy
-        if: always()
+        if: matrix.ARCH == 'x86_64' && always()
         env:
           MPLBACKEND: 'agg'
         run: |
@@ -218,7 +242,7 @@ jobs:
 
       - shell: bash -l {0}
         name: Run other test suites
-        if: always()
+        if: matrix.ARCH == 'x86_64' && always()
         env:
           MPLBACKEND: 'agg'
         run: |
