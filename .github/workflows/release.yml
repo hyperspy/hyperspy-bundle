@@ -95,7 +95,7 @@ jobs:
             ARCH: arm64
             TARGET_PLATFORM: osx-arm64
     env:
-      TEST_DEPS: pytest pytest-qt
+      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
       DISPLAY: :0
       MICROMAMBA_VERSION: '0.23.0'
@@ -256,7 +256,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive"
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not load_datacube_rebin_energy"
 
       - shell: bash -l {0}
         name: Run other test suites
@@ -266,7 +266,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} -k "not test_warnings"
+          pytest --pyargs ${{ env.LIB_TO_TEST }} -k "not test_warnings and not test_xc_yc"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -287,7 +287,7 @@ jobs:
       WP_SHA256: 09d197889b86062e9090fdc716bd16f5f604290cec3c68a0444eb7cd18f24f93
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-39100
-      TEST_DEPS: pytest pytest-qt
+      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_UPGRADE: hyperspy ipympl dask
       LIB_TO_TEST: lumispy pyxem
@@ -383,7 +383,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not samfire_set_metadata"
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not samfire_set_metadata"
 
       - name: Run other test suites
         if: always()
