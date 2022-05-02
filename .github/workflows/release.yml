@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
           body_path: "RELEASE_TEXT.md"
-          prerelease: true
+          draft: true
 
 
   build:
@@ -257,7 +257,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: ${{ env.asset_name }}
-          prerelease: true
+          draft: true
 
 
   build_portable:
@@ -384,7 +384,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: ${{ env.asset_name }}
-          prerelease: true
+          draft: true
 
 
   finalise_release_job:
@@ -398,5 +398,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
-          prerelease: false
+          draft: false
 
