@@ -22,10 +22,10 @@ specs:
   - dask-labextension
   - hdf5plugin
   - hyperspy >=1.7.0
-  - hyperspyui >=1.1.5                      # [not arm64]
+  - hyperspyui >=1.1.5
   - ipympl
   - jupyterlab >=3.0.0,<4.0
-  - kikuchipy >=0.5.7                       # [not arm64]
+  - kikuchipy >=0.5.7
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.2
   - mamba
@@ -35,18 +35,16 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
-  - ovito                                   # [not arm64]
-  - particlespy                             # [not arm64]
+  - ovito
+  - particlespy
   - python-graphviz
   - python 3.9*
-  - pystackreg                              # [not arm64]
-  - pyxem >=0.14                            # [not arm64]
-  - qt                                      # [not arm64]
-  - qtconsole                               # [not arm64]
+  - pystackreg
+  - pyxem >=0.14
+  - qtconsole
   - scanning_drift_corr
-  # sphinx >=4.0 pins docutils <0.18
-  - sphinx >=4.0                            # [not arm64]
-  - spyder                                  # [not arm64]
+  - sphinx >=4.0
+  - spyder
   - start_jupyter_cm
 
 license_file: LICENSE
