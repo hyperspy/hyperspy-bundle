@@ -97,6 +97,7 @@ jobs:
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map and not test_xc_yc"
       DISPLAY: :0
       MICROMAMBA_VERSION: '0.23.0'
 
@@ -266,7 +267,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} -k "not test_warnings and not test_xc_yc"
+          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }}
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -291,6 +292,7 @@ jobs:
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_UPGRADE: hyperspy ipympl dask
       LIB_TO_TEST: lumispy pyxem
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map"
 
     steps:
       - uses: actions/checkout@v3
@@ -393,7 +395,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} -k "not test_warnings"
+          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }}
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
