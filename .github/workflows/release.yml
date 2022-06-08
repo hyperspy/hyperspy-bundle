@@ -140,7 +140,7 @@ jobs:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
         run: |
-          if [ ${{ matrix.TARGET_PLATFORM }} = osx-arm64 ]; then
+          if [ ${{ matrix.TARGET_PLATFORM }} == osx-arm64 ]; then
              constructor -v conda_distribution --platform ${{ matrix.TARGET_PLATFORM }} --conda-exe ${{ env.MICROMAMBA_FILE }}
           else
              constructor -v conda_distribution

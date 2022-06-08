@@ -25,7 +25,7 @@ specs:
   - hyperspyui >=1.1.5
   - ipympl
   - jupyterlab >=3.0.0,<4.0
-  - kikuchipy >=0.5.7
+  - kikuchipy >=0.5.8                       # [not arm64]
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.2
   - mamba
@@ -40,10 +40,9 @@ specs:
   - python-graphviz
   - python 3.9*
   - pystackreg
-  - pyxem >=0.14
+  - pyxem >=0.14                            # [not arm64]
   - qtconsole
   - scanning_drift_corr
-  - sphinx >=4.0
   - spyder
   - start_jupyter_cm
 
