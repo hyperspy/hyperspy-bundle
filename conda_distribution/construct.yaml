@@ -41,10 +41,12 @@ specs:
   - python 3.9*
   - pystackreg
   - pyxem >=0.14.2
+  - openpyxl
   - qtconsole
   - scanning_drift_corr
   - spyder
   - start_jupyter_cm
+  - xlrd
 
 license_file: LICENSE
 
