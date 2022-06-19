@@ -8,7 +8,11 @@ For Windows and Linux, there is the choice between two variants, which are optim
 - `Intel`: with the MKL libraries,
 - `AMD`: with the openblas libraries.
 
-For included packages, [see construct.yaml](https://github.com/hyperspy/hyperspy-bundle/blob/__TAG__/conda_distribution/construct.yaml#L17-L50)
+For Mac, there two variants available:
+- `Intel` for Mac computer with Intel CPU
+- `M1` for Mac computer with Apple Silicon (M1) CPU
+
+For included packages, [see construct.yaml](https://github.com/hyperspy/hyperspy-bundle/blob/__TAG__/conda_distribution/construct.yaml#L17-L49)
 
 This distribution is built using [constructor 3.3.1](https://github.com/conda/constructor).
 
