@@ -17,7 +17,7 @@ jobs:
     name: Create Release (on tag only)
     runs-on: ubuntu-latest
     outputs: 
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      ID: ${{ steps.create_release.outputs.id }}
       VERSION: ${{ env.VERSION }}
     steps:
       - uses: actions/checkout@v2
@@ -409,17 +409,16 @@ jobs:
           files: ${{ env.asset_name }}
           draft: true
 
-
-  finalise_release_job:
-    needs: [build, build_portable]
+  publish_release_job:
+    # Set build, build_portable are needed, so that it runs when they are finished 
+    needs: [create_release_job, build, build_portable]
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Finalise release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v0.1.14
+        # Publish draft release
+        uses: eregon/publish-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          draft: false
-
+          release_id: ${{ needs.create_release_job.outputs.ID }}
