@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'hyperspy-bundle'
-copyright = '2022, HyperSpy Developers'
+copyright = '2022, HyperSpy Community'
 author = 'HyperSpy Developers'
 
 # The full version, including alpha/beta/rc tags
@@ -47,9 +47,57 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "pydata_sphinx_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = '_static/hyperspy_logo.png'
+
+# The name of an image file (within the static path) to use as favicon of the
+# docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
+# pixels large.
+html_favicon = '_static/hyperspy.ico'
+
+html_theme_options = {
+    "icon_links": [
+        {
+            # Label for this link
+            "name": "GitHub",
+            # URL where the link will redirect
+            "url": "https://github.com/hyperspy/hyperspy-bundle",  # required
+            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
+            "icon": "fab fa-github-square",
+            # The type of image to be used (see below for details)
+            "type": "fontawesome",
+        },
+        {
+            # Label for this link
+            "name": "HyperSpy",
+            # URL where the link will redirect
+            "url": "https://hyperspy.org",  # required
+            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
+            "icon": "_static/hyperspy.ico",
+            # The type of image to be used (see below for details)
+            "type": "local",
+        }
+   ],
+    "show_nav_level": 2,
+}
+
+# If you’re hosting your documentation on ReadTheDocs, you should consider
+# adding an explicit placement for their ethical advertisements. These are
+# non-tracking advertisements from ethical companies, and they help
+# ReadTheDocs sustain themselves and their free service.
+#
+# Ethical advertisements are added to your sidebar by default. To ensure
+# they are there if you manually update your sidebar, ensure that the
+# sidebar-ethical-ads.html template is added to your list. For example:
+
+html_sidebars = {
+    "**": ["search-field.html", "sidebar-nav-bs.html", "sidebar-ethical-ads.html"]
+}
