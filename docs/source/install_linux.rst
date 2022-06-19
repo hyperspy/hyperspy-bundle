@@ -18,6 +18,7 @@ or `miniforge <https://github.com/conda-forge/miniforge#install>`_:
    ``conda list``. A list of installed packages appears if it has been
    installed correctly.
 
+
 And that's it! All the installed programs should now be installed and they
 distribution should be available from the terminal or from the context menu
-(:ref:`start_jupyter`).
+(:ref:`usage-label`).

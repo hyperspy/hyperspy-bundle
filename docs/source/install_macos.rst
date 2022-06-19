@@ -28,4 +28,4 @@ location, we *highly* recommend to select ``Install for me only``:
 
 And that's it! All the installed programs should now be installed and they
 distribution should be available from the terminal or from the context menu
-(:ref:`start_jupyter`).
+(:ref:`usage-label`).

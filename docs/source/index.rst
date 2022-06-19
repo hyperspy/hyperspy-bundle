@@ -18,12 +18,4 @@ to install if you are not familiar with managing Python environments.
 
    download
    install
-   testing
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   usage

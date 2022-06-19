@@ -1,5 +1,25 @@
-Testing the installation
-^^^^^^^^^^^^^^^^^^^^^^^^
+.. _usage-label:
+
+Usage
+-----
+
+Start Menu (Windows only)
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Context Menu shortcuts
+^^^^^^^^^^^^^^^^^^^^^^
+
+The context menu shortcuts will be installed.
+
+Jupyter Notebook
+^^^^^^^^^^^^^^^^
+
+
+
+Jupyter QtConsole
+^^^^^^^^^^^^^^^^^
+
 
 If you would like to test that your installation is working properly, you can
 run a small test example by opening the "Qt Console". This is an interactive
@@ -76,20 +96,4 @@ signal:
    :alt: Removing the background from a test signal
    :figwidth: 50%
 
-Assuming all of this worked, congratulations! You have a working HyperSpy
-installation and you have run your first bit of open-source HyperSpy-based
-materials science data analysis! Click the button below to return to the main
-tutorial homepage:
 
-.. raw:: html
-
-    <div class="links-container-grid">
-        <a  class="container-link" style="grid-column: 2 / span 2;"
-            href="index.html#obtaining-the-tutorial-data">
-                Click here to return<br/>to the main page
-        </a>
-    </div>
-
-|
-|
-|

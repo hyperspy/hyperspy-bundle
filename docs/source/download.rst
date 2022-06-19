@@ -9,24 +9,20 @@ to install if you are not familiar with managing Python environments.
 Download
 ~~~~~~~~
 
-First, navigate to the repository home page
-(https://github.com/hyperspy/hyperspy-bundle), and click on the large green
-button slightly down the page:
+Download the latest HyperSpy-bundler installer:
 
-.. figure:: _static/bundle_install_button.png
-   :width: 100 %
-   :target: https://github.com/hyperspy/hyperspy-bundle
-   :alt: Link to Windows download for standalone HyperSpy bundle
-   :figwidth: 70%
+.. raw:: html
 
-   Clicking the big green button on the main repository page will bring you to
-   the "Releases" page that contains a link to the ``.exe`` installation file
+    <div class="text-center">
+        <a  class="downloadbutton"
+            href="https://github.com/hyperspy/hyperspy-bundle/releases">
+                Download HyperSpy-bundle installer
+        </a>
+    </div>
 
-On the releases page, click on the appropriate installer for your system. There
-are a few options, but we recommend either the one labeled "Intel" or 
-"AMD" depending on what type of processor your computer has, since those 
-versions are optimized for each type of processor. These bundles are based
-off of the "Anaconda" Python distribution:
+
+
+Depending on your computer, choose the most suitable installer:
 
 .. figure:: _static/bundle_release_download.png
    :width: 100 %

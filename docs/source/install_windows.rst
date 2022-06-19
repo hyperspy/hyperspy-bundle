@@ -17,5 +17,6 @@ window that looks like:
 Once the installation eventually finishes, click the *Next* button, and then 
 *Finish* to exit the installer. 
 
-And that's it! You should now have a few new applications in your
-Start Menu, including the "HyperSpy Prompt" and "HyperSpyUI".
+And that's it! All the installed programs should now be installed and they
+distribution should be available from the terminal, the context menu or the
+start menu (:ref:`usage-label`).
