@@ -97,7 +97,7 @@ jobs:
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map and not test_xc_yc"
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
       DISPLAY: :0
       MICROMAMBA_VERSION: '0.24.0'
 
@@ -257,7 +257,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not load_datacube_rebin_energy"
+          pytest --pyargs hyperspy --reruns 3 -n 2
 
       - shell: bash -l {0}
         name: Run other test suites
@@ -294,7 +294,7 @@ jobs:
       # See https://github.com/plotly/dash/issues/1992
       LIB_TO_UPGRADE: dash 
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map"
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
 
     steps:
       - uses: actions/checkout@v3
@@ -388,7 +388,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not samfire_set_metadata"
+          pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run other test suites
         if: always()
