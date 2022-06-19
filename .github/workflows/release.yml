@@ -97,7 +97,7 @@ jobs:
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map and not test_xc_yc"
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
       DISPLAY: :0
       MICROMAMBA_VERSION: '0.24.0'
 
@@ -257,7 +257,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not load_datacube_rebin_energy"
+          pytest --pyargs hyperspy --reruns 3 -n 2
 
       - shell: bash -l {0}
         name: Run other test suites
@@ -284,15 +284,17 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/4.6.20220116/Winpython64-3.9.10.0.exe
-      WP_SHA256: 09d197889b86062e9090fdc716bd16f5f604290cec3c68a0444eb7cd18f24f93
+      WP_URL: https://github.com/winpython/winpython/releases/download/4.6.20220501/Winpython64-3.10.4.0.exe
+      WP_SHA256: c4f2ac9b326df4b9c2dcf31edd8bb1f5329cd2c7e5ba4c6fbab8fcdc019e2132
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-39100
+      WP_DIR_NAME: WPy64-31040
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_UPGRADE: hyperspy ipympl dask
+      # Remove dash upgrade once winpython comes with dash>=2.3.1
+      # See https://github.com/plotly/dash/issues/1992
+      LIB_TO_UPGRADE: dash 
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_learning_ncc_matrix and not test_results_dict_to_crystal_map"
+      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
 
     steps:
       - uses: actions/checkout@v3
@@ -317,6 +319,7 @@ jobs:
           where python
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
+          pip install ${{ env.LIB_TO_UPGRADE }} --upgrade
 
       - shell: bash -l {0}
         name: Set installer name
@@ -385,7 +388,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not read_fail and not tvips_file_reader and not test_find_peaks_interactive and not samfire_set_metadata"
+          pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run other test suites
         if: always()
