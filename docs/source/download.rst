@@ -1,13 +1,7 @@
 .. _bundle-label:
 
-If you are brand new to Python, the easiest way to install HyperSpy is using
-the "standalone" bundle package. This simple to install program provides a
-customized Python installation that has the HyperSpy libraries pre-installed.
-It is compatible with Windows, MacOS, or Linux, and is the recommended way
-to install if you are not familiar with managing Python environments.
-
 Download
-~~~~~~~~
+--------
 
 Download the latest HyperSpy-bundler installer:
 
@@ -19,7 +13,7 @@ Download the latest HyperSpy-bundler installer:
                 Download HyperSpy-bundle installer
         </a>
     </div>
-
+    <br>
 
 
 Depending on your computer, choose the most suitable installer:
@@ -30,6 +24,5 @@ Depending on your computer, choose the most suitable installer:
    :alt: Links HyperSpy bundle downloads
    :figwidth: 70%
 
-   Select one of either Intel or AMD depending on what type of processor is in
-   your computer. If you use Linux or Mac, select the appropriate file for your
-   system (although we only show a Windows installation here).
+   Select a suitable installer depending on what type of processor is in your computer:
+   on Windows and Linux, one of either Intel or AMD on Mac, one of either Intel of M1.

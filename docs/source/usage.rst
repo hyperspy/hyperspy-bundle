@@ -3,11 +3,50 @@
 Usage
 -----
 
+Managing librairies and conda environements
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+   For standard version only, i.e. not supported for the portable version.
+
+As an alternative to the Anaconda Navigator, the HyperSpy bundle includes
+`gator <https://github.com/mamba-org/gator#gator>`_ to manage libraries
+and conda environments.
+
+.. figure:: _static/gator.png
+   :width: 100 %
+   :alt: Managing environments and libraries using gator
+   :figwidth: 100%
+
+   Managing environments and libraries using gator
+
+The packages can also be managed from the command line using
+`conda <https://docs.conda.io/projects/conda>`__ or
+`mamba <https://mamba.readthedocs.io>`__.
+For example, the distribution can be updated easily using
+
+.. code::
+
+   $ conda update --all
+
+or
+
+.. code::
+
+   $ mamba update --all
+
+.. note::
+   `conda <https://docs.conda.io/projects/conda>`__ is usually slow,
+   when the distribution contains many libraries, as
+   is the case for the hyperspy-bundle. `Mamba <https://mamba.readthedocs.io>`__
+   is a fast drop-in replacement for conda.
+
+
 Start Menu (Windows only)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-Context Menu shortcuts
+Context Menu Shortcuts
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The context menu shortcuts will be installed.
@@ -43,8 +82,6 @@ to launch the QT Console:
    :figwidth: 50%
 
    Launching the QT console from the Miniforge prompt
-
-.. include:: testing_install.rst
 
 The Qt Console is an interactive Python interpreter that allows you to enter
 Python statements directly and immediately see their output. Once the console
