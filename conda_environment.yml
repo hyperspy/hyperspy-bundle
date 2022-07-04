@@ -3,4 +3,5 @@ channels:
 - conda-forge
 dependencies:
 - constructor
+- pydata-sphinx-theme
 

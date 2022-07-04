@@ -13,11 +13,10 @@ sphinx:
 formats:
   - htmlzip
 
-conda:
-  environment: conda_environment.yml
-
 build:
+  os: "ubuntu-20.04"
   tools:
     python: "mambaforge-4.10"
-  commands:
-    - python parse_list_libraries.py
+
+conda:
+  environment: conda_environment.yml
