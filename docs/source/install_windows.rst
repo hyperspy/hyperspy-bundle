@@ -33,7 +33,7 @@ time (especially on the "Setting up the package cache..." and
 "Setting up the base environment..." steps), but you should get a progress 
 window that looks like:
 
-.. figure:: _static/bundle_during_installation.png
+.. figure:: _static/install_during_windows.png
    :width: 100 %
    :alt: Bundle installation progress
    :figwidth: 50%
