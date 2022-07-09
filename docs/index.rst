@@ -3,28 +3,40 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-
-Welcome to HyperSpy-bundle's Documentation!
-===========================================
+===================
+The HyperSpy-bundle
+===================
 
 What is the HyperSpy-bundle
----------------------------
+===========================
 
 The hyperspy-bundle is an program, which install a python distribution including
-hyperspy and other relevant scientific software and libraries. If you are brand
-new to Python, this is the easiest way to install HyperSpy.
+hyperspy and other relevant scientific software and libraries for the analysis of
+multidimensional dataset. It aims at making the installation python distribution
+very easy and integrating with existing established practices in the scientific
+research community. If you are brand new to Python, this is the easiest way to
+install HyperSpy.
+
+Table of Contents 
+=================
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   download
+   install
+   usage
+   verify
+   contribute
+
+Variants of the HyperSpy-bundle
+===============================
 
 It is compatible with Windows, MacOS (Intel or native M1), or Linux and comes
 with variants, which are optimised for AMD or Intel processor.
-The portable version is supported on windows only
-
-.. _included_librairies-label:
-
-
-Included Software and Libraries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. include:: specs.rst
+The portable version is supported on windows only.
 
 Standard Version 
 ----------------
@@ -60,17 +72,16 @@ It is based on the `WinPython <https://winpython.github.io/>`_ distribution.
 
 Difference with WinPython
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
 It includes the additional libraries  :ref:`listed above <included_librairies-label>` - except ovito and conda-related libraries.
 
-Table of Contents 
------------------
 
+.. _included_librairies-label:
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+Included Software and Libraries
+===============================
 
-   download
-   install
-   usage
-   verify
+The HyperSpy-bundle distribution includes the following software and libraries:
+
+.. include:: specs.rst
+

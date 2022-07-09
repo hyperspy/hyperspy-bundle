@@ -1,13 +1,13 @@
 .. _usage-label:
 
 Usage
------
+=====
 
 Managing librairies and conda environements
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------------
 
 .. note::
-   For standard version only, i.e. not supported for the portable version.
+   For the standard version only, `i.e.` not supported for the portable version.
 
 As an alternative to the Anaconda Navigator, the HyperSpy bundle includes
 `gator <https://github.com/mamba-org/gator#gator>`_ to manage libraries
@@ -41,23 +41,10 @@ or
    is the case for the hyperspy-bundle. `Mamba <https://mamba.readthedocs.io>`__
    is a fast drop-in replacement for conda.
 
-
-Start Menu (Windows only)
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Start menu shortcuts are created when the corresponding option have been selected
-during :ref:`installation <install_windows-label>`. The HyperSpy-bundle Prompt is
-a command line prompt with the base conda environment activated.
-
-.. figure:: _static/windows_start_menu.png
-   :width: 100 %
-   :alt: Launching the interactive HyperSpy-bundle prompt console
-   :figwidth: 50%
-
-   Start menu shortcuts of the HyperSpy-bundle distribution.
+.. _context_menu_shortcuts-label:
 
 Context Menu Shortcuts
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 The context menu shortcuts are created when the corresponding option have been selected
 during :ref:`installation <install_windows-label>` using the
@@ -67,6 +54,24 @@ shortcuts, the jupyter QtConsole / Lab / Notebook will start from the current fo
 .. figure:: _static/jupyter_cm_windows.png
    :width: 100 %
    :alt: Launching the interactive HyperSpy-bundle prompt console
-   :figwidth: 50%
+   :figwidth: 40%
 
-   Jupyter context menu entries in windows.
+   Jupyter context menu entries.
+
+Start Menu (Windows only)
+-------------------------
+
+Start menu shortcuts are created when the corresponding option have been selected
+during :ref:`installation <install_windows-label>`. The shortcuts are provided by
+the conda packages and if further conda packages are installed and contain shortcuts,
+it will appear in this menu.
+The HyperSpy-bundle Prompt is a command line prompt with the base conda environment
+activated and is useful to run conda/mamba, python script or program from the
+command line.
+
+.. figure:: _static/windows_start_menu.png
+   :width: 100 %
+   :alt: Launching the interactive HyperSpy-bundle prompt console
+   :figwidth: 45%
+
+   Start menu shortcuts of the HyperSpy-bundle distribution.

@@ -1,7 +1,7 @@
 .. _bundle-label:
 
 Download
---------
+========
 
 Download the latest HyperSpy-bundler installer:
 
@@ -22,7 +22,7 @@ Depending on your computer, choose the most suitable installer:
    :width: 100 %
    :target: https://github.com/hyperspy/hyperspy-bundle/releases/latest
    :alt: Links HyperSpy bundle downloads
-   :figwidth: 70%
+   :figwidth: 80%
 
    Select a suitable installer depending on what type of processor is in your computer:
    on Windows and Linux, one of either Intel or AMD on Mac, one of either Intel of M1.

@@ -1,11 +1,10 @@
 .. _verify-label:
 
 Verify Installation
--------------------
+===================
 
 Jupyter QtConsole
-^^^^^^^^^^^^^^^^^
-
+-----------------
 
 If you would like to test that your installation is working properly, you can
 run a small test example by opening the "Qt Console". This is an interactive
@@ -13,15 +12,15 @@ Python interpreter that allows you to type in Python statements directly. You
 can start the Qt Console from within the "HyperSpy-bundle Prompt", which you will
 find in the Start Menu:
 
-Once the Miniforge prompt opens, type ``jupyter qtconsole`` and press "Enter"
+Once the HyperSpy-bunlde prompt opens, type ``jupyter qtconsole`` and press "Enter"
 to launch the QT Console:
 
 .. figure:: _static/bundle_launching_qtconsole.png
    :width: 100 %
-   :alt: Launching the QT Console from the Miniforge prompt
+   :alt: Launching the QT Console from the HyperSpy-bundle prompt
    :figwidth: 50%
 
-   Launching the QT console from the Miniforge prompt
+   Launching the QT console from the HyperSpy-bundle prompt
 
 The Qt Console is an interactive Python interpreter that allows you to enter
 Python statements directly and immediately see their output. Once the console
@@ -74,3 +73,12 @@ signal:
    :figwidth: 50%
 
 
+Jupyter Lab / Notebook
+----------------------
+
+The same as above test example can be run the jupyter lab or jupyter notebook -
+open the HyperSpy-bunlde prompt and type ``jupyter lab`` or ``jupyter notebook``
+and press "Enter".
+
+.. note::
+   As an alternative, you can use the :ref:`context menu shorcuts <context_menu_shortcuts-label>`.
