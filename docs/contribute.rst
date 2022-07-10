@@ -28,3 +28,12 @@ Changelog
 ---------
 
 The changelog is available on `GitHub <https://github.com/hyperspy/hyperspy-bundle/releases>`_.
+
+Documentation
+-------------
+
+The documentation is built and deployed using github continuous integration with the following steps:
+
+#. Build the sphinx docs
+#. The html output is committed and push the ``gh-branch`` branch
+#. The html output is deploy to https://ericpre.github.io/hyperspy-bundle
