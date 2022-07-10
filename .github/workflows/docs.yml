@@ -1,0 +1,49 @@
+name: Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['*']
+    tags: ['*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniforge-variant: Mambaforge
+          channels: conda-forge
+          channel-priority: strict
+          activate-environment: docs
+
+      - name: Install Dependencies
+        shell: bash -l {0}
+        run: |
+          mamba install pydata-sphinx-theme
+
+      - name: Conda info
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+
+      - name: Check links
+        shell: bash -l {0}
+        run: |
+          cd docs
+          make linkcheck
+
+      - name: Build docs
+        shell: bash -l {0}
+        run: |
+          cd docs
+          make html
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./docs/_build/html/
+          name: docs_html

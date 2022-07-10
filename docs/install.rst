@@ -113,7 +113,7 @@ Linux
 
 The process is exactly the same as 
 `installing Anaconda <https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html>`_
-or `Miniforge <https://github.com/conda-forge/miniforge#install>`_:
+or `Miniforge <https://github.com/conda-forge/miniforge#user-content-install>`_:
 
 1. In your terminal window, run:
 

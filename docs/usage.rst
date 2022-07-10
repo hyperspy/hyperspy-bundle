@@ -10,7 +10,7 @@ Managing libraries and conda environments
    For the standard version only, `i.e.` not supported for the portable version.
 
 As an alternative to the Anaconda Navigator, the HyperSpy bundle includes
-`gator <https://github.com/mamba-org/gator#gator>`_ to manage libraries
+`gator <https://github.com/mamba-org/gator>`_ to manage libraries
 and conda environments.
 
 .. figure:: _static/gator.png
