@@ -59,7 +59,7 @@ jobs:
           name: docs_html
 
       - name: Commit files
-        if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+        if: ${{ github.event_name != 'pull_request' && github.repository == 'ericpre/hyperspy-bundle' }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -69,7 +69,7 @@ jobs:
 
       - name: Push changes
         uses: ad-m/github-push-action@master
-        if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+        if: ${{ github.event_name != 'pull_request' && github.repository == 'ericpre/hyperspy-bundle' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
