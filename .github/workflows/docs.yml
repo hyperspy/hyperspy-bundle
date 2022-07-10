@@ -8,9 +8,16 @@ on:
   pull_request:
     branches: [main]
 
+
+
 jobs:
   docs:
     runs-on: ubuntu-latest
+    permissions:
+      # needs write permission to push the docs to gh-pages
+      contents: write
+    env:
+      DOCS_PATH: ./docs/_build/html/
     steps:
       - uses: actions/checkout@v3
         with:
@@ -43,7 +50,12 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./docs/_build/html/
+          path: ${{ env.DOCS_PATH }}
+          name: docs_html
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.DOCS_PATH }}
           name: docs_html
 
       - name: Commit files
@@ -51,6 +63,8 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          # Need to force adding the html because it is present in the .gitignore
+          git add --force ${{ env.DOCS_PATH }}
           git commit -m "Update docs build" -a
 
       - name: Push changes
