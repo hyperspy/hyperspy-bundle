@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Install &#8212; hyperspy-bundle  documentation</title>
+<script>
+  document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+  document.documentElement.dataset.theme = localStorage.getItem("theme") || "light"
+</script>
+
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=92025949c220c2e29695" rel="stylesheet">
+
+
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/custom-styles.css" />
+
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/hyperspy.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Download" href="download.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="">
+    <div class="bd-header-announcement container-fluid" id="banner">
+      
+
+    </div>
+
+    
+    <nav class="bd-header navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="bd-header__inner container-xl">
+
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    <img src="_static/hyperspy_logo.png" class="logo__image only-light" alt="Logo image">
+    <img src="_static/hyperspy_logo.png" class="logo__image only-dark" alt="Logo image">
+  
+  
+    <p class="title logo__title">HyperSpy-bundle</p>
+  
+</a>
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="fas fa-bars"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="download.html">
+  Download
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Install
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="usage.html">
+  Usage
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="verify.html">
+  Verify Installation
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="contribute.html">
+  Development
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <span id="theme-switch" class="btn btn-sm btn-outline-primary navbar-btn rounded-circle">
+    <a class="theme-switch" data-mode="light"><i class="fas fa-sun"></i></a>
+    <a class="theme-switch" data-mode="dark"><i class="far fa-moon"></i></a>
+    <a class="theme-switch" data-mode="auto"><i class="fas fa-adjust"></i></a>
+</span>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/hyperspy/hyperspy-bundle" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://hyperspy.org" rel="noopener" target="_blank" title="HyperSpy"><img src="_static/hyperspy.ico" class="icon-link-image" alt="HyperSpy"/></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="bd-container container-xl">
+      <div class="bd-container__inner row">
+          
+
+<!-- Only show if we have sidebars configured, else just a small margin  -->
+<div class="bd-sidebar-primary col-12 col-md-3 bd-sidebar">
+  <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+  </div>
+  <div class="sidebar-end-items">
+  </div>
+</div>
+
+
+          
+
+
+<div class="bd-sidebar-secondary d-none d-xl-block col-xl-2 bd-toc">
+  
+    
+    <div class="toc-item">
+      
+<div class="tocsection onthispage mt-5 pt-1 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#windows">
+   Windows
+  </a>
+  <ul class="visible nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#silent-installation-on-windows">
+     Silent installation on Windows
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#macos">
+   MacOS
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#linux">
+   Linux
+  </a>
+ </li>
+</ul>
+
+</nav>
+    </div>
+    
+    <div class="toc-item">
+      
+    </div>
+    
+  
+</div>
+
+
+          
+          
+          <div class="bd-content col-12 col-md-9 col-xl-7">
+              
+              <article class="bd-article" role="main">
+                
+  <section id="install">
+<span id="linux-label"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this heading">#</a></h1>
+<section id="windows">
+<span id="install-windows-label"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading">#</a></h2>
+<p>Run the installer <code class="docutils literal notranslate"><span class="pre">.exe</span></code> file, accepting the default options. Doing so will
+install HyperSpy into the folder you choose under a subfolder named
+<code class="docutils literal notranslate"><span class="pre">hyperspy-bundle</span></code>.</p>
+<figure class="align-default" id="id1" style="width: 60%">
+<a class="reference internal image-reference" href="_images/just_me_windows.png"><img alt="Just Me (recommended)" src="_images/just_me_windows.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">A screenshot of the installation type selection. It is recommended to install
+for single user only (<cite>Just Me</cite>) to avoid permission issues when using python.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more details, for example on multi-users installation, read the
+<a class="reference external" href="https://docs.anaconda.com/anaconda/install/windows">Anaconda installation</a>
+instructions.</p>
+</div>
+<p>In the advanced installation options section, you can choose whether you want to
+create the start menu and the context menu (right-click) shortcuts.</p>
+<figure class="align-default" id="id2" style="width: 60%">
+<a class="reference internal image-reference" href="_images/installation_options_windows.png"><img alt="Installation options" src="_images/installation_options_windows.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">The advanced installation options section, where you can choose to install
+start menu and context menu shortcuts.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>Depending on your system, the installation may take quite some
+time (especially on the “Setting up the package cache…” and
+“Setting up the base environment…” steps), but you should get a progress
+window that looks like:</p>
+<figure class="align-default" id="id3" style="width: 60%">
+<a class="reference internal image-reference" href="_images/install_during_windows.png"><img alt="Bundle installation progress" src="_images/install_during_windows.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">A screenshot during the bundle installation process.</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>And that’s it! All the installed programs should now be installed and the
+distribution should be available from the terminal, the context menu or the
+start menu (<a class="reference internal" href="usage.html#usage-label"><span class="std std-ref">Usage</span></a>).</p>
+<section id="silent-installation-on-windows">
+<h3>Silent installation on Windows<a class="headerlink" href="#silent-installation-on-windows" title="Permalink to this heading">#</a></h3>
+<p>Using the command prompt:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>start /wait <span class="s2">&quot;&quot;</span> HyperSpy-bundle-2020.02.05-Windows-x86_64.exe /S /D<span class="o">=</span>%UserProfile%<span class="se">\H</span>yperSpy-bundle
+</pre></div>
+</div>
+<p>Using PowerShell:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>Start-Process -Wait -FilePath HyperSpy-bundle-2020.02.05-Windows-x86_64.exe -ArgumentList /S /D<span class="o">=</span><span class="nv">$env</span>:UserProfile<span class="se">\H</span>yperSpy-bundle
+</pre></div>
+</div>
+<p>See the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/silent-mode">Anaconda documentation</a> for more information on usage and
+more optional parameters.</p>
+</section>
+</section>
+<section id="macos">
+<span id="install-mac-label"></span><h2>MacOS<a class="headerlink" href="#macos" title="Permalink to this heading">#</a></h2>
+<p>Run the downloaded file to proceed with the installation. This installer is
+currently not identified as trusted party by macOS, meaning that macOS will
+not allow to run the installer simply by double-clicking on it. However,
+control-clicking the app icon, then choosing <code class="docutils literal notranslate"><span class="pre">Open</span></code> from the shortcut menu
+will allow to run the installer, as explained in the
+<a class="reference external" href="https://support.apple.com/en-gb/guide/mac-help/mh40616/mac">macOS documentation</a>.</p>
+<figure class="align-default" id="id4" style="width: 60%">
+<a class="reference internal image-reference" href="_images/macOS_right_click_open.png"><img alt="Links HyperSpy bundle downloads" src="_images/macOS_right_click_open.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">To open the installer, control-click the installer icon and choose Open from
+the shortcut menu.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The rest of the process is fairly straightforward. For the installation
+location, we <em>highly</em> recommend to select <code class="docutils literal notranslate"><span class="pre">Install</span> <span class="pre">for</span> <span class="pre">me</span> <span class="pre">only</span></code>:</p>
+<figure class="align-default" id="id5" style="width: 70%">
+<a class="reference internal image-reference" href="_images/macOS_install_destination.png"><img alt="Bundle installation progress" src="_images/macOS_install_destination.png" style="width: 100%;" /></a>
+<figcaption>
+<p><span class="caption-text">Single user installation is recommended.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<p>And that’s it! All the installed programs should now be installed and the
+distribution should be available from the terminal or from the context menu
+(<a class="reference internal" href="usage.html#usage-label"><span class="std std-ref">Usage</span></a>).</p>
+</section>
+<section id="linux">
+<span id="install-linux-label"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">#</a></h2>
+<p>The process is exactly the same as
+<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">installing Anaconda</a>
+or <a class="reference external" href="https://github.com/conda-forge/miniforge#user-content-install">Miniforge</a>:</p>
+<ol class="arabic">
+<li><p>In your terminal window, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash HyperSpy-bundle-YYYY.MM.DD-Linux-x86_64.sh
+</pre></div>
+</div>
+</li>
+<li><p>Follow the prompts on the installer screens.
+If you are unsure about any setting, accept the defaults. You can change
+them later.</p></li>
+<li><p>To make the changes take effect, close and then re-open your terminal window.</p></li>
+<li><p>Test your installation. In your terminal window, run the command
+<code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">list</span></code>. A list of installed packages appears if it has been
+installed correctly.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you choose to initialize <code class="docutils literal notranslate"><span class="pre">conda</span></code> during the installation, the base
+environment of the distribution will be activated in the terminal startup.
+The auto-activation can be enabled or disabled using the
+<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/commands/init.html">conda init</a>
+command.</p>
+<p>To enable conda activation at terminal startup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda init
+</pre></div>
+</div>
+<p>To disable conda activation at terminal startup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>conda init --reverse
+</pre></div>
+</div>
+</div>
+<p>And that’s it! All the installed programs should now be installed and the
+distribution should be available from the terminal or from the context menu
+(<a class="reference internal" href="usage.html#usage-label"><span class="std std-ref">Usage</span></a>).</p>
+</section>
+</section>
+
+
+              </article>
+              
+
+              
+              <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="download.html" title="previous page">
+      <i class="fas fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Download</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="usage.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Usage</p>
+  </div>
+  <i class="fas fa-angle-right"></i>
+  </a>
+</div>
+              </footer>
+              
+          </div>
+          
+      </div>
+    </div>
+
+  
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=92025949c220c2e29695"></script>
+
+<footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    <p class="copyright">
+    &copy; Copyright 2022, HyperSpy Community.<br>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.0.2.<br>
+</p>
+  </div>
+  
+</div>
+</footer>
+  </body>
+</html>

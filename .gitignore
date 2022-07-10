@@ -1,5 +1,0 @@
-# Packages
-__pycache__
-
-*.spyderproject
-docs/_build/*
