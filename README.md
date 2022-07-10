@@ -1,6 +1,6 @@
 # The HyperSpy-bundle Distribution
 
-The hyperspy-bundle is an program, which install a python distribution including hyperspy
+The hyperspy-bundle is a program, which installs a python distribution including hyperspy
 and other relevant scientific software and libraries for the analysis of multidimensional
 datasets. It aims at making the installation of a python distribution very easy and integrating
 with existing established practices in the scientific research community.
