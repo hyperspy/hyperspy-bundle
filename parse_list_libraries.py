@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 construct_fname = Path(__file__).parent.absolute() / 'conda_distribution' / 'construct.yaml'
-out = Path(__file__).parent.absolute() / 'docs' / 'source' / 'specs.rst'
+out = Path(__file__).parent.absolute() / 'docs' / 'specs.rst'
 
 info = parse(construct_fname, platform=context.subdir)
 librairies = info['specs']

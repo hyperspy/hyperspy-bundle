@@ -8,7 +8,7 @@ If you are brand new to python, this is the easiest way to install HyperSpy.
 
 ## Documentation
 
-[<img src="https://readthedocs.org/projects/hyperspy-bundle/badge/?version=latest">](<https://hyperspy-bundle.readthedocs.io>)
+[<img src="https://readthedocs.org/projects/hyperspy-bundle/badge/?version=latest">](<https://hyperspy.org/hyperspy-bundle>)
 
 ## Download
 

@@ -33,6 +33,14 @@ jobs:
           conda info
           conda list
 
+      - name: Update packages list
+        shell: bash -l {0}
+        run: |
+          python parse_list_libraries.py
+          echo "List of libraries and software"
+          echo "=============================="
+          cat ./docs/specs.rst
+
       - name: Check links
         shell: bash -l {0}
         run: |
