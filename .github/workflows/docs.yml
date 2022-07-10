@@ -85,22 +85,22 @@ jobs:
           git status
           git status -s
           if [[ $(git status -s) ]]; then
-            HAS_CHANGES=true
+            HAS_CHANGES='true'
           else
-            HAS_CHANGES=false
+            HAS_CHANGES='false'
           fi
           echo "HAS_CHANGES=${HAS_CHANGES}" >> $GITHUB_ENV
 
       - name: Commit files
         # Skip when there is nothing to commit
-        if: env.HAS_CHANGES
+        if: ${{ env.HAS_CHANGES == 'true' }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "Update docs build" -a
 
       - name: Push changes
-        if: env.HAS_CHANGES
+        if: ${{ env.HAS_CHANGES == 'true' }}
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
