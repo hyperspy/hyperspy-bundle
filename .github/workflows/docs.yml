@@ -18,12 +18,8 @@ jobs:
           miniforge-variant: Mambaforge
           channels: conda-forge
           channel-priority: strict
-          activate-environment: docs
-
-      - name: Install Dependencies
-        shell: bash -l {0}
-        run: |
-          mamba install pydata-sphinx-theme
+          environment-file: conda_environment.yml
+          activate-environment: hyperspy-bundle
 
       - name: Conda info
         shell: bash -l {0}
