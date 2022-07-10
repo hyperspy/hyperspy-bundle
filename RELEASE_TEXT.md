@@ -1,6 +1,6 @@
 The HyperSpy bundle is based on the [Anaconda](https://docs.anaconda.com/anaconda/) distribution and uses the `conda` or `mamba` package manager.
 
-**[Installation instructions](https://hyperspy-bundle.readthedocs.io/en/latest/install.html)**
+**[Installation instructions](https://hyperspy.org/hyperspy-bundle/install.html)**
 
 ## Recommended: Anaconda-type distribution (Linux, MacOS and Windows)
 
