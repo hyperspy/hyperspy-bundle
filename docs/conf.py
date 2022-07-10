@@ -86,6 +86,9 @@ html_theme_options = {
             "type": "local",
         }
     ],
+    "logo": {
+        "text": "HyperSpy-bundle",
+    },
     "show_toc_level": 2,
     "show_nav_level": 2,
 }

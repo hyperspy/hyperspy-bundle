@@ -7,8 +7,8 @@
 The HyperSpy-bundle
 ===================
 
-What is the HyperSpy-bundle
-===========================
+What is the HyperSpy-bundle?
+============================
 
 The hyperspy-bundle is a program, which installs a python distribution including
 hyperspy and other relevant scientific software and libraries for the analysis of
@@ -41,18 +41,19 @@ The portable version is supported on windows only.
 Standard Version 
 ----------------
 
-The standard version is very similar to the Anaconda/Miniconda/Miniforge distribution and it uses
-the conda/mamba package manager.
-It is built using the constructor tool, which is used to build the Anaconda/Miniconda/Miniforge
-distribution.
+The standard version is very similar to the `Anaconda <https://www.anaconda.com/products/distribution>`_ /
+`Miniforge <https://github.com/conda-forge/miniforge>`_ distribution and it uses the `conda <https://docs.conda.io/projects/conda>`__ / 
+`mamba <https://mamba.readthedocs.io>`__ package manager.
+It is built using the `constructor <https://github.com/conda/constructor>`_ tool, which is used to build the Anaconda / Miniforge
+distribution installer.
 
 Difference with Anaconda/Miniconda
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* Includes the libraries and software mentioned below.
-* The packages are downloaded from the `conda-forge <https://conda-forge.org>`_ channel only to
+* Includes the libraries and software :ref:`listed below <included_librairies-label>`.
+* The packages are downloaded from the `conda-forge <https://conda-forge.org>`_ channel `only`, to
   avoid incompatibilities between the anaconda *defaults* and *conda-forge* channels.
-* Includes the `mamba <https://mamba.readthedocs.io>`_ package manager, as faster alternative to `conda <https://docs.conda.io/projects/conda>`_.
+* Includes the `mamba <https://mamba.readthedocs.io>`__ package manager, as faster alternative to `conda <https://docs.conda.io/projects/conda>`__.
 * A configuration file ``.condarc`` is added in the root folder of the installation to save
   the channel's settings and pin the `blas` implementation.
 * Adds context menu entries (right-click shortcut) to start the *Jupyter Notebook*, *Jupyter Lab* or *Juypter QtConsole*.

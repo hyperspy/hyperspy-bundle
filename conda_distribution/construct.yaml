@@ -1,5 +1,5 @@
-#{% set version = os.environ.get("VERSION", "2021.07.08") %}
-#{% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
+{% set version = os.environ.get("VERSION", "2021.07.08") %}
+{% set blas_impl = os.environ.get("BLAS_IMPL", "openblas") %}
 
 name: HyperSpy-bundle
 version: {{ version }}

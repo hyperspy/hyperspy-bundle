@@ -22,7 +22,7 @@ install HyperSpy into the folder you choose under a subfolder named
 
 .. note::
    For more details, for example on multi-users installation, read the
-   `anaconda installation <https://docs.anaconda.com/anaconda/install/windows>`_
+   `Anaconda installation <https://docs.anaconda.com/anaconda/install/windows>`_
    instructions.
 
 In the advanced installation options section, you can choose whether you want to
@@ -84,9 +84,9 @@ will allow to run the installer, as explained in the
 `macOS documentation <https://support.apple.com/en-gb/guide/mac-help/mh40616/mac>`_.
 
 .. figure:: _static/macOS_right_click_open.png
-   :width: 60 %
+   :width: 100 %
    :alt: Links HyperSpy bundle downloads
-   :figwidth: 70%
+   :figwidth: 60%
 
    To open the installer, control-click the installer icon and choose Open from
    the shortcut menu.
@@ -97,7 +97,7 @@ location, we *highly* recommend to select ``Install for me only``:
 .. figure:: _static/macOS_install_destination.png
    :width: 100 %
    :alt: Bundle installation progress
-   :figwidth: 50%
+   :figwidth: 70%
 
    Single user installation is recommended.
 
@@ -112,8 +112,8 @@ Linux
 -----
 
 The process is exactly the same as 
-`installing anaconda <https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html>`_
-or `miniforge <https://github.com/conda-forge/miniforge#install>`_:
+`installing Anaconda <https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html>`_
+or `Miniforge <https://github.com/conda-forge/miniforge#install>`_:
 
 1. In your terminal window, run:
 
@@ -128,6 +128,25 @@ or `miniforge <https://github.com/conda-forge/miniforge#install>`_:
 4. Test your installation. In your terminal window, run the command 
    ``conda list``. A list of installed packages appears if it has been
    installed correctly.
+
+.. note::
+   If you choose to initialize ``conda`` during the installation, the base
+   environment of the distribution will be activated in the terminal startup.
+   The auto-activation can be enabled or disabled using the
+   `conda init <https://docs.conda.io/projects/conda/en/latest/commands/init.html>`_
+   command.
+
+   To enable conda activation at terminal startup:
+
+   .. code-block:: console
+
+      $ conda init
+
+   To disable conda activation at terminal startup:
+
+   .. code-block:: console
+
+      $ conda init --reverse
 
 
 And that's it! All the installed programs should now be installed and the
