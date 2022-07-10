@@ -12,7 +12,7 @@ For Mac, there are also two variants available:
 - `Intel` for Mac computers with Intel CPU
 - `M1` for Mac computers with Apple Silicon (M1) CPU
 
-For included packages, [see documentation](https://hyperspy-bundle.readthedocs.io/en/latest/index.html#included-software-and-libraries).
+For included packages, [see documentation](https://hyperspy.org/hyperspy-bundle/index.html#included-software-and-libraries).
 
 This distribution is built using [constructor 3.3.1](https://github.com/conda/constructor).
 
