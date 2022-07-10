@@ -11,11 +11,8 @@ on:
 
 
 jobs:
-  docs:
+  build_docs:
     runs-on: ubuntu-latest
-    permissions:
-      # needs write permission to push the docs to gh-pages
-      contents: write
     env:
       DOCS_PATH: ./docs/_build/html/
     steps:
@@ -53,23 +50,50 @@ jobs:
           path: ${{ env.DOCS_PATH }}
           name: docs_html
 
-      - uses: actions/upload-artifact@v3
+  push_docs:
+    needs: build_docs
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+    permissions:
+      # needs write permission to push the docs to gh-pages
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
         with:
-          path: ${{ env.DOCS_PATH }}
+          fetch-depth: 0
+          ref: gh-pages
+
+      - uses: actions/download-artifact@v3
+        with:
           name: docs_html
+          path: .
+
+      - name: list files
+        run: |
+          ls
+
+      - name: Git status
+        run: |
+          git status
+          git status -s
+          if [[ $(git status -s) ]]; then
+            HAS_CHANGES=true
+          else
+            HAS_CHANGES=false
+          fi
+          echo "HAS_CHANGES=${HAS_CHANGES}" >> $GITHUB_ENV
 
       - name: Commit files
-        if: ${{ github.event_name != 'pull_request' && github.repository == 'ericpre/hyperspy-bundle' }}
+        # Skip when there is nothing to commit
+        if: env.HAS_CHANGES
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          # Need to force adding the html because it is present in the .gitignore
-          git add --force ${{ env.DOCS_PATH }}
           git commit -m "Update docs build" -a
 
       - name: Push changes
+        if: env.HAS_CHANGES
         uses: ad-m/github-push-action@master
-        if: ${{ github.event_name != 'pull_request' && github.repository == 'ericpre/hyperspy-bundle' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
