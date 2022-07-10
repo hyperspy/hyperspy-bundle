@@ -15,13 +15,13 @@ The anaconda/miniforge-like version is built using
 `constructor <https://github.com/conda/constructor>`_ and
 `conda-forge <https://conda-forge.org/>`_ packages.
 
-The portable version is built by installing relevant libraries in the
-`WinPython <https://winpython.github.io/>`_ and compress to make 7zip auto-extracts.
+The portable version is built by installing relevant libraries in
+`WinPython <https://winpython.github.io/>`_ and compressing the distribution into to a 7zip auto-extracting archives.
 
 Release
 -------
 
-Release are made when the need arise, typically when new software or libraries are
+Releases are made when the need arises, typically when new software or libraries are
 available or changes in the conda-forge infrastructure which would benefit users.
 
 Changelog

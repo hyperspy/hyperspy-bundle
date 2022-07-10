@@ -12,8 +12,8 @@ Python interpreter that allows you to type in Python statements directly. You
 can start the Qt Console from within the "HyperSpy-bundle Prompt", which you will
 find in the Start Menu:
 
-Once the HyperSpy-bunlde prompt opens, type ``jupyter qtconsole`` and press "Enter"
-to launch the QT Console:
+Once the HyperSpy-bundle prompt opens, type ``jupyter qtconsole`` and press "Enter"
+to launch the Qt Console:
 
 .. figure:: _static/bundle_launching_qtconsole.png
    :width: 100 %
@@ -46,13 +46,13 @@ you've used HyperSpy on your machine):
    :alt: Entering the example code into the Qt Console
    :figwidth: 70%
 
-   Entering the example code into the Qt Console
+   Entering the example code into the Qt Console.
 
 Eventually, you should see a spectrum window and a small tool window for
 removing the background open (they may be stacked on top of each other;
 drag them out of the way, if so). If you click and drag on part of the spectrum
 display, HyperSpy will fit a Power Law to the signal within that region,
-and also show you a preview of the background-subtracted signal:
+and also show you a preview of the signal with the background subtracted:
 
 .. figure:: _static/bundle_test_bgremoval.gif
    :width: 100 %
@@ -61,7 +61,7 @@ and also show you a preview of the background-subtracted signal:
 
    By clicking and dragging on the spectrum display, a region is created (shown
    in red). The fitted background is shown in blue, and a preview of the
-   background-subtracted signal is displayed in green.
+   signal after background subtraction is displayed in green.
 
 Clicking "OK" in the *Background removal tool* window will perform the
 background subtraction, and replace the window with one showing the resulting
@@ -72,13 +72,15 @@ signal:
    :alt: Removing the background from a test signal
    :figwidth: 50%
 
+   Display of the signal after the background has been subtracted.
 
 Jupyter Lab / Notebook
 ----------------------
 
-The same as above test example can be run the jupyter lab or jupyter notebook -
-open the HyperSpy-bunlde prompt and type ``jupyter lab`` or ``jupyter notebook``
+The same test example as above can be run in the jupyter lab or jupyter notebook -
+open the HyperSpy-bundle prompt and type ``jupyter lab`` or ``jupyter notebook``
 and press "Enter".
 
 .. note::
-   As an alternative, you can use the :ref:`context menu shorcuts <context_menu_shortcuts-label>`.
+   As an alternative, you can use the :ref:`context menu shorcuts <context_menu_shortcuts-label>`
+   to run jupyter lab or jupyter notebook.

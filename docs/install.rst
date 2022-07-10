@@ -25,7 +25,7 @@ install HyperSpy into the folder you choose under a subfolder named
    `anaconda installation <https://docs.anaconda.com/anaconda/install/windows>`_
    instructions.
 
-In the advanced installation options section, you can choose it you want to
+In the advanced installation options section, you can choose whether you want to
 create the start menu and the context menu (right-click) shortcuts.
 
 .. figure:: _static/installation_options_windows.png
@@ -46,9 +46,9 @@ window that looks like:
    :alt: Bundle installation progress
    :figwidth: 60%
 
-   A screenshot during the bundle installation process
+   A screenshot during the bundle installation process.
 
-And that's it! All the installed programs should now be installed and they
+And that's it! All the installed programs should now be installed and the
 distribution should be available from the terminal, the context menu or the
 start menu (:ref:`usage-label`).
 
@@ -91,7 +91,7 @@ will allow to run the installer, as explained in the
    To open the installer, control-click the installer icon and choose Open from
    the shortcut menu.
 
-This rest of the process is fairly straightforward. For the installation 
+The rest of the process is fairly straightforward. For the installation 
 location, we *highly* recommend to select ``Install for me only``:
 
 .. figure:: _static/macOS_install_destination.png
@@ -102,7 +102,7 @@ location, we *highly* recommend to select ``Install for me only``:
    Single user installation is recommended.
 
 
-And that's it! All the installed programs should now be installed and they
+And that's it! All the installed programs should now be installed and the
 distribution should be available from the terminal or from the context menu
 (:ref:`usage-label`).
 
@@ -130,6 +130,6 @@ or `miniforge <https://github.com/conda-forge/miniforge#install>`_:
    installed correctly.
 
 
-And that's it! All the installed programs should now be installed and they
+And that's it! All the installed programs should now be installed and the
 distribution should be available from the terminal or from the context menu
 (:ref:`usage-label`).

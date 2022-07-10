@@ -3,7 +3,7 @@
 Download
 ========
 
-Download the latest HyperSpy-bundler installer:
+Download the latest HyperSpy-bundle installer:
 
 .. raw:: html
 
@@ -25,4 +25,4 @@ Depending on your computer, choose the most suitable installer:
    :figwidth: 80%
 
    Select a suitable installer depending on what type of processor is in your computer:
-   on Windows and Linux, one of either Intel or AMD on Mac, one of either Intel of M1.
+   on Windows and Linux, one of either Intel or AMD, and on Mac, one of either Intel of M1.

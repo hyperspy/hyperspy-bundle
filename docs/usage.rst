@@ -3,8 +3,8 @@
 Usage
 =====
 
-Managing librairies and conda environements
--------------------------------------------
+Managing libraries and conda environments
+-----------------------------------------
 
 .. note::
    For the standard version only, `i.e.` not supported for the portable version.
@@ -46,7 +46,7 @@ or
 Context Menu Shortcuts
 ----------------------
 
-The context menu shortcuts are created when the corresponding option have been selected
+The context menu shortcuts are created when the corresponding option has been selected
 during :ref:`installation <install_windows-label>` using the
 `start_jupyter_cm <https://github.com/hyperspy/start_jupyter_cm>`_ tool. Using these
 shortcuts, the jupyter QtConsole / Lab / Notebook will start from the current folder.
@@ -61,12 +61,12 @@ shortcuts, the jupyter QtConsole / Lab / Notebook will start from the current fo
 Start Menu (Windows only)
 -------------------------
 
-Start menu shortcuts are created when the corresponding option have been selected
+Start menu shortcuts are created when the corresponding option has been selected
 during :ref:`installation <install_windows-label>`. The shortcuts are provided by
 the conda packages and if further conda packages are installed and contain shortcuts,
-it will appear in this menu.
+they will appear in this menu.
 The HyperSpy-bundle Prompt is a command line prompt with the base conda environment
-activated and is useful to run conda/mamba, python script or program from the
+activated and is useful to run conda/mamba, python scripts or programs from the
 command line.
 
 .. figure:: _static/windows_start_menu.png

@@ -2,9 +2,9 @@
 
 The hyperspy-bundle is an program, which install a python distribution including hyperspy
 and other relevant scientific software and libraries for the analysis of multidimensional
-dataset. It aims at making the installation python distribution very easy and integrating
+datasets. It aims at making the installation of a python distribution very easy and integrating
 with existing established practices in the scientific research community.
-If you are brand new to Python, this is the easiest way to install HyperSpy.
+If you are brand new to python, this is the easiest way to install HyperSpy.
 
 ## Documentation
 
