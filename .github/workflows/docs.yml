@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniforge-variant: Mambaforge
@@ -43,3 +45,17 @@ jobs:
         with:
           path: ./docs/_build/html/
           name: docs_html
+
+      - name: Commit files
+        if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Update docs build" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
