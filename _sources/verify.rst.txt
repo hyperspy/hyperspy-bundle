@@ -15,7 +15,7 @@ find in the Start Menu:
 Once the HyperSpy-bundle prompt opens, type ``jupyter qtconsole`` and press "Enter"
 to launch the Qt Console:
 
-.. figure:: _static/bundle_launching_qtconsole.png
+.. figure:: _static/terminal_prompt.png
    :width: 100 %
    :alt: Launching the QT Console from the HyperSpy-bundle prompt
    :figwidth: 50%
