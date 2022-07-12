@@ -18,7 +18,7 @@ to launch the Qt Console:
 .. figure:: _static/terminal_prompt.png
    :width: 100 %
    :alt: Launching the QT Console from the HyperSpy-bundle prompt
-   :figwidth: 50%
+   :figwidth: 70%
 
    Launching the QT console from the HyperSpy-bundle prompt
 
