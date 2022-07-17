@@ -5,8 +5,12 @@ on:
   push:
     branches: ['*']
     tags: ['*']
+    paths-ignore:
+      - 'docs/**'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'docs/**'
 
 permissions:
   # needs write permission at workflow level to create release and upload artifacts

@@ -1,7 +1,7 @@
-name: test_env
+name: hyperspy-bundle
 channels:
-- defaults
+- conda-forge
 dependencies:
-- python=3.7
 - constructor
+- pydata-sphinx-theme
 
