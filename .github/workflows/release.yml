@@ -101,7 +101,7 @@ jobs:
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
+      LIB_TO_TEST_SKIP: -k "not test_xc_yc and not test_correlations_wrapping and not test_apply_affine_transforms_paths"
       DISPLAY: :0
       MICROMAMBA_VERSION: '0.24.0'
 
@@ -298,7 +298,7 @@ jobs:
       # See https://github.com/plotly/dash/issues/1992
       LIB_TO_UPGRADE: dash 
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_warnings and not test_xc_yc"
+      LIB_TO_TEST_SKIP: -k "not test_xc_yc and not test_correlations_wrapping and not test_apply_affine_transforms_paths"
 
     steps:
       - uses: actions/checkout@v3
