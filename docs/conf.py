@@ -85,7 +85,19 @@ html_theme_options = {
             "icon": "_static/hyperspy.ico",
             # The type of image to be used (see below for details)
             "type": "local",
-        }
+        },
+        {
+            # Label for this link
+            "name": "Release",
+            # URL where the link will redirect
+            "url": "https://github.com/hyperspy/hyperspy-bundle/releases",  # required
+            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
+            "icon": "https://img.shields.io/github/v/release/hyperspy/hyperspy-bundle",
+            # The type of image to be used (see below for details)
+            "type": "url",
+        },
+
+        
     ],
     "logo": {
         "text": "HyperSpy-bundle",

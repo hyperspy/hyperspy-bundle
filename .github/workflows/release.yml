@@ -42,7 +42,7 @@ jobs:
           echo ${{ env.VERSION }}
 
       - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@v2
+        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3
         if: startsWith(github.ref, 'refs/tags/')
         with:
           find: "__TAG__"
@@ -52,7 +52,7 @@ jobs:
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
@@ -275,7 +275,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -408,7 +408,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -423,7 +423,7 @@ jobs:
     steps:
       - name: Finalise release
         # Publish draft release
-        uses: eregon/publish-release@v1
+        uses: eregon/publish-release@c2c0552ef2dd8209aea2a95c940a156eb8f6e9c1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
