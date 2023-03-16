@@ -319,9 +319,11 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
+          # numexpr in winpython 2022-04 is broken
+          pip install numexpr --upgrade
           pip install ${{ env.LIB_TO_INSTALL }}
 
-      - name: Run pip list
+      - name: Pip list
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
