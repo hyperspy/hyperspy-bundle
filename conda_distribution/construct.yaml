@@ -9,6 +9,7 @@ condarc:
     - conda-forge
   pinned_packages:
     - libblas=*=*{{ blas_impl }}
+    - ovito=3.7
 
 channels:
   - conda-forge
@@ -21,8 +22,8 @@ specs:
   - dask >=2021.08.1
   - dask-labextension
   - hdf5plugin
-  - hyperspy >=1.7.0
-  - hyperspyui >=1.1.5
+  - hyperspy >=1.7.4
+  - hyperspyui >=1.2.0
   - ipympl
   - jupyterlab >=3.0.0,<4.0
   - kikuchipy >=0.6.1
@@ -35,10 +36,10 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
-  - ovito
+  - ovito =3.7
   - particlespy
   - python-graphviz
-  - python 3.9*
+  - python 3.10*
   - pystackreg
   - pyxem >=0.14.2
   - openpyxl
