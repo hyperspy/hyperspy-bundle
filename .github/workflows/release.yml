@@ -102,7 +102,7 @@ jobs:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
       LIB_TO_TEST_SKIP: -k "not test_xc_yc and not test_integrate_sigma_clip and not test_correlations_wrapping and not test_chunk_bytes"
-      DISPLAY: :0
+      DISPLAY: ':0'
       MICROMAMBA_VERSION: '1.3.1'
 
     steps:
