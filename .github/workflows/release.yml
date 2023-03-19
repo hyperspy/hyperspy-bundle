@@ -425,7 +425,7 @@ jobs:
     steps:
       - name: Finalise release
         # Publish draft release
-        uses: eregon/publish-release@c2c0552ef2dd8209aea2a95c940a156eb8f6e9c1
+        uses: eregon/publish-release@46913fa2b3f7edc7345ae3c17f6d1b093a54916d
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
