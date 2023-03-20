@@ -42,7 +42,7 @@ jobs:
           echo ${{ env.VERSION }}
 
       - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@f485fdc3f67a6d87ae6e3d11e41f648c26d7aee3
+        uses: jacobtomlinson/gha-find-replace@a51bbcd94d000df9ca0fcb54ec8be69aad8374b0
         if: startsWith(github.ref, 'refs/tags/')
         with:
           find: "__TAG__"
