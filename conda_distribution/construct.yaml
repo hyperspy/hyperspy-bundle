@@ -44,9 +44,11 @@ specs:
   - pystackreg
   - pyxem >=0.15
   - openpyxl
-  - qtconsole
+  # https://github.com/jupyter/qtconsole/issues/576
+  - qtconsole =5.4.1
   - scanning_drift_corr
-  - spyder
+  # to use qtconsole 5.4.1
+  - spyder =5.4.2
   - start_jupyter_cm
   - xlrd
 
