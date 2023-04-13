@@ -39,9 +39,10 @@ specs:
   - ovito         # [win]
   - ovito =3.7    # [not win]
   - particlespy
-  - python-graphviz
-  - python 3.10*
   - pystackreg
+  - python 3.10*
+  - python-graphviz
+  - python-rapidjson
   - pyxem >=0.15
   - openpyxl
   # https://github.com/jupyter/qtconsole/issues/576

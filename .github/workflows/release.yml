@@ -294,7 +294,7 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31090
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
-      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_TEST: lumispy pyxem
       LIB_TO_TEST_SKIP: ''
 
