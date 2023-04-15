@@ -9,8 +9,8 @@
 * hyperspyui >=1.2.0
 * ipympl
 * jupyterlab >=3.0.0,<4.0
-* kikuchipy >=0.6.1
-* lumispy >=0.2
+* kikuchipy >=0.8.4
+* lumispy >=0.2.2
 * mamba
 * mamba_gator
 * matplotlib-scalebar
@@ -19,14 +19,15 @@
 * notebook
 * ovito =3.7
 * particlespy
-* python-graphviz
-* python 3.10*
 * pystackreg
-* pyxem >=0.14.2
+* python 3.10*
+* python-graphviz
+* python-rapidjson
+* pyxem >=0.15
 * openpyxl
-* qtconsole
+* qtconsole =5.4.1
 * scanning_drift_corr
-* spyder
+* spyder =5.4.2
 * start_jupyter_cm
 * xlrd
 
