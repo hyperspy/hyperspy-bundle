@@ -9,7 +9,6 @@ condarc:
     - conda-forge
   pinned_packages:
     - libblas=*=*{{ blas_impl }}
-    - ovito=3.7
 
 channels:
   - conda-forge
@@ -26,9 +25,9 @@ specs:
   - hyperspyui >=1.2.0
   - ipympl
   - jupyterlab >=3.0.0,<4.0
-  - kikuchipy >=0.6.1
+  - kikuchipy >=0.8.4
   - libblas=*=*{{ blas_impl }}
-  - lumispy >=0.2
+  - lumispy >=0.2.2
   - mamba
   - mamba_gator
   - matplotlib-scalebar
@@ -36,16 +35,21 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
-  - ovito =3.7
+  # https://github.com/conda-forge/qt-main-feedstock/issues/150
+  - ovito         # [win]
+  - ovito =3.7    # [not win]
   - particlespy
-  - python-graphviz
-  - python 3.10*
   - pystackreg
-  - pyxem >=0.14.2
+  - python 3.10*
+  - python-graphviz
+  - python-rapidjson
+  - pyxem >=0.15
   - openpyxl
-  - qtconsole
+  # https://github.com/jupyter/qtconsole/issues/576
+  - qtconsole =5.4.1
   - scanning_drift_corr
-  - spyder
+  # to use qtconsole 5.4.1
+  - spyder =5.4.2
   - start_jupyter_cm
   - xlrd
 

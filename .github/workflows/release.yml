@@ -101,9 +101,10 @@ jobs:
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_xc_yc and not test_integrate_sigma_clip and not test_correlations_wrapping and not test_chunk_bytes"
+      # Fails on linux-mkl build
+      LIB_TO_TEST_SKIP: '-k "not test_results_dict_to_crystal_map"'
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '1.3.1'
+      MICROMAMBA_VERSION: '1.4.2'
 
     steps:
       - uses: actions/checkout@v3
@@ -293,9 +294,9 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31090
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
-      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_TEST: lumispy pyxem
-      LIB_TO_TEST_SKIP: -k "not test_xc_yc and not test_integrate_sigma_clip and not test_correlations_wrapping and not test_chunk_bytes"
+      LIB_TO_TEST_SKIP: ''
 
     steps:
       - uses: actions/checkout@v3
