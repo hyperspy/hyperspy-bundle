@@ -39,6 +39,7 @@ specs:
   - ovito         # [win]
   - ovito =3.7    # [not win]
   - particlespy
+  - py4dstem
   - pystackreg
   - python 3.10*
   - python-graphviz
