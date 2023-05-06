@@ -396,7 +396,6 @@ jobs:
           MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip these tests until there are fixed
           pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run other test suites
