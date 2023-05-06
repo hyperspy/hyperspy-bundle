@@ -65,17 +65,8 @@ html_logo = '_static/hyperspy_logo.png'
 html_favicon = '_static/hyperspy.ico'
 
 html_theme_options = {
+    "github_url": "https://github.com/hyperspy/hyperspy-bundle",
     "icon_links": [
-        {
-            # Label for this link
-            "name": "GitHub",
-            # URL where the link will redirect
-            "url": "https://github.com/hyperspy/hyperspy-bundle",  # required
-            # Icon class (if "type": "fontawesome"), or path to local image (if "type": "local")
-            "icon": "fab fa-github-square",
-            # The type of image to be used (see below for details)
-            "type": "fontawesome",
-        },
         {
             # Label for this link
             "name": "HyperSpy",
@@ -87,6 +78,11 @@ html_theme_options = {
             "type": "local",
         },
         {
+            "name": "Gitter",
+            "url": "https://gitter.im/hyperspy/hyperspy",
+            "icon": "fab fa-gitter",
+        },
+        {
             # Label for this link
             "name": "Release",
             # URL where the link will redirect
@@ -96,8 +92,6 @@ html_theme_options = {
             # The type of image to be used (see below for details)
             "type": "url",
         },
-
-        
     ],
     "logo": {
         "text": "HyperSpy-bundle",
