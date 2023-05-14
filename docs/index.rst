@@ -34,8 +34,8 @@ Table of Contents
 Variants of the HyperSpy-bundle
 ===============================
 
-It is compatible with Windows, MacOS (Intel or native M1), or Linux and comes
-with variants, which are optimised for AMD or Intel processors.
+It is compatible with Windows, MacOS (Intel and Apple Silicon), or Linux and comes
+with variants, which are optimised for AMD (using openblas) or Intel (using MKL) processors.
 The portable version is supported on windows only.
 
 Standard Version 

@@ -10,11 +10,11 @@ For Windows and Linux, there is the choice between two variants, which are optim
 
 For Mac, there are also two variants available:
 - `Intel` for Mac computers with Intel CPU
-- `M1` for Mac computers with Apple Silicon (M1) CPU
+- `Silicon` for Mac computers with Apple Silicon (M1, M2, etc.) CPU
 
 For included packages, [see documentation](https://hyperspy.org/hyperspy-bundle/index.html#included-software-and-libraries).
 
-This distribution is built using [constructor 3.3.1](https://github.com/conda/constructor).
+This distribution is built using [constructor 3.4.3](https://github.com/conda/constructor).
 
 ## Portable (Windows only)
 The portable distribution is based on the [WinPython](https://winpython.github.io) distribution and is a self-extracting archive. Running the installer will install the distribution in the current directory. Since the distribution is portable, it can be moved to any directory or run from an external drive.
