@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 
 
@@ -7,7 +6,7 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>The HyperSpy-bundle &#8212; hyperspy-bundle  documentation</title>
   
@@ -209,7 +208,7 @@ document.write(`
           
           
           
-          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square"></i></span>
+          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
             <label class="sr-only">GitHub</label></a>
         </li>
         <li class="nav-item">
@@ -222,6 +221,18 @@ document.write(`
           
           
           <a href="https://hyperspy.org" title="HyperSpy" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="_static/hyperspy.ico" class="icon-link-image" alt="HyperSpy"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
         </li>
         <li class="nav-item">
           
@@ -347,7 +358,7 @@ document.write(`
           
           
           
-          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square"></i></span>
+          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
             <label class="sr-only">GitHub</label></a>
         </li>
         <li class="nav-item">
@@ -360,6 +371,18 @@ document.write(`
           
           
           <a href="https://hyperspy.org" title="HyperSpy" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="_static/hyperspy.ico" class="icon-link-image" alt="HyperSpy"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter"></i></span>
+            <label class="sr-only">Gitter</label></a>
         </li>
         <li class="nav-item">
           
@@ -467,8 +490,8 @@ install HyperSpy.</p>
 </section>
 <section id="variants-of-the-hyperspy-bundle">
 <h2>Variants of the HyperSpy-bundle<a class="headerlink" href="#variants-of-the-hyperspy-bundle" title="Permalink to this heading">#</a></h2>
-<p>It is compatible with Windows, MacOS (Intel or native M1), or Linux and comes
-with variants, which are optimised for AMD or Intel processors.
+<p>It is compatible with Windows, MacOS (Intel and Apple Silicon), or Linux and comes
+with variants, which are optimised for AMD (using openblas) or Intel (using MKL) processors.
 The portable version is supported on windows only.</p>
 <section id="standard-version">
 <h3>Standard Version<a class="headerlink" href="#standard-version" title="Permalink to this heading">#</a></h3>
@@ -517,8 +540,8 @@ no shortcut is installed and it can be installed on an external harddrive or it 
 <li><p>dask &gt;=2021.08.1</p></li>
 <li><p>dask-labextension</p></li>
 <li><p>hdf5plugin</p></li>
-<li><p>hyperspy &gt;=1.7.4</p></li>
-<li><p>hyperspyui &gt;=1.2.0</p></li>
+<li><p>hyperspy &gt;=1.7.5</p></li>
+<li><p>hyperspyui &gt;=1.3.1</p></li>
 <li><p>ipympl</p></li>
 <li><p>jupyterlab &gt;=3.0.0,&lt;4.0</p></li>
 <li><p>kikuchipy &gt;=0.8.4</p></li>
@@ -531,15 +554,16 @@ no shortcut is installed and it can be installed on an external harddrive or it 
 <li><p>notebook</p></li>
 <li><p>ovito =3.7</p></li>
 <li><p>particlespy</p></li>
+<li><p>py4dstem</p></li>
 <li><p>pystackreg</p></li>
 <li><p>python 3.10*</p></li>
 <li><p>python-graphviz</p></li>
 <li><p>python-rapidjson</p></li>
-<li><p>pyxem &gt;=0.15</p></li>
+<li><p>pyxem &gt;=0.15.1</p></li>
 <li><p>openpyxl</p></li>
-<li><p>qtconsole =5.4.1</p></li>
+<li><p>qtconsole &gt;=5.4.3</p></li>
 <li><p>scanning_drift_corr</p></li>
-<li><p>spyder =5.4.2</p></li>
+<li><p>spyder &gt;=5.4.3</p></li>
 <li><p>start_jupyter_cm</p></li>
 <li><p>xlrd</p></li>
 </ul>
@@ -641,7 +665,7 @@ no shortcut is installed and it can be installed on an external harddrive or it 
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
     <br/>
   </p>
 </div>
