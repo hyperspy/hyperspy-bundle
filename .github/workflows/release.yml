@@ -160,7 +160,7 @@ jobs:
           echo "Original installer name: " $installer_name
           # Rename installer name according to BLAS_IMPL
           if [ ${{ matrix.TARGET_PLATFORM }} = osx-arm64 ]; then
-             CPU=M1
+             CPU=Silicon
           elif [ ${{ matrix.BLAS_IMPL }} = mkl ]; then
              CPU=Intel
           else
