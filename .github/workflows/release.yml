@@ -100,7 +100,7 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
-      LIB_TO_TEST: lumispy pyxem
+      LIB_TO_TEST: lumispy pyxem kikuchipy
       # Fails on linux-mkl build
       LIB_TO_TEST_SKIP: '-k "not test_results_dict_to_crystal_map"'
       DISPLAY: ':0'
@@ -295,7 +295,7 @@ jobs:
       WP_DIR_NAME: WPy64-31090
       TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview py4dstem particlespy pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_TEST: lumispy pyxem
+      LIB_TO_TEST: lumispy pyxem kikuchipy
       LIB_TO_TEST_SKIP: ''
 
     steps:
