@@ -104,7 +104,7 @@ jobs:
       # Fails on linux-mkl build
       LIB_TO_TEST_SKIP: '-k "not test_results_dict_to_crystal_map"'
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '1.4.2'
+      MICROMAMBA_VERSION: '1.5.1'
 
     steps:
       - uses: actions/checkout@v3
