@@ -227,7 +227,6 @@ jobs:
         name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
-          mamba install johnnydep
           python check_hyperspy_latest.py
 
       - name: Install xvfb
@@ -371,7 +370,6 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pip install johnnydep
           python check_hyperspy_latest.py
 
       - name: Install testing libraries

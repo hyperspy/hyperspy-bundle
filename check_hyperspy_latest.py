@@ -1,14 +1,13 @@
+import subprocess
 import sys
 
-from johnnydep.lib import JohnnyDist
-
-
-dist = JohnnyDist("hyperspy")
-installed = dist.version_installed
-latest = dist.version_latest
-
-if installed < latest:
-    # Should return exit code 1 to fail CI
-    raise BaseException(
-        f'hyperspy version is {installed}, while latest version is {latest}.'
-        )
+def check(name):
+    reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'list','--outdated'])
+    outdated_packages = [r.decode().split('==')[0] for r in reqs.split()]
+    if name in outdated_packages:
+        raise BaseException(
+            f'hyperspy version is outdated.'
+            )
+    
+if __name__ == "__main__":
+    check("hyperspy")
