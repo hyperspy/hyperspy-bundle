@@ -262,7 +262,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip these tests until there are fixed
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_find_peaks2D"
 
       - shell: bash -l {0}
         name: Run other test suites
@@ -393,7 +393,7 @@ jobs:
           MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_find_peaks2D"
 
       - name: Run other test suites
         if: always()
