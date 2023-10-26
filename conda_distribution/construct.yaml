@@ -9,6 +9,7 @@ condarc:
     - conda-forge
   pinned_packages:
     - libblas=*=*{{ blas_impl }}
+  solver: libmamba
 
 channels:
   - conda-forge
