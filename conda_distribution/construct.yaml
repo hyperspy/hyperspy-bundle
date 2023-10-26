@@ -36,9 +36,10 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
-  # https://github.com/conda-forge/qt-main-feedstock/issues/150
+  # # https://github.com/conda-forge/qt-main-feedstock/issues/150
+  # qt5/qt6 issue on unix
   - ovito         # [win]
-  - ovito =3.7    # [not win]
+  # - ovito =3.7    # [not win]
   - particlespy
   - pillow <10.1
   - py4dstem
