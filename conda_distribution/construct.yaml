@@ -36,8 +36,11 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
-  - ovito
+  # https://github.com/conda-forge/qt-main-feedstock/issues/150
+  - ovito         # [win]
+  - ovito =3.7    # [not win]
   - particlespy
+  - pillow <10.1
   - py4dstem
   - pymatgen
   - pystackreg
