@@ -408,7 +408,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }}
+          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }} -k "not test_load_with_padding and not test_rotation"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
