@@ -26,7 +26,7 @@ specs:
   - hyperspyui >=1.3.1
   - ipympl
   - jupyterlab
-  - kikuchipy >=0.8.7
+  - kikuchipy >=0.9
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.2.2
   - mamba >=1.5.2
