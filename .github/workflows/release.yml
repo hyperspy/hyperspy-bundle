@@ -28,7 +28,7 @@ jobs:
       ID: ${{ steps.create_release.outputs.id }}
       VERSION: ${{ env.VERSION }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get version (on tag)
         if: startsWith(github.ref, 'refs/tags/')
@@ -107,7 +107,7 @@ jobs:
       MICROMAMBA_VERSION: '1.5.1'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniforge-variant: Mambaforge
@@ -306,7 +306,7 @@ jobs:
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
