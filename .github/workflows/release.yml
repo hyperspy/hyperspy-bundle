@@ -16,6 +16,10 @@ permissions:
   # needs write permission at workflow level to create release and upload artifacts
   contents: write
 
+env:
+  MPLBACKEND: 'agg'
+  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
+
 jobs:
   create_release_job:
     name: Create Release (on tag only)
@@ -32,7 +36,7 @@ jobs:
           echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Get version (short hash)
-        if: "!startsWith(github.ref, 'refs/tags/')"
+        if: ${{ startsWith(github.ref, 'refs/tags/') == false }}
         run: |
           # Use git short hash instead of tag
           echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -99,12 +103,8 @@ jobs:
             ARCH: arm64
             TARGET_PLATFORM: osx-arm64
     env:
-      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
-      LIB_TO_TEST: lumispy pyxem kikuchipy
-      # Fails on linux-mkl build
-      LIB_TO_TEST_SKIP: '-k "not test_results_dict_to_crystal_map"'
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '1.4.2'
+      MICROMAMBA_VERSION: '1.5.1'
 
     steps:
       - uses: actions/checkout@v3
@@ -123,7 +123,7 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          mamba install constructor jinja2
+          mamba install constructor jinja2 conda-libmamba-solver
 
       - shell: bash -l {0}
         if: matrix.ARCH == 'arm64'
@@ -144,6 +144,7 @@ jobs:
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
+          CONDA_SOLVER: 'libmamba'
         run: |
           if [ ${{ matrix.TARGET_PLATFORM }} == osx-arm64 ]; then
              constructor -v conda_distribution --platform ${{ matrix.TARGET_PLATFORM }} --conda-exe ${{ env.MICROMAMBA_FILE }}
@@ -226,7 +227,6 @@ jobs:
         name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
-          mamba install johnnydep
           python check_hyperspy_latest.py
 
       - name: Install xvfb
@@ -257,22 +257,32 @@ jobs:
       - shell: bash -l {0}
         name: Test hyperspy
         if: matrix.ARCH == 'x86_64' && always()
-        env:
-          MPLBACKEND: 'agg'
         run: |
           conda activate "${{ env.install_dir }}"
-          # Skip these tests until there are fixed
           pytest --pyargs hyperspy --reruns 3 -n 2
 
       - shell: bash -l {0}
-        name: Run other test suites
+        name: Run test lumispy
+        if: matrix.ARCH == 'x86_64' && always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs lumispy
+
+      - shell: bash -l {0}
+        name: Run test pyxem
+        if: matrix.ARCH == 'x86_64' && always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs pyxem
+
+      - shell: bash -l {0}
+        name: Run test kikuchipy
         if: matrix.ARCH == 'x86_64' && always()
         env:
           MPLBACKEND: 'agg'
         run: |
           conda activate "${{ env.install_dir }}"
-          # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }}
+          pytest --pyargs kikuchipy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -289,14 +299,11 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/5.3.20221233/Winpython64-3.10.9.0.exe
-      WP_SHA256: 6d265a1b795d3a444a8890db114f8cd7153b41378a02bd21cb2bcd5ba431c4e3
+      WP_URL: https://github.com/winpython/winpython/releases/download/7.0.20230928/Winpython64-3.11.5.0mkl.exe
+      WP_SHA256: 0b2037660064589dd73a58ac17f44d9e657cfc5fcea92cec9223185243a0a3bc
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-31090
-      TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
+      WP_DIR_NAME: WPy64-31150
       LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_TEST: lumispy pyxem kikuchipy
-      LIB_TO_TEST_SKIP: ''
 
     steps:
       - uses: actions/checkout@v3
@@ -320,9 +327,10 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          # numexpr in winpython 2022-04 is broken
-          pip install numexpr --upgrade
           pip install ${{ env.LIB_TO_INSTALL }}
+          # lmfit version seems to be old
+          # numdifftools latest version has support for numpy 1.25
+          pip install --upgrade lmfit numdifftools
 
       - name: Pip list
         shell: cmd
@@ -372,7 +380,6 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pip install johnnydep
           python check_hyperspy_latest.py
 
       - name: Install testing libraries
@@ -392,21 +399,36 @@ jobs:
       - name: Run test hyperspy
         if: always()
         shell: cmd
-        env:
-          MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # Remove for 1.7.6 release
+          del WPy64-31150\python-3.11.5.amd64\Lib\site-packages\hyperspy\tests\signals\test_find_peaks2D.py
           pytest --pyargs hyperspy --reruns 3 -n 2
 
-      - name: Run other test suites
+      - name: Run test lumispy
         if: always()
         shell: cmd
-        env:
-          MPLBACKEND: 'agg'
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs ${{ env.LIB_TO_TEST }} ${{ env.LIB_TO_TEST_SKIP }}
+          pytest --pyargs lumispy
+
+      - name: Run test pyxem
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # Skip these tests until there are fixed
+          # test_results_dict_to_crystal_map failed with mkl
+          pytest --pyargs pyxem -k "not test_rotation and not test_results_dict_to_crystal_map"
+
+      - name: Run test kikuchipy
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # Skip these tests until there are fixed
+          pytest --pyargs kikuchipy -k "not test_load_with_padding"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
