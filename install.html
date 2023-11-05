@@ -18,26 +18,27 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom-styles.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom-styles.css?v=cebb11ac" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'install';</script>
     <link rel="icon" href="_static/hyperspy.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -54,6 +55,15 @@
   
   
   <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -94,7 +104,8 @@
     <span class="fa-solid fa-bars"></span>
   </label>
   
-  <div class="navbar-header-items__start">
+  
+  <div class="col-lg-3 navbar-header-items__start">
     
       <div class="navbar-item">
   
@@ -104,13 +115,14 @@
   
   
   
+  
     
     
       
     
     
-    <img src="_static/hyperspy_logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="_static/hyperspy_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="_static/hyperspy_logo.png" class="logo__image only-light" alt=""/>
+    <script>document.write(`<img src="_static/hyperspy_logo.png" class="logo__image only-dark" alt=""/>`);</script>
   
   
     <p class="title logo__title">HyperSpy-bundle</p>
@@ -118,7 +130,6 @@
 </a></div>
     
   </div>
-  
   
   <div class="col-lg-9 navbar-header-items">
     
@@ -177,23 +188,25 @@
       
         <div class="navbar-item navbar-persistent--container">
           
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
       
       
         <div class="navbar-item">
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script></div>
@@ -209,8 +222,8 @@ document.write(`
           
           
           
-          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
-            <label class="sr-only">GitHub</label></a>
+          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
         </li>
         <li class="nav-item">
           
@@ -232,8 +245,8 @@ document.write(`
           
           
           
-          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter"></i></span>
-            <label class="sr-only">Gitter</label></a>
+          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Gitter</span></a>
         </li>
         <li class="nav-item">
           
@@ -254,18 +267,20 @@ document.write(`
   
   
     <div class="navbar-persistent--mobile">
-<script>
-document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass"></i>
-  </button>
-`);
-</script>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
     </div>
   
 
   
-    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
       <span class="fa-solid fa-outdent"></span>
     </label>
   
@@ -340,10 +355,10 @@ document.write(`
           <div class="navbar-item">
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script></div>
@@ -359,8 +374,8 @@ document.write(`
           
           
           
-          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github"></i></span>
-            <label class="sr-only">GitHub</label></a>
+          <a href="https://github.com/hyperspy/hyperspy-bundle" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
         </li>
         <li class="nav-item">
           
@@ -382,8 +397,8 @@ document.write(`
           
           
           
-          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter"></i></span>
-            <label class="sr-only">Gitter</label></a>
+          <a href="https://gitter.im/hyperspy/hyperspy" title="Gitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-gitter fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Gitter</span></a>
         </li>
         <li class="nav-item">
           
@@ -446,8 +461,8 @@ document.write(`
 
 
 
-<nav aria-label="Breadcrumbs">
-  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
       <a href="index.html" class="nav-link" aria-label="Home">
@@ -472,9 +487,9 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="install">
-<span id="linux-label"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this heading">#</a></h1>
+<span id="linux-label"></span><h1>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h1>
 <section id="windows">
-<span id="install-windows-label"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading">#</a></h2>
+<span id="install-windows-label"></span><h2>Windows<a class="headerlink" href="#windows" title="Link to this heading">#</a></h2>
 <p>Run the installer <code class="docutils literal notranslate"><span class="pre">.exe</span></code> file, accepting the default options. Doing so will
 install HyperSpy into the folder you choose under a subfolder named
 <code class="docutils literal notranslate"><span class="pre">hyperspy-bundle</span></code>.</p>
@@ -482,7 +497,7 @@ install HyperSpy into the folder you choose under a subfolder named
 <a class="reference internal image-reference" href="_images/just_me_windows.png"><img alt="Just Me (recommended)" src="_images/just_me_windows.png" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">A screenshot of the installation type selection. It is recommended to install
-for single user only (<cite>Just Me</cite>) to avoid permission issues when using python.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+for single user only (<cite>Just Me</cite>) to avoid permission issues when using python.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="admonition note">
@@ -497,7 +512,7 @@ create the start menu and the context menu (right-click) shortcuts.</p>
 <a class="reference internal image-reference" href="_images/installation_options_windows.png"><img alt="Installation options" src="_images/installation_options_windows.png" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">The advanced installation options section, where you can choose to install
-start menu and context menu shortcuts.</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+start menu and context menu shortcuts.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>Depending on your system, the installation may take quite some
@@ -507,14 +522,14 @@ window that looks like:</p>
 <figure class="align-default" id="id3" style="width: 60%">
 <a class="reference internal image-reference" href="_images/install_during_windows.png"><img alt="Bundle installation progress" src="_images/install_during_windows.png" style="width: 100%;" /></a>
 <figcaption>
-<p><span class="caption-text">A screenshot during the bundle installation process.</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">A screenshot during the bundle installation process.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>And that’s it! All the installed programs should now be installed and the
 distribution should be available from the terminal, the context menu or the
 start menu (<a class="reference internal" href="usage.html#usage-label"><span class="std std-ref">Usage</span></a>).</p>
 <section id="silent-installation-on-windows">
-<h3>Silent installation on Windows<a class="headerlink" href="#silent-installation-on-windows" title="Permalink to this heading">#</a></h3>
+<h3>Silent installation on Windows<a class="headerlink" href="#silent-installation-on-windows" title="Link to this heading">#</a></h3>
 <p>Using the command prompt:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>start<span class="w"> </span>/wait<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>HyperSpy-bundle-2020.02.05-Windows-x86_64.exe<span class="w"> </span>/S<span class="w"> </span>/D<span class="o">=</span>%UserProfile%<span class="se">\H</span>yperSpy-bundle
 </pre></div>
@@ -528,7 +543,7 @@ more optional parameters.</p>
 </section>
 </section>
 <section id="macos">
-<span id="install-mac-label"></span><h2>MacOS<a class="headerlink" href="#macos" title="Permalink to this heading">#</a></h2>
+<span id="install-mac-label"></span><h2>MacOS<a class="headerlink" href="#macos" title="Link to this heading">#</a></h2>
 <p>Run the downloaded file to proceed with the installation. This installer is
 currently not identified as trusted party by macOS, meaning that macOS will
 not allow to run the installer simply by double-clicking on it. However,
@@ -539,7 +554,7 @@ will allow to run the installer, as explained in the
 <a class="reference internal image-reference" href="_images/macOS_right_click_open.png"><img alt="Links HyperSpy bundle downloads" src="_images/macOS_right_click_open.png" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">To open the installer, control-click the installer icon and choose Open from
-the shortcut menu.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+the shortcut menu.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>The rest of the process is fairly straightforward. For the installation
@@ -547,7 +562,7 @@ location, we <em>highly</em> recommend to select <code class="docutils literal n
 <figure class="align-default" id="id5" style="width: 70%">
 <a class="reference internal image-reference" href="_images/macOS_install_destination.png"><img alt="Bundle installation progress" src="_images/macOS_install_destination.png" style="width: 100%;" /></a>
 <figcaption>
-<p><span class="caption-text">Single user installation is recommended.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Single user installation is recommended.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>And that’s it! All the installed programs should now be installed and the
@@ -555,7 +570,7 @@ distribution should be available from the terminal or from the context menu
 (<a class="reference internal" href="usage.html#usage-label"><span class="std std-ref">Usage</span></a>).</p>
 </section>
 <section id="linux">
-<span id="install-linux-label"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this heading">#</a></h2>
+<span id="install-linux-label"></span><h2>Linux<a class="headerlink" href="#linux" title="Link to this heading">#</a></h2>
 <p>The process is exactly the same as
 <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">installing Anaconda</a>
 or <a class="reference external" href="https://github.com/conda-forge/miniforge#user-content-install">Miniforge</a>:</p>
@@ -600,11 +615,10 @@ distribution should be available from the terminal or from the context menu
               
               
               
-                <footer class="bd-footer-article">
-                  
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="download.html"
@@ -624,10 +638,7 @@ distribution should be available from the terminal or from the context menu
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -672,8 +683,8 @@ distribution should be available from the terminal or from the context menu
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -691,7 +702,7 @@ distribution should be available from the terminal or from the context menu
       
         <div class="footer-item">
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     <br/>
   </p>
 </div>
@@ -699,10 +710,11 @@ distribution should be available from the terminal or from the context menu
     </div>
   
   
+  
     <div class="footer-items__end">
       
         <div class="footer-item"><p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.3.
 </p></div>
       
     </div>
