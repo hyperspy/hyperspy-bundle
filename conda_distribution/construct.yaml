@@ -22,7 +22,7 @@ specs:
   - dask >=2023.6.0
   - dask-labextension
   - hdf5plugin
-  - hyperspy >=1.7.5
+  - hyperspy >=1.7.6
   - hyperspyui >=1.3.1
   - ipympl
   - jupyterlab
@@ -48,7 +48,7 @@ specs:
   - python 3.11*
   - python-graphviz
   - python-rapidjson
-  - pyxem >=0.15.1
+  - pyxem >=0.16
   - openpyxl
   - qtconsole >=5.4.3
   - scanning_drift_corr
