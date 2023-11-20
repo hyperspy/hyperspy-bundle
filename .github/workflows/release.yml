@@ -418,9 +418,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip these tests until there are fixed
-          # test_results_dict_to_crystal_map failed with mkl
-          pytest --pyargs pyxem -k "not test_rotation and not test_results_dict_to_crystal_map"
+          pytest --pyargs pyxem
 
       - name: Run test kikuchipy
         if: always()
