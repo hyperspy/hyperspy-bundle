@@ -53,7 +53,7 @@ jobs:
           cd docs
           make html
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: ${{ env.DOCS_PATH }}
           name: docs_html
