@@ -99,7 +99,7 @@ jobs:
             TARGET_PLATFORM: osx-64
           - os: macos
             INSTALLER_EXTENSION: pkg
-            BLAS_IMPL: openblas
+            BLAS_IMPL: accelerate
             ARCH: arm64
             TARGET_PLATFORM: osx-arm64
     env:
