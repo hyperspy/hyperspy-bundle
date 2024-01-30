@@ -18,7 +18,7 @@ permissions:
 
 env:
   MPLBACKEND: 'agg'
-  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures
+  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl
 
 jobs:
   create_release_job:
@@ -104,7 +104,7 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '1.5.1'
+      MICROMAMBA_VERSION: '1.5.6'
 
     steps:
       - uses: actions/checkout@v4
@@ -275,14 +275,14 @@ jobs:
           conda activate "${{ env.install_dir }}"
           pytest --pyargs pyxem
 
-      - shell: bash -l {0}
-        name: Run test kikuchipy
-        if: matrix.ARCH == 'x86_64' && always()
-        env:
-          MPLBACKEND: 'agg'
-        run: |
-          conda activate "${{ env.install_dir }}"
-          pytest --pyargs kikuchipy
+      # - shell: bash -l {0}
+      #   name: Run test kikuchipy
+      #   if: matrix.ARCH == 'x86_64' && always()
+      #   env:
+      #     MPLBACKEND: 'agg'
+      #   run: |
+      #     conda activate "${{ env.install_dir }}"
+      #     pytest --pyargs kikuchipy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -303,7 +303,8 @@ jobs:
       WP_SHA256: 0b2037660064589dd73a58ac17f44d9e657cfc5fcea92cec9223185243a0a3bc
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31150
-      LIB_TO_INSTALL: abtem ase atomap graphviz hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
+      #LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: abtem ase exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
     steps:
       - uses: actions/checkout@v4
@@ -420,13 +421,13 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs pyxem
 
-      - name: Run test kikuchipy
-        if: always()
-        shell: cmd
-        run: |
-          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip these tests until there are fixed
-          pytest --pyargs kikuchipy -k "not test_load_with_padding"
+      # - name: Run test kikuchipy
+      #   if: always()
+      #   shell: cmd
+      #   run: |
+      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+      #     # Skip these tests until there are fixed
+      #     pytest --pyargs kikuchipy -k "not test_load_with_padding"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
