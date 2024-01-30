@@ -113,5 +113,9 @@ html_sidebars = {
     "**": ["search-field.html", "sidebar-nav-bs.html", "sidebar-ethical-ads.html"]
 }
 
+linkcheck_ignore = [
+    "https://github.com/conda-forge/miniforge#Install",  # Anchor on github.com not supported
+]
+
 def setup(app):
     app.add_css_file("custom-styles.css")
