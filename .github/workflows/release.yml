@@ -18,7 +18,8 @@ permissions:
 
 env:
   MPLBACKEND: 'agg'
-  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl
+  # pin pytest to 7.4.4 to get the test suite of pyxem to work
+  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl
 
 jobs:
   create_release_job:
@@ -303,12 +304,12 @@ jobs:
           conda activate "${{ env.install_dir }}"
           pytest --pyargs lumispy
 
-      # - shell: bash -l {0}
-      #   name: Run test pyxem
-      #   if: matrix.ARCH == 'x86_64' && always()
-      #   run: |
-      #     conda activate "${{ env.install_dir }}"
-      #     pytest --pyargs pyxem
+      - shell: bash -l {0}
+        name: Run test pyxem
+        if: matrix.ARCH == 'x86_64' && always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs pyxem
 
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
@@ -482,12 +483,12 @@ jobs:
           # Skip these tests until there are fixed
           pytest --pyargs lumispy
 
-      # - name: Run test pyxem
-      #   if: always()
-      #   shell: cmd
-      #   run: |
-      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     pytest --pyargs pyxem
+      - name: Run test pyxem
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs pyxem
 
       # - name: Run test kikuchipy
       #   if: always()
