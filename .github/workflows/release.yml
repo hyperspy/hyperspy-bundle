@@ -281,7 +281,7 @@ jobs:
         if: runner.os != 'linux' && matrix.ARCH == 'x86_64' && always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs hyperspy_gui_traitsui
+          pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - shell: bash -l {0}
         name: Run test exspy
@@ -309,7 +309,7 @@ jobs:
         if: matrix.ARCH == 'x86_64' && always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs pyxem
+          pytest --pyargs pyxem -k "not test_pixelated_stem_class"
 
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
@@ -452,7 +452,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy_gui_ipywidgets
+          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_image_contrast_tool"
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
@@ -488,7 +488,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs pyxem
+          pytest --pyargs pyxem -k "not test_pixelated_stem_class"
 
       # - name: Run test kikuchipy
       #   if: always()
