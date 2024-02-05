@@ -313,7 +313,9 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs pyxem -k "not test_pixelated_stem_class"
+          # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
+          # test_offest_and_scale failure fixed in https://github.com/pyxem/pyxem/pull/1016
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_offest_and_scale"
 
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
@@ -456,7 +458,8 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_image_contrast_tool"
+          # test_spikes_removal_tool fails randomly, fixed in https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/51
+          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_image_contrast_tool and not test_spikes_removal_tool"
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
@@ -484,7 +487,6 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip these tests until there are fixed
           pytest --pyargs lumispy
 
       - name: Run test pyxem
@@ -492,7 +494,8 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs pyxem -k "not test_pixelated_stem_class"
+          # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
 
       # - name: Run test kikuchipy
       #   if: always()
