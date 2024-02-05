@@ -68,37 +68,43 @@ jobs:
   build:
     name: ${{ matrix.TARGET_PLATFORM }}-${{ matrix.BLAS_IMPL }}
     needs: create_release_job
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu
+            os_version: latest
             INSTALLER_EXTENSION: sh
             BLAS_IMPL: mkl
             ARCH: x86_64
             TARGET_PLATFORM: linux-64
           - os: ubuntu
+            os_version: latest
             INSTALLER_EXTENSION: sh
             BLAS_IMPL: openblas
             ARCH: x86_64
             TARGET_PLATFORM: linux-64
           - os: windows
+            os_version: latest
             INSTALLER_EXTENSION: exe
             BLAS_IMPL: mkl
             ARCH: x86_64
             TARGET_PLATFORM: win-64
           - os: windows
+            os_version: latest
             INSTALLER_EXTENSION: exe
             BLAS_IMPL: openblas
             ARCH: x86_64
             TARGET_PLATFORM: win-64
           - os: macos
+            os_version: latest
             INSTALLER_EXTENSION: pkg
             BLAS_IMPL: mkl
             ARCH: x86_64
             TARGET_PLATFORM: osx-64
           - os: macos
+            os_version: 14
             INSTALLER_EXTENSION: pkg
             BLAS_IMPL: accelerate
             ARCH: arm64
@@ -187,7 +193,7 @@ jobs:
           bash ${{ env.asset_name }} -b -p ${{ env.install_dir }}
 
       - name: Install new distribution (MacOS)
-        if: runner.os == 'macos' && matrix.ARCH == 'x86_64'
+        if: runner.os == 'macos'
         run: |
           echo "install_dir=/Users/runner" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
@@ -214,7 +220,6 @@ jobs:
           name: ${{ env.asset_name }}
 
       - shell: bash -l {0}
-        if: matrix.ARCH == 'x86_64'
         name: Info new distribution
         run: |
           conda activate "${{ env.install_dir }}"
@@ -224,7 +229,6 @@ jobs:
           conda list
 
       - shell: bash -l {0}
-        if: matrix.ARCH == 'x86_64'
         name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
@@ -242,14 +246,14 @@ jobs:
 
       - shell: bash -l {0}
         name: Install test dependencies
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
-        if: runner.os != 'linux' && matrix.ARCH == 'x86_64' && always()
+        if: runner.os != 'linux' && always()
         name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
@@ -257,35 +261,35 @@ jobs:
 
       - shell: bash -l {0}
         name: Test RosettaSciIO
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs rsciio --reruns 3
 
       - shell: bash -l {0}
         name: Test hyperspy
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspy --reruns 3 -n 2
 
       - shell: bash -l {0}
         name: Test hyperspy_gui_ipywidgets
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspy_gui_ipywidgets
 
       - shell: bash -l {0}
         name: Test hyperspy_gui_traitsui
-        if: runner.os != 'linux' && matrix.ARCH == 'x86_64' && always()
+        if: runner.os != 'linux' && always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - shell: bash -l {0}
         name: Run test exspy
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs exspy
@@ -299,21 +303,21 @@ jobs:
 
       - shell: bash -l {0}
         name: Run test lumispy
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs lumispy
 
       - shell: bash -l {0}
         name: Run test pyxem
-        if: matrix.ARCH == 'x86_64' && always()
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs pyxem -k "not test_pixelated_stem_class"
 
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
-      #   if: matrix.ARCH == 'x86_64' && always()
+      #   if: always()
       #   env:
       #     MPLBACKEND: 'agg'
       #   run: |
