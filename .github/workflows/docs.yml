@@ -61,7 +61,7 @@ jobs:
   push_docs:
     needs: build_docs
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' && github.repository == 'hyperspy/hyperspy-bundle' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'hyperspy/hyperspy-bundle' }}
     permissions:
       # needs write permission to push the docs to gh-pages
       contents: write
