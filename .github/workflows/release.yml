@@ -322,7 +322,8 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs atomap
+          # Skip interactive test
+          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
@@ -509,7 +510,8 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs atomap
+          # Skip interactive test
+          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
       # - name: Run test kikuchipy
       #   if: always()
