@@ -317,6 +317,14 @@ jobs:
           # test_offest_and_scale failure fixed in https://github.com/pyxem/pyxem/pull/1016
           pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_offest_and_scale"
 
+      - shell: bash -l {0}
+        name: Run test atomap
+        if: always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          # Skip interactive test
+          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
+
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
       #   if: always()
@@ -346,7 +354,7 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31150
       #LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_INSTALL: abtem ase exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
     steps:
       - uses: actions/checkout@v4
@@ -496,6 +504,14 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
           pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+ 
+      - name: Run test atomap
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # Skip interactive test
+          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
       # - name: Run test kikuchipy
       #   if: always()
