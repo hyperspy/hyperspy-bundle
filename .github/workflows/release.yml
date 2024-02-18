@@ -317,6 +317,13 @@ jobs:
           # test_offest_and_scale failure fixed in https://github.com/pyxem/pyxem/pull/1016
           pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_offest_and_scale"
 
+      - shell: bash -l {0}
+        name: Run test atomap
+        if: always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs atomap
+
       # - shell: bash -l {0}
       #   name: Run test kikuchipy
       #   if: always()
@@ -496,6 +503,13 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
           pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+ 
+      - name: Run test atomap
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs atomap
 
       # - name: Run test kikuchipy
       #   if: always()
