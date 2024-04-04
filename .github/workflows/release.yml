@@ -349,10 +349,10 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/7.0.20230928/Winpython64-3.11.5.0mkl.exe
-      WP_SHA256: 0b2037660064589dd73a58ac17f44d9e657cfc5fcea92cec9223185243a0a3bc
+      WP_URL: https://github.com/winpython/winpython/releases/download/7.1.20240203final/Winpython64-3.11.8.0.exe
+      WP_SHA256: 0fa1bad92e7287632ce6c32c263c694b109b714b5d12e56063b2cd4281a71f7c
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-31150
+      WP_DIR_NAME: WPy64-31180
       #LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
