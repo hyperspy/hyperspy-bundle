@@ -285,6 +285,7 @@ jobs:
         if: runner.os != 'linux' && always()
         run: |
           conda activate "${{ env.install_dir }}"
+          # test_image_contrast_tool not supported with agg backend
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - shell: bash -l {0}
@@ -466,14 +467,14 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # test_spikes_removal_tool fails randomly, fixed in https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/51
-          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_image_contrast_tool and not test_spikes_removal_tool"
+          pytest --pyargs hyperspy_gui_ipywidgets
 
-      - name: Run test hyperspy_gui_traitsui
+      - name: Run test hyperspy_gui_traitsui --reruns 3
         if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # test_image_contrast_tool not supported with agg backend
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - name: Run test exspy
