@@ -380,6 +380,8 @@ jobs:
           where python
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
+          # workaround for imageio / pillow incompatiblity?
+          pip install --upgrade imageio
 
       - name: Pip list
         shell: cmd
