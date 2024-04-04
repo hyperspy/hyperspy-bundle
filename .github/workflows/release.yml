@@ -380,9 +380,6 @@ jobs:
           where python
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
-          # lmfit version seems to be old
-          # numdifftools latest version has support for numpy 1.25
-          pip install --upgrade lmfit numdifftools
 
       - name: Pip list
         shell: cmd
