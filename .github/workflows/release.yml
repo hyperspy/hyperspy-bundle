@@ -111,7 +111,7 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '1.5.6'
+      MICROMAMBA_VERSION: '1.5.8'
 
     steps:
       - uses: actions/checkout@v4
@@ -264,7 +264,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3
+          pytest --pyargs rsciio --reruns 3 -n 2
 
       - shell: bash -l {0}
         name: Test hyperspy
@@ -285,6 +285,7 @@ jobs:
         if: runner.os != 'linux' && always()
         run: |
           conda activate "${{ env.install_dir }}"
+          # test_image_contrast_tool not supported with agg backend
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - shell: bash -l {0}
@@ -349,10 +350,10 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/7.0.20230928/Winpython64-3.11.5.0mkl.exe
-      WP_SHA256: 0b2037660064589dd73a58ac17f44d9e657cfc5fcea92cec9223185243a0a3bc
+      WP_URL: https://github.com/winpython/winpython/releases/download/7.1.20240203final/Winpython64-3.11.8.0.exe
+      WP_SHA256: 0fa1bad92e7287632ce6c32c263c694b109b714b5d12e56063b2cd4281a71f7c
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-31150
+      WP_DIR_NAME: WPy64-31180
       #LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
       LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
@@ -379,9 +380,8 @@ jobs:
           where python
           where pip
           pip install ${{ env.LIB_TO_INSTALL }}
-          # lmfit version seems to be old
-          # numdifftools latest version has support for numpy 1.25
-          pip install --upgrade lmfit numdifftools
+          # workaround for imageio / pillow incompatiblity?
+          pip install --upgrade imageio
 
       - name: Pip list
         shell: cmd
@@ -452,28 +452,28 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 4
+          pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run test RosettaSciIO
         if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3
+          pytest --pyargs rsciio --reruns 3 -n 2
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # test_spikes_removal_tool fails randomly, fixed in https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/51
-          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_image_contrast_tool and not test_spikes_removal_tool"
+          pytest --pyargs hyperspy_gui_ipywidgets
 
-      - name: Run test hyperspy_gui_traitsui
+      - name: Run test hyperspy_gui_traitsui --reruns 3
         if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # test_image_contrast_tool not supported with agg backend
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
       - name: Run test exspy
