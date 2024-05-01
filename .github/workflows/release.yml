@@ -98,13 +98,13 @@ jobs:
             ARCH: x86_64
             TARGET_PLATFORM: win-64
           - os: macos
-            os_version: latest
+            os_version: '13'
             INSTALLER_EXTENSION: pkg
             BLAS_IMPL: mkl
             ARCH: x86_64
             TARGET_PLATFORM: osx-64
           - os: macos
-            os_version: 14
+            os_version: latest
             INSTALLER_EXTENSION: pkg
             BLAS_IMPL: accelerate
             ARCH: arm64
