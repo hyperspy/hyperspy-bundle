@@ -19,7 +19,7 @@ permissions:
 env:
   MPLBACKEND: 'agg'
   # pin pytest to 7.4.4 to get the test suite of pyxem to work
-  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl
+  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
 
 jobs:
   create_release_job:
