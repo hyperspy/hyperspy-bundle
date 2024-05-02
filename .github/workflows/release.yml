@@ -19,7 +19,7 @@ permissions:
 env:
   MPLBACKEND: 'agg'
   # pin pytest to 7.4.4 to get the test suite of pyxem to work
-  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl
+  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
 
 jobs:
   create_release_job:
@@ -264,7 +264,9 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3 -n 2
+          # teardown in test_quantumdetector.py doesn't play well with pytest setup
+          # revisit when pytest 7.4.4 is unpinned
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_quantumdetector.py"
 
       - shell: bash -l {0}
         name: Test hyperspy
@@ -459,7 +461,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_quantumdetector.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
