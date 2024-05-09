@@ -1,18 +1,18 @@
 * abtem
 * ase
 * atomap >=0.4.0
-* conda >=23.11
+* conda >=24.4
 * dask >=2023.6.0
 * dask-labextension
 * exspy
 * hdf5plugin
 * holospy
-* hyperspy >=2.0
+* hyperspy >=2.1.0
 * hyperspyui >=2.0
 * ipympl
 * jupyterlab
 * lumispy >=0.2.2
-* mamba >=1.5.6
+* mamba >=1.5.8
 * mamba_gator
 * matplotlib-scalebar
 * nb_conda_kernels
@@ -20,15 +20,16 @@
 * notebook
 * particlespy
 * pillow
-* py4dstem
+* py4dstem >=0.14.14
 * pymatgen
 * pystackreg
 * python 3.11*
 * python-graphviz
 * python-rapidjson
-* pyxem >=0.17
+* pyxem >=0.18
 * openpyxl
 * qtconsole >=5.4.3
+* rosettasciio >=0.4
 * scanning_drift_corr
 * spyder >=5.4.3
 * start_jupyter_cm

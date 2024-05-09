@@ -5,16 +5,12 @@ Download
 
 Download the latest HyperSpy-bundle installer:
 
-.. raw:: html
+.. button-link:: https://github.com/hyperspy/hyperspy-bundle/releases/latest
+    :color: primary
+    :shadow:
+    :align: center
 
-    <div class="text-center">
-        <a  class="downloadbutton"
-            href="https://github.com/hyperspy/hyperspy-bundle/releases/latest">
-                Download HyperSpy-bundle installer
-        </a>
-    </div>
-    <br>
-
+    :octicon:`desktop-download` Download installer
 
 Depending on your computer, choose the most suitable installer:
 

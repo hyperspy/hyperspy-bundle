@@ -17,6 +17,13 @@ very easy and integrating with existing established practices in the scientific
 research community. If you are brand new to python, this is the easiest way to
 install HyperSpy.
 
+.. button-link:: https://github.com/hyperspy/hyperspy-bundle/releases/latest
+    :color: primary
+    :shadow:
+    :align: center
+
+    :octicon:`desktop-download` Download installer
+
 Table of Contents 
 =================
 
