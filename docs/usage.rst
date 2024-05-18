@@ -58,8 +58,10 @@ shortcuts, the jupyter QtConsole / Lab / Notebook will start from the current fo
 
    Jupyter context menu entries.
 
-Start Menu (Windows only)
--------------------------
+.. _menu_shortcuts-label:
+
+Menu Shortcuts
+--------------
 
 Start menu shortcuts are created when the corresponding option has been selected
 during :ref:`installation <install_windows-label>`. The shortcuts are provided by
@@ -75,3 +77,49 @@ command line.
    :figwidth: 45%
 
    Start menu shortcuts of the HyperSpy-bundle distribution.
+
+.. note::
+   Support for menu shorcuts on Linux and MacOS is possible since beginning of 2024
+   and not packages currently supports it.
+ 
+
+Installation alongside other Python Distribution
+------------------------------------------------
+
+The hyperspy-bundle will install a python distribution alongside existing python
+distribution. The easiest way to use the python distribution installed by the
+hyperspy-bundle is to use the shortcuts defined above
+(:ref:`constext_menu <context_menu_shortcuts-label>` and :ref:`menu shortcut <menu_shortcuts-label>`).  
+
+
+
+Alternatively, it is possible to:
+
+* activate the desired environment from a terminal - 
+  see `how to activate environment <https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment>`_
+  from the conda documentation for more information.
+* select the `desired kernel <https://jupyterlab.readthedocs.io/en/latest/user/running.html>`_
+  from jupyter notebook or jupyterlab.
+
+.. note::
+   To check which python distribution you are using, you can import a library and find its location
+   using the ``__file__`` attribute, for example:
+
+   .. code:: python
+
+      import hyperspy
+      print("Location of the hyperspy library:", hyperspy.__file__)
+   
+   The path of the file will contain the path of the python distribution which should help you
+   to identify which python distribution is being used.
+
+
+.. note::
+   ``conda``/``mamba`` uses a `configuration file <condarc_doc_>`_ (``.condarc``) to allow
+   users to save ``conda`` settings. The hyperspy-bundle includes such a configuration file
+   in the distribution but user-defined ``.condarc`` file saved in other location (for example,
+   the *home* folder) can overwrite the default settings defined in the hyperspy-bundle.
+   See the `conda documentation <condarc_doc_>`_ for more information on ``conda`` uses
+   ``.condarc`` files.
+
+.. _condarc_doc: https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html
