@@ -357,7 +357,7 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31180
       #LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
-      LIB_TO_INSTALL: abtem ase atomap exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: abtem ase atomap dask-image exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
 
     steps:
       - uses: actions/checkout@v4

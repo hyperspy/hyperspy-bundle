@@ -21,6 +21,7 @@ specs:
   - conda >=24.4
   - dask >=2023.6.0
   - dask-labextension
+  - dask-image
   - exspy
   - hdf5plugin
   - holospy
