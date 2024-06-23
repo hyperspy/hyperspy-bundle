@@ -18,8 +18,7 @@ permissions:
 
 env:
   MPLBACKEND: 'agg'
-  # pin pytest to 7.4.4 to get the test suite of pyxem to work
-  TEST_DEPS: pytest==7.4.4 pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
+  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
 
 jobs:
   create_release_job:
@@ -264,9 +263,9 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # teardown in test_quantumdetector.py doesn't play well with pytest setup
-          # revisit when pytest 7.4.4 is unpinned
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_quantumdetector.py"
+          # Remove skipping test when rosettasciio 0.6 is released
+          # https://github.com/hyperspy/rosettasciio/pull/282 
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_read_stack"
 
       - shell: bash -l {0}
         name: Test hyperspy
@@ -317,8 +316,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          # test_offest_and_scale failure fixed in https://github.com/pyxem/pyxem/pull/1016
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_offest_and_scale"
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
 
       - shell: bash -l {0}
         name: Run test atomap
@@ -461,7 +459,9 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_quantumdetector.py"
+          # Remove skipping test when rosettasciio 0.6 is released
+          # https://github.com/hyperspy/rosettasciio/pull/282 
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_read_stack"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
