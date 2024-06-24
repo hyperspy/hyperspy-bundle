@@ -4,6 +4,7 @@
 * conda >=24.4
 * dask >=2023.6.0
 * dask-labextension
+* dask-image
 * exspy
 * hdf5plugin
 * holospy
@@ -26,10 +27,10 @@
 * python 3.11*
 * python-graphviz
 * python-rapidjson
-* pyxem >=0.18
+* pyxem >=0.19.1
 * openpyxl
 * qtconsole >=5.4.3
-* rosettasciio >=0.4
+* rosettasciio >=0.5
 * scanning_drift_corr
 * spyder >=5.4.3
 * start_jupyter_cm
