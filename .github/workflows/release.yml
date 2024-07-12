@@ -263,9 +263,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # Remove skipping test when rosettasciio 0.6 is released
-          # https://github.com/hyperspy/rosettasciio/pull/282 
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_read_stack"
+          pytest --pyargs rsciio --reruns 3 -n 2
 
       - shell: bash -l {0}
         name: Test hyperspy
@@ -459,9 +457,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Remove skipping test when rosettasciio 0.6 is released
-          # https://github.com/hyperspy/rosettasciio/pull/282 
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_read_stack"
+          pytest --pyargs rsciio --reruns 3 -n 2
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
