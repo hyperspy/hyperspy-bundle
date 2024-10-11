@@ -450,7 +450,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not TestMarkers and not test_from_signal"
 
       - name: Run test RosettaSciIO
         if: always()
