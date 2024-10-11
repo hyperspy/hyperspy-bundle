@@ -116,7 +116,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
+          miniforge-version: latest
           channels: conda-forge
           channel-priority: strict
 
@@ -129,7 +129,7 @@ jobs:
       - shell: bash -l {0}
         name: Install constructor
         run: |
-          mamba install constructor jinja2 conda-libmamba-solver
+          conda install constructor
 
       - shell: bash -l {0}
         if: matrix.ARCH == 'arm64'
