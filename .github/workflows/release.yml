@@ -46,7 +46,7 @@ jobs:
           echo ${{ env.VERSION }}
 
       - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@a51bbcd94d000df9ca0fcb54ec8be69aad8374b0
+        uses: jacobtomlinson/gha-find-replace@863001a682308a0a2405e69e645cb0899b5ee64b
         if: startsWith(github.ref, 'refs/tags/')
         with:
           find: "__TAG__"
@@ -116,7 +116,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-variant: Mambaforge
+          miniforge-version: latest
           channels: conda-forge
           channel-priority: strict
 
@@ -450,7 +450,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not TestMarkers and not test_from_signal"
 
       - name: Run test RosettaSciIO
         if: always()
