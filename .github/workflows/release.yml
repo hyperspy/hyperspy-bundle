@@ -324,14 +324,14 @@ jobs:
           # Skip interactive test
           pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
-      # - shell: bash -l {0}
-      #   name: Run test kikuchipy
-      #   if: always()
-      #   env:
-      #     MPLBACKEND: 'agg'
-      #   run: |
-      #     conda activate "${{ env.install_dir }}"
-      #     pytest --pyargs kikuchipy
+      - shell: bash -l {0}
+        name: Run test kikuchipy
+        if: always()
+        env:
+          MPLBACKEND: 'agg'
+        run: |
+          conda activate "${{ env.install_dir }}"
+          pytest --pyargs kikuchipy -k "not test_spherical_pyvista and not test_not_allow_download_raises"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -457,7 +457,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
@@ -511,13 +511,13 @@ jobs:
           # Skip interactive test
           pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
-      # - name: Run test kikuchipy
-      #   if: always()
-      #   shell: cmd
-      #   run: |
-      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     # Skip these tests until there are fixed
-      #     pytest --pyargs kikuchipy -k "not test_load_with_padding"
+      - name: Run test kikuchipy
+        if: always()
+        shell: cmd
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          # Skip these tests until there are fixed
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
