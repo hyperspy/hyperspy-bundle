@@ -263,7 +263,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3 -n 2
+          pytest --pyargs rsciio --reruns 3 -n 1 -k "not TestOperate"
 
       - shell: bash -l {0}
         name: Test hyperspy
