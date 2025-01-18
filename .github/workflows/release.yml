@@ -383,7 +383,7 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
           where pip
-          pip install -r requirement_portable.txt
+          pip install -r requirement_portable_distribution.txt
 
       - name: Pip list
         shell: cmd

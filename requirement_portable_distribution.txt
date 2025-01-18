@@ -1,6 +1,7 @@
 abtem
 ase
 atomap
+dask >=2023.6.0,<2024.12.0
 dask-image
 exspy
 graphviz
@@ -12,7 +13,10 @@ kikuchipy
 lumispy
 matplotlib-scalebar
 nglview
+numpy >2
+numpy-quaternion
 particlespy
+pint >0.24
 py4dstem
 pymatgen
 pystackreg
