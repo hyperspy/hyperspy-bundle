@@ -17,7 +17,11 @@ permissions:
   contents: write
 
 env:
-  MPLBACKEND: 'agg'
+  MPLBACKEND: agg
+  QT_API: pyqt5
+  # pytest-qt doesn't seem to be playing well when pyqt5 and pyside6
+  # are installed in the same environment
+  PYTEST_QT_API: pyqt5
   TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
 
 jobs:
@@ -251,12 +255,8 @@ jobs:
           mamba install ${{ env.TEST_DEPS }}
 
       - shell: bash -l {0}
-        # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
-        if: runner.os != 'linux' && always()
+        if: always()
         name: Test new distribution (HyperSpyUI)
-        env:
-          # Specify pyqt5
-          QT_API: pyqt5
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspyui
@@ -331,11 +331,11 @@ jobs:
         name: Run test kikuchipy
         if: always()
         env:
-          MPLBACKEND: agg
           # Need to specify pyside6 to avoid segmentation fault when running the kikuchipy test suite
           # quite brittle but there is currently alternative since kikuchipy install pysista and pyside6
           # which causes the segmentation when pyqt5 is imported before pyvista
           QT_API: pyside6
+          PYTEST_QT_API: pyside6
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs kikuchipy -k "not test_spherical_pyvista and not test_not_allow_download_raises"
