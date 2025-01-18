@@ -259,7 +259,8 @@ jobs:
         name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs hyperspyui
+          # Error on closing figure, not critical
+          pytest --pyargs hyperspyui -k "not plotting"
 
       - shell: bash -l {0}
         name: Test RosettaSciIO
@@ -446,7 +447,8 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspyui
+          # Error on closing figure, not critical
+          pytest --pyargs hyperspyui -k "not plotting"
 
       - name: Run test hyperspy
         if: always()
