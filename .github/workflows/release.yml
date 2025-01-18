@@ -356,10 +356,10 @@ jobs:
     needs: create_release_job
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1.exe
-      WP_SHA256: 08903f02514f59c891e3d56d3ff0d092a7d8571daf66237a5a2c2698068981ec
+      WP_URL: https://github.com/winpython/winpython/releases/download/11.2.20241228final/Winpython64-3.12.8.0slim.exe
+      WP_SHA256: c4c59403370e62169bbeba06f140f0da76b2ee5a5a51ebcfdb3d3ad663b2688a
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-31241
+      WP_DIR_NAME: WPy64-31280
 
     steps:
       - uses: actions/checkout@v4
