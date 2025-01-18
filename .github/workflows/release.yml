@@ -254,6 +254,9 @@ jobs:
         # TODO: revisit at some point, to get it to work on linux (hyperspyui CI works fine...)
         if: runner.os != 'linux' && always()
         name: Test new distribution (HyperSpyUI)
+        env:
+          # Specify pyqt5
+          QT_API: pyqt5
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspyui
@@ -328,7 +331,11 @@ jobs:
         name: Run test kikuchipy
         if: always()
         env:
-          MPLBACKEND: 'agg'
+          MPLBACKEND: agg
+          # Need to specify pyside6 to avoid segmentation fault when running the kikuchipy test suite
+          # quite brittle but there is currently alternative since kikuchipy install pysista and pyside6
+          # which causes the segmentation when pyqt5 is imported before pyvista
+          QT_API: pyside6
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs kikuchipy -k "not test_spherical_pyvista and not test_not_allow_download_raises"
@@ -352,7 +359,7 @@ jobs:
       WP_SHA256: 08903f02514f59c891e3d56d3ff0d092a7d8571daf66237a5a2c2698068981ec
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31241
-      LIB_TO_INSTALL: abtem ase atomap dask-image exspy graphviz holospy hdf5plugin hyperspy[all] hyperspyui kikuchipy lumispy matplotlib-scalebar nglview particlespy py4dstem pymatgen pystackreg python-rapidjson pyxem scanning_drift_corr start_jupyter_cm
+      LIB_TO_INSTALL: 
 
     steps:
       - uses: actions/checkout@v4
