@@ -114,7 +114,6 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
-      MICROMAMBA_VERSION: '2.0.5'
 
     defaults:
       run:
@@ -128,27 +127,14 @@ jobs:
           channels: conda-forge
           channel-priority: strict
 
-      - name: Conda info
-        run: |
-          conda info
-          conda list
-
       - name: Install constructor
         run: |
           conda install constructor
 
-      - name: Install micromamba
-        if: matrix.ARCH == 'arm64'
+      - name: Conda info
         run: |
-          TEMP_DIR=$(mktemp -d)
-          mkdir "${TEMP_DIR}/micromamba"
-          pushd "${TEMP_DIR}/micromamba"
-          curl -L -O "https://anaconda.org/conda-forge/micromamba/${{ env.MICROMAMBA_VERSION }}/download/${{ matrix.TARGET_PLATFORM }}/micromamba-${{ env.MICROMAMBA_VERSION }}-0.tar.bz2"
-          bsdtar -xf "micromamba-${{ env.MICROMAMBA_VERSION }}-0.tar.bz2"
-          echo "MICROMAMBA_FILE=${PWD}/bin/micromamba" >> $GITHUB_ENV
-          ls ${PWD}
-          ls ${PWD}/bin  
-          popd
+          conda info
+          conda list
 
       - name: Build distribution
         env:
@@ -156,11 +142,7 @@ jobs:
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
           CONDA_SOLVER: 'libmamba'
         run: |
-          if [ ${{ matrix.TARGET_PLATFORM }} == osx-arm64 ]; then
-             constructor -v conda_distribution --platform ${{ matrix.TARGET_PLATFORM }} --conda-exe ${{ env.MICROMAMBA_FILE }}
-          else
-             constructor -v conda_distribution
-          fi
+          constructor -v conda_distribution
 
       - name: Set asset name
         env:
@@ -197,7 +179,7 @@ jobs:
       - name: Install new distribution (MacOS)
         if: runner.os == 'macos'
         run: |
-          echo "install_dir=/Users/runner" >> $GITHUB_ENV
+          echo "install_dir=/Users/runner/hyperspy-bundle" >> $GITHUB_ENV
           installer -pkg ${{ env.asset_name }} -target CurrentUserHomeDirectory
 
       - name: Install new distribution (Windows)
@@ -219,6 +201,10 @@ jobs:
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
+
+      - name: Show install folder content
+        run : |
+          ls "${{ env.install_dir }}"
 
       - name: Info new distribution
         run: |
