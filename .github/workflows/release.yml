@@ -116,6 +116,10 @@ jobs:
       DISPLAY: ':0'
       MICROMAMBA_VERSION: '2.0.5'
 
+    defaults:
+      run:
+        shell: bash -el {0}
+
     steps:
       - uses: actions/checkout@v4
       - uses: conda-incubator/setup-miniconda@v3
@@ -124,20 +128,17 @@ jobs:
           channels: conda-forge
           channel-priority: strict
 
-      - shell: bash -l {0}
-        name: Conda info
+      - name: Conda info
         run: |
           conda info
           conda list
 
-      - shell: bash -l {0}
-        name: Install constructor
+      - name: Install constructor
         run: |
           conda install constructor
 
-      - shell: bash -l {0}
+      - name: Install micromamba
         if: matrix.ARCH == 'arm64'
-        name: Install micromamba
         run: |
           TEMP_DIR=$(mktemp -d)
           mkdir "${TEMP_DIR}/micromamba"
@@ -149,8 +150,7 @@ jobs:
           ls ${PWD}/bin  
           popd
 
-      - shell: bash -l {0}
-        name: Build distribution
+      - name: Build distribution
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
           BLAS_IMPL: ${{ matrix.BLAS_IMPL }}
@@ -162,8 +162,7 @@ jobs:
              constructor -v conda_distribution
           fi
 
-      - shell: bash -l {0}
-        name: Set asset name
+      - name: Set asset name
         env:
           ext: ${{ matrix.INSTALLER_EXTENSION }}
         run: |  
@@ -205,7 +204,6 @@ jobs:
         if: runner.os == 'windows'
         env:
           install_dir: '${{ github.workspace }}\nd'
-        shell: bash
         run: |
           echo "install_dir=${{ env.install_dir }}" >> $GITHUB_ENV
 
@@ -222,8 +220,7 @@ jobs:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
 
-      - shell: bash -l {0}
-        name: Info new distribution
+      - name: Info new distribution
         run: |
           conda activate "${{ env.install_dir }}"
           conda info
@@ -231,8 +228,7 @@ jobs:
           conda config --show channel_priority
           conda list
 
-      - shell: bash -l {0}
-        name: Check latest available hyperspy version
+      - name: Check latest available hyperspy version
         run: |
           conda activate "${{ env.install_dir }}"     
           python check_hyperspy_latest.py
@@ -247,89 +243,77 @@ jobs:
         run: |
           sudo /usr/bin/Xvfb ${{ env.DISPLAY }} -screen 0 1280x1024x24 & 
 
-      - shell: bash -l {0}
-        name: Install test dependencies
+      - name: Install test dependencies
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
 
-      - shell: bash -l {0}
-        if: always()
+      - if: always()
         name: Test new distribution (HyperSpyUI)
         run: |
           conda activate "${{ env.install_dir }}"
           # Error on closing figure, not critical
           pytest --pyargs hyperspyui -k "not plotting"
 
-      - shell: bash -l {0}
-        name: Test RosettaSciIO
+      - name: Test RosettaSciIO
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs rsciio --reruns 3 -n 1 -k "not TestOperate"
 
-      - shell: bash -l {0}
-        name: Test hyperspy
+      - name: Test hyperspy
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspy --reruns 3 -n 2
 
-      - shell: bash -l {0}
-        name: Test hyperspy_gui_ipywidgets
+      - name: Test hyperspy_gui_ipywidgets
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs hyperspy_gui_ipywidgets
 
-      - shell: bash -l {0}
-        name: Test hyperspy_gui_traitsui
+      - name: Test hyperspy_gui_traitsui
         if: runner.os != 'linux' && always()
         run: |
           conda activate "${{ env.install_dir }}"
           # test_image_contrast_tool not supported with agg backend
           pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
 
-      - shell: bash -l {0}
-        name: Run test exspy
+      - name: Run test exspy
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs exspy
   
-      - shell: bash -l {0}
-        name: Run test holospy
+      - name: Run test holospy
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs holospy
 
-      - shell: bash -l {0}
-        name: Run test lumispy
+      - name: Run test lumispy
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs lumispy
 
-      - shell: bash -l {0}
-        name: Run test pyxem
+      - name: Run test pyxem
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
           pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
 
-      - shell: bash -l {0}
-        name: Run test atomap
+      - name: Run test atomap
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           # Skip interactive test
           pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
-      # - shell: bash -l {0}
-      #   name: Run test kikuchipy
+      # - name: Run test kikuchipy
       #   if: always()
       #   env:
       #     # Need to specify pyside6 to avoid segmentation fault when running the kikuchipy test suite
