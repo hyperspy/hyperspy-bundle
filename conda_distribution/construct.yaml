@@ -25,6 +25,9 @@ specs:
   - dask-core >=2023.6.0,<2024.12.0
   - dask-labextension
   - dask-image
+  # etspy has a tight pinning on numba (even if it doesn't use)
+  # https://github.com/conda-forge/etspy-feedstock/pull/6
+  - etspy
   - exspy
   - hdf5plugin
   - holospy
