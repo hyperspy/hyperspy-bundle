@@ -1,0 +1,27 @@
+abtem
+ase
+atomap
+dask >=2023.6.0,<2024.12.0
+dask-image
+exspy
+graphviz
+holospy
+hdf5plugin
+hyperspy[all]
+hyperspyui
+kikuchipy
+lumispy
+matplotlib-scalebar
+nglview
+numpy >2
+numpy-quaternion
+particlespy
+pint >0.24
+py4dstem
+pymatgen
+pystackreg
+python-rapidjson
+pyxem
+rosettasciio[all]
+scanning_drift_corr
+start_jupyter_cm

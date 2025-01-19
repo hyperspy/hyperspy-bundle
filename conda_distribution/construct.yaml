@@ -7,56 +7,59 @@ version: {{ version }}
 condarc:
   channels:
     - conda-forge
+    - nodefaults
   pinned_packages:
     - libblas=*=*{{ blas_impl }}
   solver: libmamba
 
 channels:
   - conda-forge
+  - nodefaults
 
 specs:
   - abtem
   - ase
-  - atomap >=0.4.0
-  - conda >=24.4
-  - dask >=2023.6.0
+  - atomap >=0.4.1
+  - conda >=24.11.3
+  # use <2024.12.0 until https://github.com/hyperspy/hyperspy/pull/3476 is released
+  - dask-core >=2023.6.0,<2024.12.0
   - dask-labextension
   - dask-image
+  # etspy has a tight pinning on numba (even if it doesn't use)
+  # https://github.com/conda-forge/etspy-feedstock/pull/6
+  - etspy
   - exspy
   - hdf5plugin
   - holospy
-  - hyperspy >=2.1.0
-  - hyperspyui >=2.0
+  - hyperspy >=2.2.0
+  - hyperspyui >=2.0.2
   - ipympl
   - jupyterlab
-  #- kikuchipy >=0.9
+  - kikuchipy >=0.11
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.2.2
-  - mamba >=1.5.8
+  - mamba >=2.0.5
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
   - nb_conda_kernels
   - nglview
   - notebook
-  # # https://github.com/conda-forge/qt-main-feedstock/issues/150
-  # qt5/qt6 issue on unix
-  - ovito         # [win]
-  # - ovito =3.7    # [not win]
+  - ovito
   - particlespy
   - pillow
   - py4dstem >=0.14.14
   - pymatgen
   - pystackreg
-  - python 3.11*
+  - python 3.12*
   - python-graphviz
   - python-rapidjson
-  - pyxem >=0.19.1
+  - pyxem >=0.20
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.5
+  - rosettasciio >=0.7.1
   - scanning_drift_corr
-  - spyder >=5.4.3
+  - spyder >=6.0
   - start_jupyter_cm
   - xlrd
 
