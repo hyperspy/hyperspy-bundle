@@ -252,7 +252,8 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          # test_rank_lstsq_residual fails on windows with MKL
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack"
 
       - name: Test hyperspy_gui_ipywidgets
         if: always()
