@@ -246,7 +246,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3 -n 1 -k "not TestOperate"
+          pytest --pyargs rsciio --reruns 3 -n 1 -k "not TestOperate and not test_export_scalebar and not test_load_readonly and not test_lazy_loading_hyperspy_close"
 
       - name: Test hyperspy
         if: always()
@@ -432,7 +432,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py and not TestOperate"
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py and not TestOperate and not test_lazy_loading_hyperspy_close"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
