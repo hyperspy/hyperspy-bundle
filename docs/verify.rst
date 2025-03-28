@@ -30,16 +30,15 @@ snippet at the location of the blinking cursor:
 ..  code-block:: python
 
     %matplotlib qt
-    import hyperspy.api as hs
-    s = hs.datasets.artificial_data.get_core_loss_eels_signal(add_powerlaw=True)
+    import exspy
+    s = exspy.data.EELS_MnFe()
     s.remove_background()
 
 Very briefly, this code is loading the interactive plotting libraries, loading
-HyperSpy, creating an example EELS signal from some artificial data, and then
-telling the interpreter you want to interactively remove the Power Law
-background. Press ``Shift-Enter`` within the console to run the lines of code
-you pasted in (it may take a few moments to run if this is the first time
-you've used HyperSpy on your machine):
+eXSpy, creating an artificial EELS signal, and then telling the interpreter you
+want to interactively remove the power law background. Press ``Shift-Enter``
+within the console to run the lines of code you pasted in (it may take a few
+moments to run if this is the first time you've used HyperSpy on your machine):
 
 .. figure:: _static/bundle_test_qtconsole_code.png
    :width: 100 %
