@@ -1,33 +1,41 @@
 * abtem
 * ase
-* atomap
-* conda
-* dask >=2021.08.1
+* atomap >=0.4.2
+* conda >=25.5.0
+* dask-core >=2023.6.0
 * dask-labextension
+* dask-image
+* etspy
+* exspy
 * hdf5plugin
-* hyperspy >=1.7.0
-* hyperspyui >=1.1.5
+* holospy
+* hyperspy >=2.3.0
+* hyperspyui >=2.0.2
 * ipympl
-* jupyterlab >=3.0.0,<4.0
-* kikuchipy >=0.6.1
-* lumispy >=0.2
-* mamba
+* jupyterlab
+* kikuchipy >=0.11.2
+* libblas=*=*{{ blas_impl }}
+* lumispy >=0.3.0
+* mamba >=2.1.1
 * mamba_gator
 * matplotlib-scalebar
-* miniforge_console_shortcut
 * nb_conda_kernels
 * nglview
 * notebook
 * ovito
 * particlespy
-* python-graphviz
-* python 3.9*
+* pillow
+* py4dstem >=0.14.18
+* pymatgen
 * pystackreg
-* pyxem >=0.14.2
+* python 3.12*
+* python-graphviz
+* python-rapidjson
+* pyxem >=0.20
 * openpyxl
-* qtconsole
+* qtconsole >=5.4.3
+* rosettasciio >=0.9.0
 * scanning_drift_corr
-* spyder
+* spyder >=6.0
 * start_jupyter_cm
 * xlrd
-
