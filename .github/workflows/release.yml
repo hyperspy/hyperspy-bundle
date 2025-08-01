@@ -246,7 +246,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3 -n 1 -k "not TestOperate and not test_export_scalebar and not test_load_readonly and not test_lazy_loading_hyperspy_close"
+          pytest --pyargs rsciio --reruns 3 -n 1
 
       - name: Test hyperspy
         if: always()
@@ -265,8 +265,7 @@ jobs:
         if: runner.os != 'linux' && always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # test_image_contrast_tool not supported with agg backend
-          pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
+          pytest --pyargs hyperspy_gui_traitsui
 
       - name: Run test exspy
         if: always()
@@ -433,7 +432,7 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py and not TestOperate and not test_lazy_loading_hyperspy_close"
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
@@ -442,13 +441,12 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy_gui_ipywidgets
 
-      - name: Run test hyperspy_gui_traitsui --reruns 3
+      - name: Run test hyperspy_gui_traitsui
         if: always()
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # test_image_contrast_tool not supported with agg backend
-          pytest --pyargs hyperspy_gui_traitsui -k "not test_image_contrast_tool"
+          pytest --pyargs hyperspy_gui_traitsui
 
       - name: Run test exspy
         if: always()
@@ -493,7 +491,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip these tests until there are fixed
-          pytest --pyargs kikuchipy -k "not test_spherical_pyvista and not test_not_allow_download_raises and not test_save_load_0d_nav"
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
