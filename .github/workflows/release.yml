@@ -109,7 +109,7 @@ jobs:
           - os: macos
             os_version: latest
             INSTALLER_EXTENSION: pkg
-            BLAS_IMPL: accelerate
+            BLAS_IMPL: _accelerate # avoid newaccelerate for now, issue with scipy
             ARCH: arm64
             TARGET_PLATFORM: osx-arm64
     env:
