@@ -304,7 +304,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # https://github.com/pyxem/kikuchipy/issues/707
-          # "not spherical" is to skip tests that uses pyvista
+          # https://github.com/pyxem/kikuchipy/pull/749
           pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
 
       - name: Upload Release Asset
@@ -486,8 +486,9 @@ jobs:
         shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip these tests until there are fixed
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises"
+          # https://github.com/pyxem/kikuchipy/issues/707
+          # https://github.com/pyxem/kikuchipy/pull/749
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
