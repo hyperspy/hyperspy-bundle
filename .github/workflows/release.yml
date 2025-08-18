@@ -32,7 +32,7 @@ jobs:
       ID: ${{ steps.create_release.outputs.id }}
       VERSION: ${{ env.VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Get version (on tag)
         if: startsWith(github.ref, 'refs/tags/')
@@ -120,7 +120,7 @@ jobs:
         shell: bash -el {0}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
@@ -328,7 +328,7 @@ jobs:
       WP_DIR_NAME: WPy64-31280
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
