@@ -129,7 +129,7 @@ jobs:
 
       - name: Install constructor
         run: |
-          conda install constructor>=3.11.2
+          conda install constructor>=3.12.2
 
       - name: Conda info
         run: |
