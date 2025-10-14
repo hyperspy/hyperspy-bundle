@@ -101,7 +101,7 @@ jobs:
             ARCH: x86_64
             TARGET_PLATFORM: win-64
           - os: macos
-            os_version: '13'
+            os_version: '15-intel'
             INSTALLER_EXTENSION: pkg
             BLAS_IMPL: mkl
             ARCH: x86_64
