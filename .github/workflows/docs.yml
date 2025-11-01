@@ -53,7 +53,7 @@ jobs:
           cd docs
           make html
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           path: ${{ env.DOCS_PATH }}
           name: docs_html
@@ -71,7 +71,7 @@ jobs:
           fetch-depth: 0
           ref: gh-pages
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: docs_html
           path: .
