@@ -253,7 +253,8 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # test_rank_lstsq_residual fails on windows with MKL
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack"
+          # map_values_std_isset fixed in https://github.com/hyperspy/hyperspy/pull/3554
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not map_values_std_isset"
 
       - name: Test hyperspy_gui_ipywidgets
         if: always()
