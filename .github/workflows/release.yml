@@ -32,7 +32,7 @@ jobs:
       ID: ${{ steps.create_release.outputs.id }}
       VERSION: ${{ env.VERSION }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Get version (on tag)
         if: startsWith(github.ref, 'refs/tags/')
@@ -60,7 +60,7 @@ jobs:
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
-        uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions
         with:
@@ -120,7 +120,7 @@ jobs:
         shell: bash -el {0}
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
@@ -197,7 +197,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -310,7 +310,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -329,7 +329,7 @@ jobs:
       WP_DIR_NAME: WPy64-31280
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Download Winpython
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
@@ -382,7 +382,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -493,7 +493,7 @@ jobs:
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
