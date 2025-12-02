@@ -145,6 +145,12 @@ jobs:
         run: |
           constructor -v conda_distribution
 
+      - name: Clean constructor cache
+        if: runner.os != 'windows'
+        # PermissionError on windows
+        run: |
+          constructor --clean
+
       - name: Set asset name
         env:
           ext: ${{ matrix.INSTALLER_EXTENSION }}
