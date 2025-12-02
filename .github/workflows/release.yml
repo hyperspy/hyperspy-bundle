@@ -22,7 +22,8 @@ env:
   # pytest-qt doesn't seem to be playing well when pyqt5 and pyside6
   # are installed in the same environment
   PYTEST_QT_API: pyqt5
-  TEST_DEPS: pytest pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock
+  # workaround for https://github.com/pyxem/pyxem/pull/1175
+  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
 
 jobs:
   create_release_job:
