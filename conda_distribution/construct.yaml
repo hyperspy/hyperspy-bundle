@@ -20,7 +20,7 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=25.5.1
+  - conda >=25.11.0
   - dask-core >=2023.6.0
   - dask-labextension
   - dask-image
@@ -37,6 +37,7 @@ specs:
   - kikuchipy >=0.11.2
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
+  # conda 25.11.0 doesn't seem to be compatible with mamba 2.4.0 on linux
   - mamba >=2.3.0
   - mamba_gator
   - matplotlib-scalebar
@@ -56,7 +57,7 @@ specs:
   - pyxem >=0.21
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.10.0
+  - rosettasciio >=0.11.0
   - scanning_drift_corr
   - spyder >=6.0
   - start_jupyter_cm
