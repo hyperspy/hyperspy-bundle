@@ -25,6 +25,7 @@ env:
   # workaround for https://github.com/pyxem/pyxem/pull/1175
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.14.0'
+  CONDA_STANDALONE: '24.11.0'
 
 defaults:
   run:
@@ -83,6 +84,14 @@ jobs:
         with:
           find: "__CONSTRUCTOR_VERSION__"
           replace: ${{ env.CONSTRUCTOR_VERSION }}
+          include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
+
+      - name: Find and Replace conda-standalone version in Release Notes
+        uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          find: "__CONDA_STANDALONE_VERSION__"
+          replace: ${{ env.CONDA_STANDALONE }}
           include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
 
       - name: Update packages list
@@ -172,7 +181,7 @@ jobs:
 
       - name: Install constructor
         run: |
-          conda install constructor==${{ env.CONSTRUCTOR_VERSION }}
+          conda install constructor==${{ env.CONSTRUCTOR_VERSION }} conda-standalone==${{ env.CONDA_STANDALONE }}
 
       - name: Conda info
         run: |

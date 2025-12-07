@@ -24,7 +24,7 @@ __INCLUDED_PACKAGES__
 
 </details>
 
-This distribution is built using [constructor __CONSTRUCTOR_VERSION__](https://conda.github.io/constructor).
+This distribution is built using [constructor __CONSTRUCTOR_VERSION__](https://conda.github.io/constructor) and [conda-standalone __CONDA_STANDALONE_VERSION__](https://github.com/conda/conda-standalone).
 
 ## Portable (Windows only)
 The portable distribution is based on the [WinPython](https://winpython.github.io) distribution and is a self-extracting archive. Running the installer will install the distribution in the current directory. Since the distribution is portable, it can be moved to any directory or run from an external drive.
