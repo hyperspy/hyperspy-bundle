@@ -22,9 +22,9 @@ jobs:
           fetch-depth: 0
       - uses: conda-incubator/setup-miniconda@v3
         with:
+          miniforge-version: latest
           environment-file: conda_environment.yml
           activate-environment: hyperspy-bundle
-          conda-remove-defaults: "true"
 
       - name: Conda info
         shell: bash -l {0}

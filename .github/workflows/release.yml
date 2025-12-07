@@ -57,7 +57,7 @@ jobs:
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          conda-remove-defaults: "true"
+            miniforge-version: latest
 
       - name: Install constructor
         run: |
@@ -168,7 +168,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          conda-remove-defaults: "true"
+          miniforge-version: latest
 
       - name: Install constructor
         run: |
