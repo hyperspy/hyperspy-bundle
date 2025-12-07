@@ -26,6 +26,10 @@ env:
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.14.0'
 
+defaults:
+  run:
+    shell: bash -el {0}
+
 jobs:
   create_release_job:
     name: Create Release (on tag only)
@@ -159,10 +163,6 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
-
-    defaults:
-      run:
-        shell: bash -el {0}
 
     steps:
       - uses: actions/checkout@v6
@@ -377,9 +377,14 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31280
 
+    defaults:
+      run:
+        shell: cmd
+
     steps:
       - uses: actions/checkout@v6
       - name: Download Winpython
+        shell: powershell
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
           ls
@@ -388,13 +393,13 @@ jobs:
           if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
 
       - name: Install Winpython
+        shell: powershell
         run: |
           .\${{ env.WP_EXE }} -y | Out-Null
           ls
           ls ${{ env.WP_DIR_NAME }}
 
       - name: Install libraries
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
@@ -402,7 +407,6 @@ jobs:
           pip install -r requirement_portable_distribution.txt
 
       - name: Pip list
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip list
@@ -417,7 +421,6 @@ jobs:
           echo $installer_name
 
       - name: Run pyclean in distribution folder
-        shell: cmd
         run: |
           where pip
           pip install pyclean
@@ -437,6 +440,7 @@ jobs:
           name: ${{ env.asset_name }}
 
       - name: Install new distribution
+        shell: powershell
         run: |
           Remove-Item -recurse ${{ env.WP_DIR_NAME }}
           ls
@@ -446,21 +450,18 @@ jobs:
           echo ${{ env.asset_name }}
 
       - name: Check latest available hyperspy version
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           python check_hyperspy_latest.py
 
       - name: Install testing libraries
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
       - name: Run test suite (HyperSpyUI)
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Error on closing figure, not critical
@@ -468,56 +469,48 @@ jobs:
 
       - name: Run test hyperspy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run test RosettaSciIO
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy_gui_ipywidgets
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy_gui_traitsui
 
       - name: Run test exspy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs exspy
 
       - name: Run test holospy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs holospy
 
       - name: Run test lumispy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs lumispy
 
       - name: Run test pyxem
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
@@ -525,7 +518,6 @@ jobs:
  
       - name: Run test atomap
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip interactive test
@@ -533,7 +525,6 @@ jobs:
 
       - name: Run test kikuchipy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # https://github.com/pyxem/kikuchipy/issues/707
