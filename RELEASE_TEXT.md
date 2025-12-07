@@ -16,7 +16,13 @@ For Mac, there are also two variants available:
 - `Intel` for Mac computers with Intel CPU, with the MKL library
 - `Silicon` for Mac computers with Apple Silicon (M1, M2, etc.) CPU, with the Accelerate library
 
-For included packages, [see documentation](https://hyperspy.org/hyperspy-bundle/index.html#included-software-and-libraries).
+<details>
+
+<summary>Included packages</summary>
+
+__INCLUDED_PACKAGES__
+
+</details>
 
 This distribution is built using [constructor __CONSTRUCTOR_VERSION__](https://conda.github.io/constructor).
 

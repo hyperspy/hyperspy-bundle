@@ -51,6 +51,20 @@ jobs:
         run: |
           echo ${{ env.VERSION }}
 
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          conda-remove-defaults: "true"
+
+      - name: Install constructor
+        run: |
+          # Constructor is needed to parse the list of included packages
+          conda install constructor==${{ env.CONSTRUCTOR_VERSION }}
+
+      - name: Conda info
+        run: |
+          conda info
+          conda list
+
       - name: Find and Replace Version in Release Notes
         uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
         if: startsWith(github.ref, 'refs/tags/')
@@ -65,6 +79,27 @@ jobs:
         with:
           find: "__CONSTRUCTOR_VERSION__"
           replace: ${{ env.CONSTRUCTOR_VERSION }}
+          include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
+
+      - name: Update packages list
+        run: |
+          python parse_list_libraries.py
+          echo "List of libraries and software"
+          echo "=============================="
+          cat ./docs/specs.rst
+
+      - name: Save `docs/specs.rst` content as environment variable
+        run: |
+          echo "INCLUDED_PACKAGES<<EOF" >> $GITHUB_ENV
+          cat ./docs/specs.rst >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Find and Replace included packages in Release Notes
+        uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          find: "__INCLUDED_PACKAGES__"
+          replace: ${{ env.INCLUDED_PACKAGES }}
           include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
 
       - name: Create Release
@@ -133,9 +168,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          miniforge-version: latest
-          channels: conda-forge
-          channel-priority: strict
+          conda-remove-defaults: "true"
 
       - name: Install constructor
         run: |
