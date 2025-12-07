@@ -18,7 +18,7 @@ For Mac, there are also two variants available:
 
 For included packages, [see documentation](https://hyperspy.org/hyperspy-bundle/index.html#included-software-and-libraries).
 
-This distribution is built using [constructor 3.6.0](https://conda.github.io/constructor).
+This distribution is built using [constructor __CONSTRUCTOR_VERSION__](https://conda.github.io/constructor).
 
 ## Portable (Windows only)
 The portable distribution is based on the [WinPython](https://winpython.github.io) distribution and is a self-extracting archive. Running the installer will install the distribution in the current directory. Since the distribution is portable, it can be moved to any directory or run from an external drive.
