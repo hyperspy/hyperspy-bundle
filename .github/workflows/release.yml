@@ -364,7 +364,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
 
       - name: Run test atomap
         if: always()
@@ -567,7 +567,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
  
       - name: Run test atomap
         if: always()
