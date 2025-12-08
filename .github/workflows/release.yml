@@ -407,7 +407,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      - name: Cache WinPython data
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.WP_EXE }}
+          key:
+            WinPython-${{ env.WP_DIR_NAME }}-${{ env.CACHE_NUMBER }}
+          restore-keys: |
+            WinPython-${{ env.WP_DIR_NAME }}-${{ env.CACHE_NUMBER }}
+
       - name: Download Winpython
+        # only run if not in cache
+        if: hashFiles(env.WP_EXE) == ''
         shell: powershell
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
