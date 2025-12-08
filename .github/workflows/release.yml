@@ -26,6 +26,7 @@ env:
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.14.0'
   CONDA_STANDALONE: '24.11.0'
+  ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:
   run:
@@ -274,7 +275,7 @@ jobs:
 
       - name: Check latest available hyperspy version
         run: |
-          conda activate "${{ env.install_dir }}"     
+          conda activate "${{ env.install_dir }}"
           python check_hyperspy_latest.py
 
       - name: Install xvfb
@@ -292,6 +293,20 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
+
+      - name: Get rosettasciio tests data location
+        run: |
+          conda activate "${{ env.install_dir }}"
+          python -c "from rsciio.tests import registry; print(f'ROSETTASCIIO_TEST_DATA={str(registry.TESTS_PATH / \"data\") }')" >> $GITHUB_ENV
+
+      - name: Cache rosettasciio data
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
+          key:
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          restore-keys: |
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
 
       - if: always()
         name: Test new distribution (HyperSpyUI)
@@ -420,8 +435,8 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip list
 
-      - shell: bash -l {0}
-        name: Set installer name
+      - name: Set installer name
+        shell: bash -l {0}
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
@@ -462,6 +477,20 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           python check_hyperspy_latest.py
+
+      - name: Get rosettasciio tests data location
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          python -c "from rsciio.tests import registry; data_path=str(registry.TESTS_PATH / 'data'); print(f'ROSETTASCIIO_TEST_DATA={data_path}')">> %GITHUB_ENV%
+
+      - name: Cache rosettasciio data
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
+          key:
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          restore-keys: |
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
 
       - name: Install testing libraries
         if: always()
