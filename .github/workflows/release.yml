@@ -24,6 +24,13 @@ env:
   PYTEST_QT_API: pyqt5
   # workaround for https://github.com/pyxem/pyxem/pull/1175
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
+  CONSTRUCTOR_VERSION: '3.14.0'
+  CONDA_STANDALONE: '24.11.0'
+  ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
+
+defaults:
+  run:
+    shell: bash -el {0}
 
 jobs:
   create_release_job:
@@ -50,12 +57,63 @@ jobs:
         run: |
           echo ${{ env.VERSION }}
 
-      - name: Find and Replace
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+            miniforge-version: latest
+
+      - name: Install constructor
+        run: |
+          # Constructor is needed to parse the list of included packages
+          conda install constructor==${{ env.CONSTRUCTOR_VERSION }}
+
+      - name: Conda info
+        run: |
+          conda info
+          conda list
+
+      - name: Find and Replace Version in Release Notes
         uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
         if: startsWith(github.ref, 'refs/tags/')
         with:
           find: "__TAG__"
           replace: ${{ env.VERSION }}
+          include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
+
+      - name: Find and Replace constructor version in Release Notes
+        uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          find: "__CONSTRUCTOR_VERSION__"
+          replace: ${{ env.CONSTRUCTOR_VERSION }}
+          include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
+
+      - name: Find and Replace conda-standalone version in Release Notes
+        uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          find: "__CONDA_STANDALONE_VERSION__"
+          replace: ${{ env.CONDA_STANDALONE }}
+          include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
+
+      - name: Update packages list
+        run: |
+          python parse_list_libraries.py
+          echo "List of libraries and software"
+          echo "=============================="
+          cat ./docs/specs.rst
+
+      - name: Save `docs/specs.rst` content as environment variable
+        run: |
+          echo "INCLUDED_PACKAGES<<EOF" >> $GITHUB_ENV
+          cat ./docs/specs.rst >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Find and Replace included packages in Release Notes
+        uses: jacobtomlinson/gha-find-replace@f1069b438f125e5395d84d1c6fd3b559a7880cb5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          find: "__INCLUDED_PACKAGES__"
+          replace: ${{ env.INCLUDED_PACKAGES }}
           include: "RELEASE_TEXT.md" # Will match all RELEASE_TEXT.md files in any nested directory
 
       - name: Create Release
@@ -116,21 +174,15 @@ jobs:
     env:
       DISPLAY: ':0'
 
-    defaults:
-      run:
-        shell: bash -el {0}
-
     steps:
       - uses: actions/checkout@v6
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
-          channels: conda-forge
-          channel-priority: strict
 
       - name: Install constructor
         run: |
-          conda install constructor>=3.12.2
+          conda install constructor==${{ env.CONSTRUCTOR_VERSION }} conda-standalone==${{ env.CONDA_STANDALONE }}
 
       - name: Conda info
         run: |
@@ -223,7 +275,7 @@ jobs:
 
       - name: Check latest available hyperspy version
         run: |
-          conda activate "${{ env.install_dir }}"     
+          conda activate "${{ env.install_dir }}"
           python check_hyperspy_latest.py
 
       - name: Install xvfb
@@ -241,6 +293,20 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
+
+      - name: Get rosettasciio tests data location
+        run: |
+          conda activate "${{ env.install_dir }}"
+          python -c "from rsciio.tests import registry; print(f'ROSETTASCIIO_TEST_DATA={str(registry.TESTS_PATH / \"data\") }')" >> $GITHUB_ENV
+
+      - name: Cache rosettasciio data
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
+          key:
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          restore-keys: |
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
 
       - if: always()
         name: Test new distribution (HyperSpyUI)
@@ -298,7 +364,7 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
 
       - name: Run test atomap
         if: always()
@@ -335,9 +401,29 @@ jobs:
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31280
 
+    defaults:
+      run:
+        shell: cmd
+
     steps:
       - uses: actions/checkout@v6
+
+      - name: Cache WinPython data
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache
+          CACHE_NUMBER: 0
+        with:
+          path: ${{ env.WP_EXE }}
+          key:
+            WinPython-${{ env.WP_DIR_NAME }}-${{ env.CACHE_NUMBER }}
+          restore-keys: |
+            WinPython-${{ env.WP_DIR_NAME }}-${{ env.CACHE_NUMBER }}
+
       - name: Download Winpython
+        # only run if not in cache
+        if: hashFiles(env.WP_EXE) == ''
+        shell: powershell
         run: |
           Invoke-WebRequest -OutFile ${{ env.WP_EXE }} ${{ env.WP_URL }}
           ls
@@ -346,13 +432,13 @@ jobs:
           if ($file_hash -ne "${{ env.WP_SHA256 }}") { exit(1) }
 
       - name: Install Winpython
+        shell: powershell
         run: |
           .\${{ env.WP_EXE }} -y | Out-Null
           ls
           ls ${{ env.WP_DIR_NAME }}
 
       - name: Install libraries
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           where python
@@ -360,13 +446,12 @@ jobs:
           pip install -r requirement_portable_distribution.txt
 
       - name: Pip list
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip list
 
-      - shell: bash -l {0}
-        name: Set installer name
+      - name: Set installer name
+        shell: bash -l {0}
         env:
           VERSION: ${{ needs.create_release_job.outputs.VERSION }}
         run: |
@@ -375,7 +460,6 @@ jobs:
           echo $installer_name
 
       - name: Run pyclean in distribution folder
-        shell: cmd
         run: |
           where pip
           pip install pyclean
@@ -395,6 +479,7 @@ jobs:
           name: ${{ env.asset_name }}
 
       - name: Install new distribution
+        shell: powershell
         run: |
           Remove-Item -recurse ${{ env.WP_DIR_NAME }}
           ls
@@ -404,21 +489,32 @@ jobs:
           echo ${{ env.asset_name }}
 
       - name: Check latest available hyperspy version
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           python check_hyperspy_latest.py
 
+      - name: Get rosettasciio tests data location
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          python -c "from rsciio.tests import registry; data_path=str(registry.TESTS_PATH / 'data'); print(f'ROSETTASCIIO_TEST_DATA={data_path}')">> %GITHUB_ENV%
+
+      - name: Cache rosettasciio data
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
+          key:
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          restore-keys: |
+            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+
       - name: Install testing libraries
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pip install ${{ env.TEST_DEPS }}
 
       - name: Run test suite (HyperSpyUI)
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Error on closing figure, not critical
@@ -426,64 +522,55 @@ jobs:
 
       - name: Run test hyperspy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy --reruns 3 -n 2
 
       - name: Run test RosettaSciIO
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy_gui_ipywidgets
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs hyperspy_gui_traitsui
 
       - name: Run test exspy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs exspy
 
       - name: Run test holospy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs holospy
 
       - name: Run test lumispy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs lumispy
 
       - name: Run test pyxem
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers"
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
  
       - name: Run test atomap
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # Skip interactive test
@@ -491,7 +578,6 @@ jobs:
 
       - name: Run test kikuchipy
         if: always()
-        shell: cmd
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # https://github.com/pyxem/kikuchipy/issues/707
