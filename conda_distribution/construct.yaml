@@ -16,6 +16,11 @@ channels:
   - conda-forge
   - nodefaults
 
+mirrored_channels:
+  conda-forge:
+    - "https://conda.anaconda.org/conda-forge"
+    - "https://prefix.dev/conda-forge"
+
 specs:
   - abtem
   - ase
