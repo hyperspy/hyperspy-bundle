@@ -22,8 +22,10 @@ env:
   # pytest-qt doesn't seem to be playing well when pyqt5 and pyside6
   # are installed in the same environment
   PYTEST_QT_API: pyqt5
-  # workaround for https://github.com/pyxem/pyxem/pull/1175
-  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
+  # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
+  # tomli is needed for etspy test_version
+  # https://github.com/usnistgov/etspy/issues/24
+  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock tomli'
   CONSTRUCTOR_VERSION: '3.14.0'
   CONDA_STANDALONE: '24.11.0'
   ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
@@ -381,6 +383,13 @@ jobs:
           # https://github.com/pyxem/kikuchipy/pull/749
           pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
 
+      - name: Run test etspy
+        if: always()
+        run: |
+          conda activate "${{ env.install_dir }}"
+          # https://github.com/usnistgov/etspy/issues/24
+          pytest --pyargs etspy -k "not test_version"
+
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
@@ -583,6 +592,14 @@ jobs:
           # https://github.com/pyxem/kikuchipy/issues/707
           # https://github.com/pyxem/kikuchipy/pull/749
           pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
+
+      # astra-toolbox wheel not available for windows on pypi
+      # - name: Run test etspy
+      #   if: always()
+      #   run: |
+      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+      #     # https://github.com/usnistgov/etspy/issues/24
+      #     pytest --pyargs etspy -k "not test_version"
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
