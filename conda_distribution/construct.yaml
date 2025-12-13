@@ -50,6 +50,7 @@ specs:
   - nb_conda_kernels
   - nglview
   - notebook
+  - orix !=0.14.0,!=0.14.1
   - ovito
   - particlespy
   - pillow
