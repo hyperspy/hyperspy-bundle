@@ -51,6 +51,8 @@ specs:
   - nglview
   - notebook
   - orix !=0.14.0,!=0.14.1
+  # orix 0.13.0 doesn't depends on orix-base, so we need to exclude it to avoid both conflicting
+  - orix-base !=0.14.0,!=0.14.1
   - ovito
   - particlespy
   - pillow
