@@ -25,34 +25,30 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=25.11.0
+  - conda >=25.11.1
   - dask-core >=2023.6.0
   - dask-labextension
   - dask-image
-  # etspy has a tight pinning on numba (even if it doesn't use)
-  # https://github.com/conda-forge/etspy-feedstock/pull/6
   - etspy
   - exspy
   - hdf5plugin
   - holospy
-  - hyperspy >=2.3.0
+  - hyperspy >=2.4.0
   - hyperspyui >=2.0.2
   - ipympl
   - jupyterlab
-  - kikuchipy >=0.11.2
+  - kikuchipy >=0.11.3
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
   # conda 25.11.0 doesn't seem to be compatible with mamba 2.4.0 on linux
-  - mamba >=2.3.0
+  - mamba >=2.5.0
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
   - nb_conda_kernels
   - nglview
   - notebook
-  - orix !=0.14.0,!=0.14.1
-  # orix 0.13.0 doesn't depends on orix-base, so we need to exclude it to avoid both conflicting
-  - orix-base !=0.14.0,!=0.14.1
+  - orix >=0.14.1
   - ovito
   - particlespy
   - pillow
@@ -65,7 +61,7 @@ specs:
   - pyxem >=0.21
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.11.0
+  - rosettasciio >=0.12.0
   - scanning_drift_corr
   - spyder >=6.0
   - start_jupyter_cm
