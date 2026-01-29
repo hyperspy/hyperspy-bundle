@@ -40,7 +40,6 @@ specs:
   - kikuchipy >=0.11.3
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
-  # conda 25.11.0 doesn't seem to be compatible with mamba 2.4.0 on linux
   - mamba >=2.5.0
   - mamba_gator
   - matplotlib-scalebar
@@ -65,6 +64,8 @@ specs:
   - qtconsole >=5.4.3
   - rosettasciio >=0.12.0
   - scanning_drift_corr
+  # https://github.com/pyxem/pyxem/issues/1174
+  - scikit-image <0.26.0
   - spyder >=6.0
   - start_jupyter_cm
   - xlrd
