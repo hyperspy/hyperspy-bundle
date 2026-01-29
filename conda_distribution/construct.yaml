@@ -37,7 +37,10 @@ specs:
   - hyperspyui >=2.0.2
   - ipympl
   - jupyterlab
-  - kikuchipy >=0.11.3
+  # don't use kikuchipy as workaround for pyvista installation issue
+  # because of a `icu` dependency conflict for `qt5` and `qt6` on macos
+  # https://github.com/conda-forge/qt-main-feedstock/pull/380
+  - kikuchipy-base >=0.11.3
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
   - mamba >=2.5.0
@@ -45,6 +48,7 @@ specs:
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
   - nb_conda_kernels
+  - nlopt
   - nglview
   - notebook
   - orix >=0.14.1
@@ -55,6 +59,7 @@ specs:
   # https://github.com/conda-forge/py4dstem-feedstock
   #- py4dstem >=0.14.18
   #- pymatgen
+  - pyebsdindex-base >=0.3.9.1
   - pystackreg
   - python 3.12*
   - python-graphviz
