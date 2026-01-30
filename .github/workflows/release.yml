@@ -381,7 +381,8 @@ jobs:
           conda activate "${{ env.install_dir }}"
           # https://github.com/pyxem/kikuchipy/issues/707
           # https://github.com/pyxem/kikuchipy/pull/749
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
+          # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/767
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical and not test_dataset_availability"
 
       - name: Run test etspy
         if: always()
