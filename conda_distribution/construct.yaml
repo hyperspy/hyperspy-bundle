@@ -25,39 +25,41 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=25.11.0
+  - conda >=25.11.1
   - dask-core >=2023.6.0
   - dask-labextension
   - dask-image
-  # etspy has a tight pinning on numba (even if it doesn't use)
-  # https://github.com/conda-forge/etspy-feedstock/pull/6
   - etspy
   - exspy
   - hdf5plugin
   - holospy
-  - hyperspy >=2.3.0
+  - hyperspy >=2.4.0
   - hyperspyui >=2.0.2
   - ipympl
   - jupyterlab
-  - kikuchipy >=0.11.2
+  # don't use kikuchipy as workaround for pyvista installation issue
+  # because of a `icu` dependency conflict for `qt5` and `qt6` on macos
+  # https://github.com/conda-forge/qt-main-feedstock/pull/380
+  - kikuchipy-base >=0.11.3
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
-  # conda 25.11.0 doesn't seem to be compatible with mamba 2.4.0 on linux
-  - mamba >=2.3.0
+  - mamba >=2.5.0
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
   - nb_conda_kernels
+  - nlopt
   - nglview
   - notebook
-  - orix !=0.14.0,!=0.14.1
-  # orix 0.13.0 doesn't depends on orix-base, so we need to exclude it to avoid both conflicting
-  - orix-base !=0.14.0,!=0.14.1
+  - orix >=0.14.1
   - ovito
   - particlespy
   - pillow
-  - py4dstem >=0.14.18
-  - pymatgen
+  # incompatible pinning with scikit-learn
+  # https://github.com/conda-forge/py4dstem-feedstock
+  #- py4dstem >=0.14.18
+  #- pymatgen
+  - pyebsdindex-base >=0.3.9.1
   - pystackreg
   - python 3.12*
   - python-graphviz
@@ -65,8 +67,10 @@ specs:
   - pyxem >=0.21
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.11.0
+  - rosettasciio >=0.12.0
   - scanning_drift_corr
+  # https://github.com/pyxem/pyxem/issues/1174
+  - scikit-image <0.26.0
   - spyder >=6.0
   - start_jupyter_cm
   - xlrd
@@ -81,15 +85,17 @@ pre_uninstall: pre_uninstall.bat            # [win]
 
 post_install_desc: "Add context menu shortcuts." # [win]
 
-# transmute not supported yet by micromamba
-# https://github.com/conda-forge/miniforge/pull/270
-transmute_file_type: ".conda"               # [not arm64]
+
+transmute_file_type: ".conda"
 installer_type: pkg                         # [osx]
 
 # Icon image for Windows installer
 icon_image: hyperspy_bundle_installer.ico   # [win]
 
 default_prefix: '%USERPROFILE%\HyperSpy-bundle' # [win]
+default_prefix_domain_user: '%USERDOMAIN%\%USERNAME%\HyperSpy-bundle' # [win]
+
+check_path_length: true                      # [win]
 
 welcome_image_text: |-
                     HyperSpy
