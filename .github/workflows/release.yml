@@ -27,7 +27,8 @@ env:
   # https://github.com/usnistgov/etspy/issues/24
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock tomli'
   CONSTRUCTOR_VERSION: '3.14.0'
-  CONDA_STANDALONE: '24.11.0'
+  # Latest version of conda-standalone (from anaconda main) that is built on osx-64
+  CONDA_STANDALONE: '25.5.1.post1'
   ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:
@@ -184,7 +185,7 @@ jobs:
 
       - name: Install constructor
         run: |
-          conda install constructor==${{ env.CONSTRUCTOR_VERSION }} conda-standalone==${{ env.CONDA_STANDALONE }}
+          conda install constructor==${{ env.CONSTRUCTOR_VERSION }} main::conda-standalone==${{ env.CONDA_STANDALONE }}
 
       - name: Conda info
         run: |
