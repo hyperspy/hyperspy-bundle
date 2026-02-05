@@ -92,9 +92,6 @@ installer_type: pkg                         # [osx]
 # Icon image for Windows installer
 icon_image: hyperspy_bundle_installer.ico   # [win]
 
-default_prefix: '%USERPROFILE%\HyperSpy-bundle' # [win]
-default_prefix_domain_user: '%USERDOMAIN%\%USERNAME%\HyperSpy-bundle' # [win]
-
 check_path_length: true                      # [win]
 
 welcome_image_text: |-
