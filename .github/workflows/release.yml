@@ -259,7 +259,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -303,7 +303,7 @@ jobs:
           python -c "from rsciio.tests import registry; print(f'ROSETTASCIIO_TEST_DATA={str(registry.TESTS_PATH / \"data\") }')" >> $GITHUB_ENV
 
       - name: Cache rosettasciio data
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.ROSETTASCIIO_TEST_DATA }}
           key:
@@ -420,7 +420,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Cache WinPython data
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           # Increase this value to reset cache
           CACHE_NUMBER: 0
@@ -484,7 +484,7 @@ jobs:
 
       - name: Upload artifact
         if: startsWith(github.ref, 'refs/tags/') != true
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           path: ${{ env.asset_name }}
           name: ${{ env.asset_name }}
@@ -510,7 +510,7 @@ jobs:
           python -c "from rsciio.tests import registry; data_path=str(registry.TESTS_PATH / 'data'); print(f'ROSETTASCIIO_TEST_DATA={data_path}')">> %GITHUB_ENV%
 
       - name: Cache rosettasciio data
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.ROSETTASCIIO_TEST_DATA }}
           key:
