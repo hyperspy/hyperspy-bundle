@@ -620,8 +620,8 @@ jobs:
     steps:
       - name: Finalise release
         # Publish draft release
-        uses: eregon/publish-release@01df127f5e9a3c26935118e22e738d95b59d10ce
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.create_release_job.outputs.ID }}
+          draft: false
