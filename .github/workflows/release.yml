@@ -129,10 +129,19 @@ jobs:
           body_path: "RELEASE_TEXT.md"
           draft: true
 
+  download_exspy_GOS:
+    # Use the "reusable workflow" from the hyperspy organisation
+    uses: hyperspy/.github/.github/workflows/download_exspy_GOS.yml@main
+
+  download_rsciio_test_data:
+    # Use the "reusable workflow" from the hyperspy organisation
+    uses: hyperspy/.github/.github/workflows/download_rsciio_test_data.yml@main
+    with:
+      VERSION: "release"
 
   build:
     name: ${{ matrix.TARGET_PLATFORM }}-${{ matrix.BLAS_IMPL }}
-    needs: create_release_job
+    needs: [create_release_job, download_exspy_GOS, download_rsciio_test_data]
     runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       fail-fast: false
@@ -176,9 +185,22 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
+      RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v6
+
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          name: pooch
+          fail-on-cache-miss: true
+
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          # to restore the RosettaSciIO test data cache
+          name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
+          fail-on-cache-miss: true
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
@@ -297,19 +319,22 @@ jobs:
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
 
-      - name: Get rosettasciio tests data location
-        run: |
-          conda activate "${{ env.install_dir }}"
-          python -c "from rsciio.tests import registry; print(f'ROSETTASCIIO_TEST_DATA={str(registry.TESTS_PATH / \"data\") }')" >> $GITHUB_ENV
+      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
+      # and remove the next step
+      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
+      #   run: |
+      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
 
-      - name: Cache rosettasciio data
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
-          key:
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
-          restore-keys: |
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+      - name: Copy RosettaSciIO test data from pooch cache
+        run: |
+          # copy the RosettaSciIO test data from the pooch cache to the rsciio/tests/data folder
+          POOCH_CACHE_DIR=$(python -c "import pooch; print(pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}'))")
+          RSCIIO_TEST_DATA_DIR=$(python -c "from pathlib import Path; import importlib.util; spec = importlib.util.find_spec('rsciio'); print(Path(spec.origin).parent / 'tests' / 'data')")
+          echo "Copying test data from ${POOCH_CACHE_DIR} to ${RSCIIO_TEST_DATA_DIR}"
+          mkdir -p ${RSCIIO_TEST_DATA_DIR}
+          cp -r ${POOCH_CACHE_DIR} ${RSCIIO_TEST_DATA_DIR}
+          ls -lR ${RSCIIO_TEST_DATA_DIR}/
 
       - if: always()
         name: Test new distribution (HyperSpyUI)
@@ -418,6 +443,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          name: pooch
+          fail-on-cache-miss: true
 
       - name: Cache WinPython data
         uses: actions/cache@v5
