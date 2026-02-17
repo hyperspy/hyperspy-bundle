@@ -23,9 +23,7 @@ env:
   # are installed in the same environment
   PYTEST_QT_API: pyqt5
   # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
-  # tomli is needed for etspy test_version
-  # https://github.com/usnistgov/etspy/issues/24
-  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock tomli'
+  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.14.0'
   # Latest version of conda-standalone (from anaconda main) that is built on osx-64
   CONDA_STANDALONE: '25.5.1.post1'
@@ -418,8 +416,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # https://github.com/usnistgov/etspy/issues/24
-          pytest --pyargs etspy -k "not test_version"
+          pytest --pyargs etspy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -645,8 +642,7 @@ jobs:
       #   if: always()
       #   run: |
       #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     # https://github.com/usnistgov/etspy/issues/24
-      #     pytest --pyargs etspy -k "not test_version"
+      #     pytest --pyargs etspy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
