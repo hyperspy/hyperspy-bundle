@@ -433,13 +433,14 @@ jobs:
 
   build_portable:
     name: windows (Portable)
-    needs: create_release_job
+    needs: [create_release_job, download_exspy_GOS, download_rsciio_test_data]
     runs-on: windows-latest
     env:
       WP_URL: https://github.com/winpython/winpython/releases/download/11.2.20241228final/Winpython64-3.12.8.0slim.exe
       WP_SHA256: c4c59403370e62169bbeba06f140f0da76b2ee5a5a51ebcfdb3d3ad663b2688a
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31280
+      RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
 
     defaults:
       run:
@@ -538,19 +539,29 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           python check_hyperspy_latest.py
 
-      - name: Get rosettasciio tests data location
+      - uses: ssciwr/pooch-cache@v1
+        # to restore the pooch cache (e.g. for eXPy GOS data)
+        with:
+          name: pooch
+          fail-on-cache-miss: true
+
+      - uses: ssciwr/pooch-cache@v1
+        # to restore the RosettaSciIO test data cache
+        with:
+          name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
+          fail-on-cache-miss: true
+
+      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
+      # and remove the next step
+      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
+      #   run: |
+      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
+
+      - name: Copy RosettaSciIO test data from pooch cache
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          python -c "from rsciio.tests import registry; data_path=str(registry.TESTS_PATH / 'data'); print(f'ROSETTASCIIO_TEST_DATA={data_path}')">> %GITHUB_ENV%
-
-      - name: Cache rosettasciio data
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
-          key:
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
-          restore-keys: |
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          python -c "import importlib.util, os, shutil, sys; from pathlib import Path; import pooch; src = pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}'); dest = Path(importlib.util.find_spec('rsciio').origin).parent / 'tests' / 'data'; print(f'Copying from {src} to {dest}'); shutil.copytree(str(src), str(dest), dirs_exist_ok=True); print(os.listdir(dest))"
 
       - name: Install testing libraries
         if: always()
