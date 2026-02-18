@@ -23,9 +23,7 @@ env:
   # are installed in the same environment
   PYTEST_QT_API: pyqt5
   # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
-  # tomli is needed for etspy test_version
-  # https://github.com/usnistgov/etspy/issues/24
-  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock tomli'
+  TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.14.0'
   # Latest version of conda-standalone (from anaconda main) that is built on osx-64
   CONDA_STANDALONE: '25.5.1.post1'
@@ -129,10 +127,19 @@ jobs:
           body_path: "RELEASE_TEXT.md"
           draft: true
 
+  download_exspy_GOS:
+    # Use the "reusable workflow" from the hyperspy organisation
+    uses: hyperspy/.github/.github/workflows/download_exspy_GOS.yml@main
+
+  download_rsciio_test_data:
+    # Use the "reusable workflow" from the hyperspy organisation
+    uses: hyperspy/.github/.github/workflows/download_rsciio_test_data.yml@main
+    with:
+      VERSION: "release"
 
   build:
     name: ${{ matrix.TARGET_PLATFORM }}-${{ matrix.BLAS_IMPL }}
-    needs: create_release_job
+    needs: [create_release_job, download_exspy_GOS, download_rsciio_test_data]
     runs-on: ${{ matrix.os }}-${{ matrix.os_version }}
     strategy:
       fail-fast: false
@@ -176,9 +183,11 @@ jobs:
             TARGET_PLATFORM: osx-arm64
     env:
       DISPLAY: ':0'
+      RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
 
     steps:
       - uses: actions/checkout@v6
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
@@ -297,22 +306,40 @@ jobs:
           conda activate "${{ env.install_dir }}"
           mamba install ${{ env.TEST_DEPS }}
 
-      - name: Get rosettasciio tests data location
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          name: pooch
+          fail-on-cache-miss: true
+
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          # to restore the RosettaSciIO test data cache
+          name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
+          fail-on-cache-miss: true
+
+      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
+      # and remove the next step
+      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
+      #   run: |
+      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
+
+      - name: Copy RosettaSciIO test data from pooch cache
         run: |
           conda activate "${{ env.install_dir }}"
-          python -c "from rsciio.tests import registry; print(f'ROSETTASCIIO_TEST_DATA={str(registry.TESTS_PATH / \"data\") }')" >> $GITHUB_ENV
+          python -c "
+          import importlib.util, os, shutil, sys
+          from pathlib import Path
+          import pooch
+          src = pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}')
+          dest = Path(importlib.util.find_spec('rsciio').origin).parent / 'tests' / 'data'
+          print(f'Copying from {src} to {dest}')
+          shutil.copytree(str(src), str(dest), dirs_exist_ok=True)
+          print(os.listdir(dest))
+          "
 
-      - name: Cache rosettasciio data
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
-          key:
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
-          restore-keys: |
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
-
-      - if: always()
-        name: Test new distribution (HyperSpyUI)
+      - name: Test new distribution (HyperSpyUI)
+        if: always()
         run: |
           conda activate "${{ env.install_dir }}"
           # Error on closing figure, not critical
@@ -389,8 +416,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # https://github.com/usnistgov/etspy/issues/24
-          pytest --pyargs etspy -k "not test_version"
+          pytest --pyargs etspy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -404,13 +430,14 @@ jobs:
 
   build_portable:
     name: windows (Portable)
-    needs: create_release_job
+    needs: [create_release_job, download_exspy_GOS, download_rsciio_test_data]
     runs-on: windows-latest
     env:
       WP_URL: https://github.com/winpython/winpython/releases/download/11.2.20241228final/Winpython64-3.12.8.0slim.exe
       WP_SHA256: c4c59403370e62169bbeba06f140f0da76b2ee5a5a51ebcfdb3d3ad663b2688a
       WP_EXE: winpython.exe
       WP_DIR_NAME: WPy64-31280
+      RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
 
     defaults:
       run:
@@ -418,6 +445,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      - uses: ssciwr/pooch-cache@v1
+        with:
+          name: pooch
+          fail-on-cache-miss: true
 
       - name: Cache WinPython data
         uses: actions/cache@v5
@@ -504,19 +536,29 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           python check_hyperspy_latest.py
 
-      - name: Get rosettasciio tests data location
+      - uses: ssciwr/pooch-cache@v1
+        # to restore the pooch cache (e.g. for eXPy GOS data)
+        with:
+          name: pooch
+          fail-on-cache-miss: true
+
+      - uses: ssciwr/pooch-cache@v1
+        # to restore the RosettaSciIO test data cache
+        with:
+          name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
+          fail-on-cache-miss: true
+
+      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
+      # and remove the next step
+      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
+      #   run: |
+      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
+
+      - name: Copy RosettaSciIO test data from pooch cache
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          python -c "from rsciio.tests import registry; data_path=str(registry.TESTS_PATH / 'data'); print(f'ROSETTASCIIO_TEST_DATA={data_path}')">> %GITHUB_ENV%
-
-      - name: Cache rosettasciio data
-        uses: actions/cache@v5
-        with:
-          path: ${{ env.ROSETTASCIIO_TEST_DATA }}
-          key:
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
-          restore-keys: |
-            RosettaSciIO-test_data-${{ env.ROSETTASCIIO_CACHE_NUMBER }}
+          python -c "import importlib.util, os, shutil, sys; from pathlib import Path; import pooch; src = pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}'); dest = Path(importlib.util.find_spec('rsciio').origin).parent / 'tests' / 'data'; print(f'Copying from {src} to {dest}'); shutil.copytree(str(src), str(dest), dirs_exist_ok=True); print(os.listdir(dest))"
 
       - name: Install testing libraries
         if: always()
@@ -600,8 +642,7 @@ jobs:
       #   if: always()
       #   run: |
       #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     # https://github.com/usnistgov/etspy/issues/24
-      #     pytest --pyargs etspy -k "not test_version"
+      #     pytest --pyargs etspy
 
       - name: Upload Release Asset
         if: startsWith(github.ref, 'refs/tags/')
@@ -620,8 +661,8 @@ jobs:
     steps:
       - name: Finalise release
         # Publish draft release
-        uses: eregon/publish-release@01df127f5e9a3c26935118e22e738d95b59d10ce
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          release_id: ${{ needs.create_release_job.outputs.ID }}
+          draft: false
