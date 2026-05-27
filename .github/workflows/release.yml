@@ -24,8 +24,8 @@ env:
   PYTEST_QT_API: pyqt5
   # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
-  CONSTRUCTOR_VERSION: '3.14.0'
-  CONDA_STANDALONE_VERSION: '25.11.0'
+  CONSTRUCTOR_VERSION: '3.15.3'
+  CONDA_STANDALONE_VERSION: '26.3.2.post1'
   ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:

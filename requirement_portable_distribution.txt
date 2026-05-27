@@ -15,7 +15,7 @@ matplotlib-scalebar
 nglview
 numpy >2
 numpy-quaternion
-orix >=0.14.1
+orix >=0.14.2
 particlespy
 pint >0.24
 pymatgen
