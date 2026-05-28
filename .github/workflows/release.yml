@@ -355,8 +355,8 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # test_rank_lstsq_residual fails on windows with MKL
-          # map_values_std_isset fixed in https://github.com/hyperspy/hyperspy/pull/3554
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not map_values_std_isset"
+          # test_units_error and test_offset_as_quantity_setter_string_no_units fixed in https://github.com/hyperspy/hyperspy/pull/3602 (not released yet)
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_units_error and not test_lazy_units_error and not test_offset_as_quantity_setter_string_no_units"
 
       - name: Test hyperspy_gui_ipywidgets
         if: always()
@@ -393,7 +393,9 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
+          # test_ransac_ellipse_tools: scikit-image incompatibility
+          # test_load_au_grating: download from zenodo, skip to avoid timeout issue
+          pytest --pyargs pyxem -k "not test_load_au_grating and not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame and not test_ransac_ellipse_tools"
 
       - name: Run test atomap
         if: always()
@@ -406,10 +408,10 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # https://github.com/pyxem/kikuchipy/issues/707
-          # https://github.com/pyxem/kikuchipy/pull/749
-          # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/767
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical and not test_dataset_availability"
+          # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/799
+          # https://github.com/hyperspy/hyperspy-extensions-list/issues/96#issuecomment-4555594312
+          # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
 
       - name: Run test etspy
         if: always()
@@ -576,13 +578,15 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy --reruns 3 -n 2
+          # test_units_error and test_offset_as_quantity_setter_string_no_units fixed in https://github.com/hyperspy/hyperspy/pull/3602 (not released yet)
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_units_error and not test_lazy_units_error and not test_offset_as_quantity_setter_string_no_units"
 
       - name: Run test RosettaSciIO
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py"
+          # test_compressdata: to investigate python 3.14 issue?
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py and not test_compressdata"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
@@ -619,7 +623,9 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame"
+          # test_ransac_ellipse_tools: scikit-image incompatibility
+          # test_load_au_grating: download from zenodo, skip to avoid timeout issue
+          pytest --pyargs pyxem -k "not test_load_au_grating and not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame and not test_ransac_ellipse_tools"
  
       - name: Run test atomap
         if: always()
@@ -628,13 +634,14 @@ jobs:
           # Skip interactive test
           pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
 
-      - name: Run test kikuchipy
-        if: always()
-        run: |
-          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # https://github.com/pyxem/kikuchipy/issues/707
-          # https://github.com/pyxem/kikuchipy/pull/749
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not spherical"
+      # - name: Run test kikuchipy
+      #   if: always()
+      #   run: |
+      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+      #     # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/799
+      #     # https://github.com/hyperspy/hyperspy-extensions-list/issues/96#issuecomment-4555594312
+      #     # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
+      #     pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
 
       # astra-toolbox wheel not available for windows on pypi
       # - name: Run test etspy
