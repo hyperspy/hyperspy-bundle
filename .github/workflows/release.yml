@@ -432,10 +432,10 @@ jobs:
     needs: [create_release_job, download_exspy_GOS, download_rsciio_test_data]
     runs-on: windows-latest
     env:
-      WP_URL: https://github.com/winpython/winpython/releases/download/11.2.20241228final/Winpython64-3.12.8.0slim.exe
-      WP_SHA256: c4c59403370e62169bbeba06f140f0da76b2ee5a5a51ebcfdb3d3ad663b2688a
+      WP_URL: https://github.com/winpython/winpython/releases/download/17.4.20260511final/WinPython64-3.14.5.0slim.exe
+      WP_SHA256: ec316e930e0631687c2bdc953424ace24756fd67030520abb88f74521276ed38
       WP_EXE: winpython.exe
-      WP_DIR_NAME: WPy64-31280
+      WP_DIR_NAME: WPy64-31450
       RSCIIO_CACHE_POOCH_LABEL: ${{ needs.download_rsciio_test_data.outputs.VERSION }}
 
     defaults:
