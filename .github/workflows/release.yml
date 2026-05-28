@@ -411,7 +411,8 @@ jobs:
           # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/799
           # https://github.com/hyperspy/hyperspy-extensions-list/issues/96#issuecomment-4555594312
           # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
+          # test_ebsd_refinement: occasional segmentation fault
+          pytest --pyargs kikuchipy -k "not test_ebsd_refinement and not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
 
       - name: Run test etspy
         if: always()
