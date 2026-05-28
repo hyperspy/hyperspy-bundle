@@ -25,7 +25,7 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=25.11.1
+  - conda >=26.5.0
   - dask-core >=2023.6.0
   - dask-labextension
   - dask-image
@@ -40,10 +40,10 @@ specs:
   # don't use kikuchipy as workaround for pyvista installation issue
   # because of a `icu` dependency conflict for `qt5` and `qt6` on macos
   # https://github.com/conda-forge/qt-main-feedstock/pull/380
-  - kikuchipy-base >=0.11.3
+  - kikuchipy-base >=0.12.0
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
-  - mamba >=2.5.0
+  - mamba >=2.6.2
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
@@ -51,7 +51,7 @@ specs:
   - nlopt
   - nglview
   - notebook
-  - orix >=0.14.1
+  - orix >=0.14.2
   - ovito
   - particlespy
   - pillow
@@ -61,13 +61,13 @@ specs:
   #- pymatgen
   - pyebsdindex-base >=0.3.9.1
   - pystackreg
-  - python 3.12*
+  - python 3.14*
   - python-graphviz
   - python-rapidjson
   - pyxem >=0.21
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.12.0
+  - rosettasciio >=0.14.0
   - scanning_drift_corr
   # https://github.com/pyxem/pyxem/issues/1174
   - scikit-image <0.26.0
