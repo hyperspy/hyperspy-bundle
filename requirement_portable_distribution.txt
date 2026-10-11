@@ -1,7 +1,7 @@
 abtem
 ase
 atomap
-dask >=2023.6.0
+dask >=2024.12.0
 dask-image
 exspy
 graphviz
@@ -15,7 +15,7 @@ matplotlib-scalebar
 nglview
 numpy >2
 numpy-quaternion
-orix >=0.14.2
+orix >=0.15.0
 particlespy
 pint >0.24
 pymatgen

@@ -354,15 +354,16 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # test_rank_lstsq_residual fails on windows with MKL
-          # test_units_error and test_offset_as_quantity_setter_string_no_units fixed in https://github.com/hyperspy/hyperspy/pull/3602 (not released yet)
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_units_error and not test_lazy_units_error and not test_offset_as_quantity_setter_string_no_units"
+          # https://github.com/hyperspy/hyperspy/issues/3536
+          # skip test_missing_analytical_gradient and test_EELSModel_saving until exspy is released with the "_download_GOS_files" function
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_missing_analytical_gradient and not test_EELSModel_saving"
 
       - name: Test hyperspy_gui_ipywidgets
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs hyperspy_gui_ipywidgets
+          # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
+          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
 
       - name: Test hyperspy_gui_traitsui
         if: runner.os != 'linux' && always()
@@ -374,7 +375,8 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs exspy
+          # two_area: https://github.com/hyperspy/hyperspy-extensions-list/issues/106
+          pytest --pyargs exspy -k "not two_area"
   
       - name: Run test holospy
         if: always()
@@ -386,33 +388,34 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs lumispy
+          # https://github.com/hyperspy/hyperspy-extensions-list/issues/90
+          pytest --pyargs lumispy -k "not test_crop_edges_fancy_str"
 
       - name: Run test pyxem
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          # test_ransac_ellipse_tools: scikit-image incompatibility
-          # test_load_au_grating: download from zenodo, skip to avoid timeout issue
-          pytest --pyargs pyxem -k "not test_load_au_grating and not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame and not test_ransac_ellipse_tools"
+          # https://github.com/pyxem/pyxem/issues/1153
+          # https://github.com/pyxem/pyxem/issues/1174
+          # test_load_au_grating: skip to avoid hitting rate limits from zenodo
+          # TestDecomposition: https://github.com/pyxem/pyxem/pull/1190
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_ransac_ellipse_tools and not test_load_au_grating and not TestDecomposition"
 
       - name: Run test atomap
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # Skip interactive test
-          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
+          # don't run tests that require a gui
+          # https://github.com/atomap-dev/atomap/pull/2
+          pytest --pyargs atomap -k "not test_gui_function_qt"
 
       - name: Run test kikuchipy
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/799
-          # https://github.com/hyperspy/hyperspy-extensions-list/issues/96#issuecomment-4555594312
           # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
-          # test_ebsd_refinement: occasional segmentation fault
-          pytest --pyargs kikuchipy -k "not test_ebsd_refinement and not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
+          # test_lazy_decomposition, test_get_decomposition_model_lazy: https://github.com/pyxem/kikuchipy/pull/813
+          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_lazy_decomposition and not test_get_decomposition_model_lazy"
 
       - name: Run test etspy
         if: always()
@@ -579,21 +582,23 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # test_units_error and test_offset_as_quantity_setter_string_no_units fixed in https://github.com/hyperspy/hyperspy/pull/3602 (not released yet)
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_units_error and not test_lazy_units_error and not test_offset_as_quantity_setter_string_no_units"
+          # https://github.com/hyperspy/hyperspy/issues/3536
+          # skip test_missing_analytical_gradient and test_EELSModel_saving until exspy is released with the "_download_GOS_files" function
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_missing_analytical_gradient and not test_EELSModel_saving"
 
       - name: Run test RosettaSciIO
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # test_compressdata: to investigate python 3.14 issue?
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_mrcz.py and not test_usid.py and not test_compressdata"
+          # pyusid doesn't support numpy 2
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_usid.py"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs hyperspy_gui_ipywidgets
+          # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
+          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
@@ -605,7 +610,8 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs exspy
+          # two_area: https://github.com/hyperspy/hyperspy-extensions-list/issues/106
+          pytest --pyargs exspy -k "not two_area"
 
       - name: Run test holospy
         if: always()
@@ -617,32 +623,34 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          pytest --pyargs lumispy
+          # https://github.com/hyperspy/hyperspy-extensions-list/issues/90
+          pytest --pyargs lumispy -k "not test_crop_edges_fancy_str"
 
       - name: Run test pyxem
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # cause of the TestAddEllipseArrayAsMarkers failure is unknown (seems to be on blas mkl only)
-          # test_ransac_ellipse_tools: scikit-image incompatibility
-          # test_load_au_grating: download from zenodo, skip to avoid timeout issue
-          pytest --pyargs pyxem -k "not test_load_au_grating and not TestAddEllipseArrayAsMarkers and not TestGetEllipseModelRansacSingleFrame and not test_ransac_ellipse_tools"
+          # https://github.com/pyxem/pyxem/issues/1153
+          # https://github.com/pyxem/pyxem/issues/1174
+          # test_load_au_grating: skip to avoid hitting rate limits from zenodo
+          # TestDecomposition: https://github.com/pyxem/pyxem/pull/1190
+          pytest --pyargs pyxem -k "not TestAddEllipseArrayAsMarkers and not test_ransac_ellipse_tools and not test_load_au_grating and not TestDecomposition"
  
       - name: Run test atomap
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # Skip interactive test
-          pytest --pyargs atomap -k "not TestSelectAtomsWithGui"
+          # don't run tests that require a gui
+          # https://github.com/atomap-dev/atomap/pull/2
+          pytest --pyargs atomap -k "not test_gui_function_qt"
 
       # - name: Run test kikuchipy
       #   if: always()
       #   run: |
       #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     # test_dataset_availability: https://github.com/pyxem/kikuchipy/issues/799
-      #     # https://github.com/hyperspy/hyperspy-extensions-list/issues/96#issuecomment-4555594312
       #     # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
-      #     pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_dataset_availability and not test_estimate_xtilt"
+      #     # test_lazy_decomposition, test_get_decomposition_model_lazy: https://github.com/pyxem/kikuchipy/pull/813
+      #     pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_lazy_decomposition and not test_get_decomposition_model_lazy"
 
       # astra-toolbox wheel not available for windows on pypi
       # - name: Run test etspy
