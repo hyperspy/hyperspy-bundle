@@ -7,9 +7,9 @@ exspy
 graphviz
 holospy
 hdf5plugin
-hyperspy[all]
+hyperspy[all] >=2.5.0
 hyperspyui
-kikuchipy[all]
+kikuchipy[all] >=0.13.1
 lumispy
 matplotlib-scalebar
 nglview
@@ -21,7 +21,7 @@ pint >0.24
 pymatgen
 pystackreg
 python-rapidjson
-pyxem
+pyxem >=0.21.0
 rosettasciio[all]
 scanning_drift_corr
 start_jupyter_cm
