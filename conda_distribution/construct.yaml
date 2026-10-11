@@ -25,7 +25,7 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=26.5.0
+  - conda >=26.9.2
   - dask-core >=2024.12.0
   - dask-labextension
   - dask-image
@@ -43,7 +43,7 @@ specs:
   - kikuchipy-base >=0.13.1
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
-  - mamba >=2.6.2
+  - mamba >=2.9.0
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
