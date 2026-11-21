@@ -25,14 +25,14 @@ specs:
   - abtem
   - ase
   - atomap >=0.4.2
-  - conda >=26.9.2
+  - conda >=26.10.0
   - dask-core >=2024.12.0
   - dask-labextension
   - dask-image
   - etspy
-  - exspy
+  - exspy >=0.3.2
   - hdf5plugin
-  - holospy
+  - holospy >=0.4.1
   - hyperspy >=2.5.0
   - hyperspyui >=2.0.2
   - ipympl
@@ -40,10 +40,10 @@ specs:
   # don't use kikuchipy as workaround for pyvista installation issue
   # because of a `icu` dependency conflict for `qt5` and `qt6` on macos
   # https://github.com/conda-forge/qt-main-feedstock/pull/380
-  - kikuchipy-base >=0.13.1
+  - kikuchipy-base >=0.14.2
   - libblas=*=*{{ blas_impl }}
   - lumispy >=0.3.0
-  - mamba >=2.9.0
+  - mamba >=2.10.0
   - mamba_gator
   - matplotlib-scalebar
   - miniforge_console_shortcut              # [win]
@@ -59,12 +59,12 @@ specs:
   # https://github.com/conda-forge/py4dstem-feedstock
   #- py4dstem >=0.14.18
   #- pymatgen
-  - pyebsdindex-base >=0.3.9.1
+  - pyebsdindex-base >=0.3.10.1
   - pystackreg
   - python 3.14*
   - python-graphviz
   - python-rapidjson
-  - pyxem >=0.21
+  - pyxem >=0.21.0
   - openpyxl
   - qtconsole >=5.4.3
   - rosettasciio >=0.15.0
