@@ -25,7 +25,7 @@ env:
   # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.17.3'
-  CONDA_STANDALONE_VERSION: '26.5.2'
+  CONDA_STANDALONE_VERSION: '26.10.0'
   ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:
