@@ -3,14 +3,14 @@ ase
 atomap
 dask >=2024.12.0
 dask-image
-exspy
+exspy >=0.3.2
 graphviz
 holospy
 hdf5plugin
 hyperspy[all] >=2.5.0
 hyperspyui
-kikuchipy[all] >=0.13.1
-lumispy
+kikuchipy[all] >=0.14.2
+lumispy >=0.3.0
 matplotlib-scalebar
 nglview
 numpy >2
@@ -22,6 +22,6 @@ pymatgen
 pystackreg
 python-rapidjson
 pyxem >=0.21.0
-rosettasciio[all]
+rosettasciio[all] >=0.15.0
 scanning_drift_corr
 start_jupyter_cm

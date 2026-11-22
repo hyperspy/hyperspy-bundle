@@ -25,7 +25,7 @@ env:
   # pytest<9 is workaround for https://github.com/pyxem/pyxem/pull/1175
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.17.3'
-  CONDA_STANDALONE_VERSION: '26.5.2'
+  CONDA_STANDALONE_VERSION: '26.10.0'
   ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:
@@ -316,26 +316,11 @@ jobs:
           name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
           fail-on-cache-miss: true
 
-      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
-      # and remove the next step
-      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
-      #   run: |
-      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
-      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
-
-      - name: Copy RosettaSciIO test data from pooch cache
+      - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
         run: |
           conda activate "${{ env.install_dir }}"
-          python -c "
-          import importlib.util, os, shutil, sys
-          from pathlib import Path
-          import pooch
-          src = pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}')
-          dest = Path(importlib.util.find_spec('rsciio').origin).parent / 'tests' / 'data'
-          print(f'Copying from {src} to {dest}')
-          shutil.copytree(str(src), str(dest), dirs_exist_ok=True)
-          print(os.listdir(dest))
-          "
+          # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+          python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
 
       - name: Test new distribution (HyperSpyUI)
         if: always()
@@ -363,7 +348,10 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
+          # needs hyperspy_gui_ipywidgets > 2.1.1
+          # https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/102
           pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
+
 
       - name: Test hyperspy_gui_traitsui
         if: runner.os != 'linux' && always()
@@ -413,9 +401,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
-          # test_lazy_decomposition, test_get_decomposition_model_lazy: https://github.com/pyxem/kikuchipy/pull/813
-          pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_lazy_decomposition and not test_get_decomposition_model_lazy"
+          pytest --pyargs kikuchipy
 
       - name: Run test etspy
         if: always()
@@ -553,17 +539,11 @@ jobs:
           name: rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}
           fail-on-cache-miss: true
 
-      # Need https://github.com/hyperspy/rosettasciio/pull/482 to be released
-      # and remove the next step
-      # - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
-      #   run: |
-      #     # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
-      #     python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
-
-      - name: Copy RosettaSciIO test data from pooch cache
+      - name: Set RSCIIO_TEST_DATA_SOURCE environment variable
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          python -c "import importlib.util, os, shutil, sys; from pathlib import Path; import pooch; src = pooch.os_cache('rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}'); dest = Path(importlib.util.find_spec('rsciio').origin).parent / 'tests' / 'data'; print(f'Copying from {src} to {dest}'); shutil.copytree(str(src), str(dest), dirs_exist_ok=True); print(os.listdir(dest))"
+          # Get the value `RSCIIO_TEST_DATA_SOURCE` from the pooch cache path
+          python -c "import pooch; print(f'RSCIIO_TEST_DATA_SOURCE={str(pooch.os_cache(\"rsciio-${{ env.RSCIIO_CACHE_POOCH_LABEL }}\"))}')" >> $GITHUB_ENV
 
       - name: Install testing libraries
         if: always()
@@ -599,6 +579,8 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
+          # needs hyperspy_gui_ipywidgets > 2.1.1
+          # https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/102
           pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
 
       - name: Run test hyperspy_gui_traitsui
