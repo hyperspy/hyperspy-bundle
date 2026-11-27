@@ -26,7 +26,6 @@ env:
   TEST_DEPS: '"pytest<9" pytest-qt pytest-xdist pytest-rerunfailures pytest-mpl filelock'
   CONSTRUCTOR_VERSION: '3.17.3'
   CONDA_STANDALONE_VERSION: '26.10.0'
-  ROSETTASCIIO_CACHE_NUMBER: 0 # Increase this value to reset cache
 
 defaults:
   run:
@@ -340,18 +339,13 @@ jobs:
         run: |
           conda activate "${{ env.install_dir }}"
           # https://github.com/hyperspy/hyperspy/issues/3536
-          # skip test_missing_analytical_gradient and test_EELSModel_saving until exspy is released with the "_download_GOS_files" function
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_missing_analytical_gradient and not test_EELSModel_saving"
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack"
 
       - name: Test hyperspy_gui_ipywidgets
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
-          # needs hyperspy_gui_ipywidgets > 2.1.1
-          # https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/102
-          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
-
+          pytest --pyargs hyperspy_gui_ipywidgets
 
       - name: Test hyperspy_gui_traitsui
         if: runner.os != 'linux' && always()
@@ -363,8 +357,7 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          # two_area: https://github.com/hyperspy/hyperspy-extensions-list/issues/106
-          pytest --pyargs exspy -k "not two_area"
+          pytest --pyargs exspy
   
       - name: Run test holospy
         if: always()
@@ -563,8 +556,7 @@ jobs:
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # https://github.com/hyperspy/hyperspy/issues/3536
-          # skip test_missing_analytical_gradient and test_EELSModel_saving until exspy is released with the "_download_GOS_files" function
-          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack and not test_missing_analytical_gradient and not test_EELSModel_saving"
+          pytest --pyargs hyperspy --reruns 3 -n 2 -k "not test_arpack"
 
       - name: Run test RosettaSciIO
         if: always()
@@ -578,10 +570,7 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # https://github.com/hyperspy/hyperspy-extensions-list/issues/107
-          # needs hyperspy_gui_ipywidgets > 2.1.1
-          # https://github.com/hyperspy/hyperspy_gui_ipywidgets/pull/102
-          pytest --pyargs hyperspy_gui_ipywidgets -k "not test_smooth and not test_filter_butterworth"
+          pytest --pyargs hyperspy_gui_ipywidgets
 
       - name: Run test hyperspy_gui_traitsui
         if: always()
@@ -593,8 +582,7 @@ jobs:
         if: always()
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-          # two_area: https://github.com/hyperspy/hyperspy-extensions-list/issues/106
-          pytest --pyargs exspy -k "not two_area"
+          pytest --pyargs exspy
 
       - name: Run test holospy
         if: always()
@@ -627,15 +615,13 @@ jobs:
           # https://github.com/atomap-dev/atomap/pull/2
           pytest --pyargs atomap -k "not test_gui_function_qt"
 
-      # - name: Run test kikuchipy
-      #   if: always()
-      #   run: |
-      #     call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
-      #     # test_not_allow_download_raises: https://github.com/pyxem/kikuchipy/issues/707
-      #     # test_lazy_decomposition, test_get_decomposition_model_lazy: https://github.com/pyxem/kikuchipy/pull/813
-      #     pytest --pyargs kikuchipy -k "not test_not_allow_download_raises and not test_lazy_decomposition and not test_get_decomposition_model_lazy"
+      - name: Run test kikuchipy
+        if: always()
+        run: |
+          call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
+          pytest --pyargs kikuchipy
 
-      # astra-toolbox wheel not available for windows on pypi
+      # eTSpy requires pystackreg <0.3, which has no Windows Python 3.14 wheel on PyPI.
       # - name: Run test etspy
       #   if: always()
       #   run: |
