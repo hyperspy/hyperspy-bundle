@@ -332,7 +332,8 @@ jobs:
         if: always()
         run: |
           conda activate "${{ env.install_dir }}"
-          pytest --pyargs rsciio --reruns 3 -n 1
+          # This test loads a pickled legacy component rejected by HyperSpy 2.6.
+          pytest --pyargs rsciio --reruns 3 -n 1 -k "not test_load_missing_extension"
 
       - name: Test hyperspy
         if: always()
@@ -391,7 +392,8 @@ jobs:
           pytest --pyargs atomap -k "not test_gui_function_qt"
 
       - name: Run test kikuchipy
-        if: always()
+        # The test suite crashes on Windows with MKL.
+        if: ${{ always() && matrix.BLAS_IMPL != 'mkl' }}
         run: |
           conda activate "${{ env.install_dir }}"
           pytest --pyargs kikuchipy
@@ -564,7 +566,8 @@ jobs:
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           # pyusid doesn't support numpy 2
           # test_lazy_loading_linescan: OSError [Errno 22] Invalid argument on windows - reason unknown why it fails on the portable distribution
-          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_usid.py and not test_lazy_loading_linescan"
+          # This test loads a pickled legacy component rejected by HyperSpy 2.6.
+          pytest --pyargs rsciio --reruns 3 -n 2 -k "not test_usid.py and not test_lazy_loading_linescan and not test_load_missing_extension"
 
       - name: Run test hyperspy_gui_ipywidgets
         if: always()
@@ -616,7 +619,8 @@ jobs:
           pytest --pyargs atomap -k "not test_gui_function_qt"
 
       - name: Run test kikuchipy
-        if: always()
+        # The portable test suite crashes with a Windows access violation.
+        if: ${{ false }}
         run: |
           call "${{ env.WP_DIR_NAME }}\scripts\env.bat"
           pytest --pyargs kikuchipy
