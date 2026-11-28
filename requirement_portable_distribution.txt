@@ -1,19 +1,23 @@
 abtem
 ase
-atomap
+atomap >=0.4.2
 dask >=2024.12.0
 dask-image
-exspy >=0.3.2
+exspy >=0.4.0
 graphviz
-holospy
+holospy >=0.4.1
 hdf5plugin
-hyperspy[all] >=2.5.0
-hyperspyui
+hyperspy[all] >=2.6.0
+hyperspy-gui-ipywidgets >=2.2.0
+hyperspy-gui-traitsui >=2.2.0
+hyperspyui >=2.0.2
 kikuchipy[all] >=0.14.2
 lumispy >=0.3.0
 matplotlib-scalebar
 nglview
-numpy >2
+# scikit-image 0.26 ellipse fitting is incompatible with NumPy 2.5
+# https://github.com/pyxem/pyxem/pull/1195
+numpy >2,<2.5
 numpy-quaternion
 orix >=0.15.0
 particlespy
@@ -22,6 +26,6 @@ pymatgen
 pystackreg
 python-rapidjson
 pyxem >=0.21.0
-rosettasciio[all] >=0.15.0
+rosettasciio[all] >=0.16.0
 scanning_drift_corr
 start_jupyter_cm

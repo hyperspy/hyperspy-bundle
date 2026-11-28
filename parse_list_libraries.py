@@ -16,4 +16,3 @@ with open(out, "w") as f:
     for lib in librairies:
         if 'libblas' not in lib:
             f.write(f'* {lib}\n')
-    f.write('\n')

@@ -29,11 +29,13 @@ specs:
   - dask-core >=2024.12.0
   - dask-labextension
   - dask-image
-  - etspy
-  - exspy >=0.3.2
+  - etspy >=1.4.0
+  - exspy >=0.4.0
   - hdf5plugin
   - holospy >=0.4.1
-  - hyperspy >=2.5.0
+  - hyperspy >=2.6.0
+  - hyperspy-gui-ipywidgets >=2.2.0
+  - hyperspy-gui-traitsui >=2.2.0
   - hyperspyui >=2.0.2
   - ipympl
   - jupyterlab
@@ -51,6 +53,9 @@ specs:
   - nlopt
   - nglview
   - notebook
+  # scikit-image 0.26 ellipse fitting is incompatible with NumPy 2.5
+  # https://github.com/pyxem/pyxem/pull/1195
+  - numpy <2.5
   - orix >=0.15.0
   - ovito
   - particlespy
@@ -67,10 +72,8 @@ specs:
   - pyxem >=0.21.0
   - openpyxl
   - qtconsole >=5.4.3
-  - rosettasciio >=0.15.0
+  - rosettasciio >=0.16.0
   - scanning_drift_corr
-  # https://github.com/pyxem/pyxem/issues/1174
-  - scikit-image <0.26.0
   - spyder >=6.0
   - start_jupyter_cm
   - xlrd
